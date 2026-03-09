@@ -19,8 +19,12 @@
 }
 
 /* ===== CONTENT TYPOGRAPHY ===== */
-main { max-width: 860px; margin: 0 auto; padding: 3rem 1rem; }
+main { max-width: 860px; width: 100%; margin: 0 auto; padding: 3rem 1rem; overflow-wrap: break-word; word-break: break-word; min-width: 0; box-sizing: border-box; overflow-x: hidden; }
 main h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.5rem; line-height: 1.2; }
+@media (max-width: 640px) {
+    main h1 { font-size: 1.5rem; }
+    main h2 { font-size: 1.25rem; }
+}
 main .subtitle { color: var(--text-dim); font-size: 1.05rem; margin-bottom: 2.5rem; line-height: 1.6; }
 main .subtitle code { font-size: 0.9em; }
 main h2 { font-size: 1.45rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
@@ -39,6 +43,8 @@ main code {
     font-family: var(--font-mono);
     font-size: 0.85em;
     color: #334155;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 .dark main code {
     background: #1e293b;

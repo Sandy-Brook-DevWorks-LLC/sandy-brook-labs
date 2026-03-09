@@ -59,6 +59,17 @@
         </div>
     </nav>
 
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu">
+        <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
+        <div class="mobile-menu-panel">
+            <a href="#currently-building" onclick="closeMenu()">Building</a>
+            <a href="#past-projects" onclick="closeMenu()">Shipped</a>
+            <a href="guides/">Developers</a>
+            <a href="https://sandybrookdevworks.com" target="_blank" rel="noopener noreferrer">Sandy Brook DevWorks</a>
+        </div>
+    </div>
+
     <main>
         <!-- Hero -->
         <section class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center">
@@ -185,16 +196,5 @@
         </div>
     </footer>
 
-    <!-- Mobile Bottom Sheet -->
-    <div id="mobile-menu">
-        <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
-        <div class="mobile-menu-sheet">
-            <div class="mobile-menu-handle"></div>
-            <a href="#currently-building" onclick="closeMenu()">Building</a>
-            <a href="#past-projects" onclick="closeMenu()">Shipped</a>
-            <a href="guides/">Developers</a>
-            <a href="https://sandybrookdevworks.com" target="_blank" rel="noopener noreferrer">Sandy Brook DevWorks</a>
-        </div>
-    </div>
 </body>
 </html>

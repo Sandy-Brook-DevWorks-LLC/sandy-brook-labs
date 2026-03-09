@@ -135,16 +135,15 @@ The nav adapts per page. Key parameters: logo path, subtitle text, nav links.
 </nav>
 ```
 
-## Mobile Bottom Sheet Template
+## Mobile Dropdown Menu Template
 
-Place this before `</body>` on every page. The links should match the desktop nav links for that page.
+Place this right after `</nav>` on every page. The links should match the desktop nav links for that page.
 
 ```html
-<!-- Mobile Bottom Sheet -->
+<!-- Mobile Dropdown Menu -->
 <div id="mobile-menu">
     <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
-    <div class="mobile-menu-sheet">
-        <div class="mobile-menu-handle"></div>
+    <div class="mobile-menu-panel">
         <!-- Page-specific links. For anchor links on the same page, add onclick="closeMenu()" -->
         <a href="#section" onclick="closeMenu()">Section Name</a>
         <a href="other-page/">Other Page</a>
@@ -153,7 +152,7 @@ Place this before `</body>` on every page. The links should match the desktop na
 </div>
 ```
 
-Styles are defined in `styles/brand.css`. JS functions (`toggleMenu`, `closeMenu`) are in `styles/theme.js`.
+Styles are defined in `styles/brand.css`. JS functions (`toggleMenu`, `closeMenu`) are in `styles/theme.js`. The panel slides down from the top, positioned right below the nav bar.
 
 ## Footer Template
 
