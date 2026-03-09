@@ -1,147 +1,92 @@
 # Sandy Brook ProjectLab
 
-A static site showcasing Sandy Brook's internal product experiments. Sibling to the main Sandy Brook DevWorks site at `sandybrookdevworks.com` (source: `~/Repos/sandy-brook-web`).
+A static site showcasing Sandy Brook's internal product experiments and study guides. Sibling to the main Sandy Brook DevWorks site at `sandybrookdevworks.com` (source: `~/Repos/sandy-brook-web`).
 
 ## Stack
 
 - Plain HTML, vanilla JS, Tailwind CSS v4 via CDN (`@tailwindcss/browser@4`)
-- Google Fonts: Inter (weights 300–700)
+- Google Fonts: Inter (body, weights 300–700), JetBrains Mono (code, weights 400, 600)
 - No build step, no frameworks, no npm
-- Single `index.html` file
 
 ## File Structure
 
-| File                 | Purpose                                      |
-|----------------------|----------------------------------------------|
-| `index.html`         | Main (and only) page                         |
-| `blue_logo.jpg`      | Light mode Sandy Brook logo                  |
-| `dark_logo.jpg`      | Dark mode Sandy Brook logo                   |
-| `relay_logo.png`     | Relay app icon (AI-generated)                |
-| `cogniwatch_logo.png`| CogniWatch app icon                          |
-| `CNAME`              | GitHub Pages custom domain (if configured)   |
-| `.claude/launch.json`| Preview server config (python3 http.server)  |
+| File / Directory | Purpose |
+|------------------|---------|
+| `index.html` | Main ProjectLab page (Relay, CogniWatch) |
+| `styles/brand.css` | **Shared** — CSS custom properties, brand colors, grid bg, dark mode overrides |
+| `styles/theme.js` | **Shared** — `toggleTheme()` function for dark mode button |
+| `guides/index.html` | Guides hub page |
+| `guides/content.css` | **Shared** — Content styling for all guide pages (typography, callouts, code blocks, tables, etc.) |
+| `guides/linq/` | C# Data Structures & LINQ course (index + 5 lessons) |
+| `blue_logo.jpg` | Light mode Sandy Brook logo |
+| `dark_logo.jpg` | Dark mode Sandy Brook logo |
+| `relay_logo.png` | Relay app icon |
+| `cogniwatch_logo.png` | CogniWatch app icon |
+| `STYLE_GUIDE.md` | **Human-readable design system reference** with templates and how-to guides |
+| `.claude/launch.json` | Preview server config (python3 http.server on port 8080) |
 
-## Design System (from sandy-brook-web)
+## Shared Assets
+
+Three files eliminate duplication across all pages:
+
+1. **`styles/brand.css`** — CSS variables (`--brand-teal`, `--font-sans`), body font stack, grid background SVGs, `.dark` utility overrides. Linked via `<link rel="stylesheet">`.
+
+2. **`styles/theme.js`** — The `toggleTheme()` function. Loaded via `<script src="...">` (no defer). Dark mode *init* is a 1-line inline `<script>` in each page's `<head>` to prevent FOUC.
+
+3. **`guides/content.css`** — Content styling for guide pages. Targets elements inside `<main>` via descendant selectors (`main h1`, `main p`, etc.). Includes callout system (`.callout.tip/warn/danger`), code block styling, table styling, challenge boxes, page nav, syntax highlighting spans, Big-O badges.
+
+Each HTML page also has a minimal inline `<style type="text/tailwindcss">` block (7 lines) for the Tailwind `@theme` and `@custom-variant` directives that the CDN requires inline.
+
+## Design System
+
+See `STYLE_GUIDE.md` for full details, copy-paste templates, and how-to guides.
 
 ### Brand Colors
 
-| Token               | Value                        | Usage                                |
-|----------------------|------------------------------|--------------------------------------|
-| `--brand-teal`       | `#1a5f6b`                    | Primary brand color (light mode)     |
-| `--brand-teal-light` | `#2d8291`                    | Brand color in dark mode contexts    |
-| `--brand-teal-dark`  | `#12444d`                    | Darker accent                        |
-| `--color-brand-shadow` | `rgba(26, 95, 107, 0.25)` | Box-shadow on CTAs                   |
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--brand-teal` | `#1a5f6b` | Primary accent (light mode) |
+| `--brand-teal-light` | `#2d8291` | Dark mode accent, hover states |
+| `--brand-teal-dark` | `#12444d` | Deep accents, shadows |
 
-### Tailwind Theme Extension
+### Dark Mode
 
-```css
-@theme {
-    --color-brand: var(--brand-teal);
-    --color-brand-light: var(--brand-teal-light);
-    --color-brand-dark: var(--brand-teal-dark);
-    --color-brand-shadow: rgba(26, 95, 107, 0.25);
-}
-```
+Class-based using `@custom-variant dark (&:where(.dark, .dark *))`. Toggle persists in `localStorage.theme`. Init script in `<head>` prevents flash.
 
-### Surface Colors (Tailwind defaults)
+### Surface Colors (Tailwind slate palette)
 
-| Context       | Light Mode        | Dark Mode          |
-|---------------|-------------------|--------------------|
-| Body bg       | `bg-slate-50`     | `dark:bg-slate-950`|
-| Body text     | `text-slate-900`  | `dark:text-slate-50`|
-| Card bg       | `bg-white`        | `dark:bg-slate-950` or `dark:bg-slate-900` |
-| Muted text    | `text-slate-600`  | `dark:text-slate-400`|
-| Borders       | `border-slate-200`| `dark:border-slate-800`|
-| Nav bg        | `bg-white/80 backdrop-blur-md` | `dark:bg-slate-950/80` |
+| Context | Light | Dark |
+|---------|-------|------|
+| Body bg | `bg-slate-50` | `dark:bg-slate-950` |
+| Cards | `bg-white` | `dark:bg-slate-900` |
+| Nav | `bg-white/80 backdrop-blur-md` | `dark:bg-slate-950/80` |
+| Borders | `border-slate-200` | `dark:border-slate-800` |
+| Muted text | `text-slate-600` | `dark:text-slate-400` |
 
-### Typography
+## Site Structure
 
-- Font family: `'Inter', system-ui, -apple-system, sans-serif`
-- Headings: `font-bold` / `font-extrabold`, `tracking-tight`
-- Body: default weight (400), `leading-relaxed` for paragraphs
-- Small labels: `text-xs font-medium tracking-widest uppercase`
+### Main Page (`index.html`)
 
-### Spacing & Layout Patterns
+1. **Navigation** — Sticky nav, logo, "Sandy Brook ProjectLab", links to Building/Shipped sections, dark mode toggle
+2. **Hero** — Logo, badge, headline, subtitle
+3. **Currently Building** — Dark section with Relay project card
+4. **Past Projects** — CogniWatch project card with "Shipped" badge
+5. **Footer** — Logo, Services/About/Contact links, copyright
 
-- Container: `container mx-auto px-4`
-- Section padding: `py-24` (desktop), responsive via Tailwind
-- Cards: `rounded-2xl border p-8`, hover effect: `hover:border-brand/50 hover:shadow-2xl hover:shadow-brand-shadow/20`
-- Nav height: `h-16`
-- App icon sizing: `w-24 md:w-48` with `aspect-square rounded-2xl overflow-hidden`
+### Guides (`guides/`)
 
-### Custom Utility Classes
+- `guides/index.html` — Hub page listing all available guides
+- `guides/linq/` — C# Data Structures & LINQ (5 lessons with Big-O cheat sheet)
 
-```css
-.hover-bg-brand:hover { background-color: var(--brand-teal-light); }
-.dark .hover-bg-brand:hover { background-color: var(--brand-teal); }
-.dark .text-brand { color: var(--brand-teal-light); }
-.dark .bg-brand { background-color: var(--brand-teal-light); }
-.dark .border-brand { border-color: var(--brand-teal-light); }
-```
-
-### Background Grid Pattern
-
-Subtle SVG grid overlay on the page background:
-
-```css
-.bg-grid-slate-100 {
-    background-image: url("data:image/svg+xml,...");
-}
-```
-
-Applied via: `<div class="fixed inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10 pointer-events-none"></div>`
-
-## Logo Rendering Pattern
-
-```html
-<img src="blue_logo.jpg" alt="..." class="... dark:hidden shadow-sm">
-<img src="dark_logo.jpg" alt="..." class="hidden ... dark:block shadow-sm">
-```
-
-Favicon: `<link rel="icon" type="image/jpeg" href="blue_logo.jpg">`
-
-## Dark Mode Implementation
-
-Class-based dark mode using Tailwind v4's `@custom-variant`:
-
-```css
-@custom-variant dark (&:where(.dark, .dark *));
-```
-
-Toggle logic (vanilla JS in `<head>` to avoid FOUC) uses `localStorage.theme` and `prefers-color-scheme` media query.
-
-## Site Structure (index.html)
-
-1. **Navigation** — Sticky nav with logo, "Sandy Brook ProjectLab" branding, links to main site sections (Building, Shipped), dark mode toggle
-2. **Hero** — Logo, animated badge, headline "Ideas in Motion. Projects in Progress.", subtitle
-3. **Currently Building** — Dark section (`bg-slate-900`) with card (`bg-slate-800`). Relay project with "In Development" badge, app icon between subtitle and description
-4. **Past Projects** — Default page background. CogniWatch project with "Shipped" badge, app icon between subtitle and description, "Visit Landing Page" link
-5. **Footer** — Logo, nav links to main site (Services, About, Contact), copyright
-
-## Project Content
-
-### Currently Building
-
-- **Relay** — AI Phone Assistant
-  - Status: In Development
-  - Tags: AI, Voice, Telephony, NLP
-  - No external link yet
-
-### Past Projects
-
-- **CogniWatch** — AI Conversations on Your Wrist
-  - Status: Shipped
-  - Tags: Apple Watch, iOS, AI, Voice
-  - Landing page: https://cogniwatch.sandybrook.io/
+Guide pages use `guides/content.css` for content styling. Content is wrapped in `<main>` so descendant selectors apply.
 
 ## Constraints
 
 - No build step, no frameworks, no npm
 - Tailwind CSS via CDN only
-- Must be fully mobile responsive
-- All external links open in new tabs (`target="_blank" rel="noopener noreferrer"`)
-- Dark mode must match the main site's implementation
-- App icon pattern: small icon (`w-24 md:w-48`) placed between project subtitle and description
+- Fully mobile responsive
+- External links: `target="_blank" rel="noopener noreferrer"`
+- Logo paths are relative to file depth (use `../../blue_logo.jpg` from `guides/linq/`)
 
 ## Main Site Reference
 
