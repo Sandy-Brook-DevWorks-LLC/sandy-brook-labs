@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectLab | Sandy Brook DevWorks LLC</title>
+    <meta name="description" content="Sandy Brook ProjectLab — a showcase of what Sandy Brook DevWorks LLC is actively building and has shipped.">
+    <link rel="icon" type="image/jpeg" href="blue_logo.jpg">
+    <link rel="apple-touch-icon" href="blue_logo.jpg">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @theme {
+            --color-brand: var(--brand-teal);
+            --color-brand-light: var(--brand-teal-light);
+            --color-brand-dark: var(--brand-teal-dark);
+            --color-brand-shadow: rgba(26, 95, 107, 0.25);
+        }
+        @custom-variant dark (&:where(.dark, .dark *));
+        :root {
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --brand-teal: #1a5f6b;
+            --brand-teal-light: #2d8291;
+            --brand-teal-dark: #12444d;
+        }
+        body {
+            font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        .bg-grid-slate-100 {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(26 95 107 / 0.05)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
+        }
+        .dark .bg-grid-slate-100 {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(45 130 145 / 0.1)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
+        }
+        .hover-bg-brand:hover { background-color: var(--brand-teal-light); }
+        .dark .hover-bg-brand:hover { background-color: var(--brand-teal); }
+        .dark .text-brand { color: var(--brand-teal-light); }
+        .dark .bg-brand { background-color: var(--brand-teal-light); }
+        .dark .border-brand { border-color: var(--brand-teal-light); }
+    </style>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark')
+                localStorage.theme = 'light'
+            } else {
+                document.documentElement.classList.add('dark')
+                localStorage.theme = 'dark'
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300">
+    <div class="fixed inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10 pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 w-full border-b border-slate-200/40 bg-white/80 backdrop-blur-md dark:border-slate-800/40 dark:bg-slate-950/80">
+        <div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+            <div class="flex items-center gap-4 font-bold text-xl tracking-tight">
+                <a href="https://sandybrookdevworks.com" target="_blank" rel="noopener noreferrer" class="relative group" aria-label="Sandy Brook DevWorks Home">
+                    <div class="absolute -inset-1 rounded-full bg-brand/20 blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    <img src="blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative h-12 w-12 rounded-full border border-slate-200 dark:hidden shadow-sm">
+                    <img src="dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative hidden h-12 w-12 rounded-full border border-slate-800 dark:block shadow-sm">
+                </a>
+                <div class="flex flex-col leading-tight">
+                    <span class="text-brand">Sandy Brook</span>
+                    <span class="text-xs font-medium tracking-widest uppercase text-slate-500 dark:text-slate-400">ProjectLab</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 md:gap-8">
+                <a href="https://sandybrookdevworks.com" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Sandy Brook DevWorks</a>
+                <a href="#currently-building" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Building</a>
+                <a href="#past-projects" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Shipped</a>
+                <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero -->
+        <section class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center">
+            <div class="mb-8 relative">
+                <div class="absolute -inset-4 rounded-full bg-brand/10 blur-xl dark:bg-brand/20"></div>
+                <img src="blue_logo.jpg" alt="Sandy Brook DevWorks" class="relative h-24 w-24 md:h-32 md:w-32 rounded-full border-4 border-white shadow-2xl dark:hidden">
+                <img src="dark_logo.jpg" alt="Sandy Brook DevWorks" class="relative hidden h-24 w-24 md:h-32 md:w-32 rounded-full border-4 border-slate-900 shadow-2xl dark:block">
+            </div>
+            <div class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm font-semibold text-brand shadow-sm dark:border-brand/40 dark:bg-brand/10 dark:text-brand mb-6 transition-all hover:border-brand/60">
+                <span class="relative flex h-2 w-2 mr-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
+                </span>
+                Sandy Brook ProjectLab
+            </div>
+            <h1 class="max-w-4xl text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl">
+                Ideas in Motion. Projects <span class="text-brand">in Progress.</span>
+            </h1>
+            <p class="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400 md:text-xl">
+                A showcase of what Sandy Brook DevWorks is actively building and has shipped — from concept to production.
+            </p>
+        </section>
+
+        <!-- Currently Building -->
+        <section id="currently-building" class="bg-slate-900 text-white py-24">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Currently Building</h2>
+                    <p class="mt-4 text-slate-400">What we're working on right now.</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <div class="group relative overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 p-8 md:p-12 transition-all hover:border-brand/50 hover:shadow-2xl hover:shadow-brand-shadow/20">
+                        <div class="space-y-6">
+                            <div class="flex flex-wrap items-center gap-3">
+                                <h3 class="text-2xl md:text-3xl font-bold">Relay</h3>
+                                <span class="inline-flex items-center rounded-full bg-brand/10 border border-brand/30 px-3 py-1 text-xs font-semibold text-brand">
+                                    <span class="relative flex h-1.5 w-1.5 mr-1.5">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand"></span>
+                                    </span>
+                                    In Development
+                                </span>
+                            </div>
+                            <p class="text-lg font-medium text-slate-300">AI Phone Assistant</p>
+                            <div class="w-24 md:w-48">
+                                <div class="flex items-center justify-center aspect-square rounded-2xl overflow-hidden bg-slate-700 border border-slate-600">
+                                    <img src="relay_logo.png" alt="Relay App Icon" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <p class="text-slate-400 leading-relaxed">
+                                An intelligent AI assistant that handles phone interactions — answering calls, understanding context, and managing conversations so you don't have to. Built for seamless, natural communication powered by advanced language models.
+                            </p>
+                            <div class="flex flex-wrap gap-3 pt-2">
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">AI</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Voice</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Telephony</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">NLP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Past Projects -->
+        <section id="past-projects" class="py-24 container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Past Projects</h2>
+                <p class="mt-4 text-slate-600 dark:text-slate-400">What we've shipped.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="space-y-6">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <h3 class="text-2xl md:text-3xl font-bold">CogniWatch</h3>
+                        <span class="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-3 py-1 text-xs font-semibold text-green-700 dark:bg-green-900/20 dark:border-green-800 dark:text-green-400">
+                            Shipped
+                        </span>
+                    </div>
+                    <p class="text-lg font-medium text-slate-700 dark:text-slate-300">AI Conversations on Your Wrist</p>
+                    <div class="w-24 md:w-48">
+                        <div class="flex items-center justify-center aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
+                            <img src="cogniwatch_logo.png" alt="CogniWatch App Icon" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                        An Apple Watch and iPhone app that brings conversational AI to your wrist — voice-first, multilingual, with natural AI voices and privacy-first design.
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">Apple Watch</span>
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">iOS</span>
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">AI</span>
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">Voice</span>
+                    </div>
+                    <a href="https://cogniwatch.sandybrook.io/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 font-bold text-brand hover:text-brand-dark dark:hover:text-white transition-colors">
+                        Visit Landing Page <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <a href="https://sandybrookdevworks.com" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 font-bold text-xl group transition-transform hover:scale-105" aria-label="Sandy Brook DevWorks Home">
+                    <img src="blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="h-8 w-8 rounded-full dark:hidden">
+                    <img src="dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="hidden h-8 w-8 rounded-full dark:block">
+                    <div>
+                        <span class="text-brand">Sandy Brook</span> DevWorks
+                    </div>
+                </a>
+                <div class="flex gap-8 text-sm text-slate-500">
+                    <a href="https://sandybrookdevworks.com#services" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Services</a>
+                    <a href="https://sandybrookdevworks.com#about" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">About</a>
+                    <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Contact</a>
+                </div>
+                <div class="text-sm text-slate-500">
+                    &copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

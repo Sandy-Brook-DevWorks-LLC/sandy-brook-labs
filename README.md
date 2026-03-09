@@ -1,2 +1,34 @@
-# sandybrooklabs
-Landing site for Sandy Brook DevWorks Lab Projects
+# Sandy Brook ProjectLab
+
+A showcase of what [Sandy Brook DevWorks](https://sandybrookdevworks.com) is actively building and has shipped — from concept to production.
+
+## Projects
+
+### Currently Building
+
+- **Relay** — AI Phone Assistant that handles phone interactions, answering calls, understanding context, and managing conversations. Powered by advanced language models.
+
+### Shipped
+
+- **CogniWatch** — An Apple Watch and iPhone app that brings conversational AI to your wrist. Voice-first, multilingual, with natural AI voices and privacy-first design. [Landing Page](https://cogniwatch.sandybrook.io/)
+
+## Tech Stack
+
+- Plain HTML + vanilla JS
+- [Tailwind CSS v4](https://tailwindcss.com/) via CDN
+- [Inter](https://fonts.google.com/specimen/Inter) typeface
+- No build step, no frameworks, no npm
+
+## Development
+
+Serve locally with any static file server:
+
+```bash
+python3 -m http.server 8080
+```
+
+Then open [http://localhost:8080](http://localhost:8080).
+
+## License
+
+See [LICENSE](LICENSE) for details.
