@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4: Advanced LINQ Transformations &amp; Set Operations — C# DS &amp; LINQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">
+      <span class="menu-btn__open">&#9776;</span>
+      <span class="menu-btn__close">&#10005;</span>
+    </button>
+    <a href="index.html" class="site-header__logo">C# <span>DS &amp; LINQ</span></a>
+    <nav>
+      <a href="lesson1.html">Lesson 1</a>
+      <a href="lesson2.html">Lesson 2</a>
+      <a href="lesson3.html">Lesson 3</a>
+      <a href="lesson4.html" class="active">Lesson 4</a>
+      <a href="lesson5.html">Lesson 5</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <span class="theme-toggle__icon"></span>
+      <span class="theme-toggle__label"></span>
+    </button>
+  </div>
+</header>
+
+<main class="page">
+  <h1>Lesson 4: Advanced LINQ Transformations &amp; Set Operations</h1>
+  <p class="subtitle">Learn to project, flatten, group, and aggregate complex data using LINQ's most powerful operators.</p>
+
+  <!-- ===== SECTION: Select ===== -->
+  <h2>Select — Projection (One-to-One)</h2>
+  <p><code>Select</code> transforms each element into exactly one new element. It's the LINQ equivalent of a <code>map</code> in functional programming. The shape of the output can be completely different from the input:</p>
+
+<pre><span class="pk">var</span> employees = <span class="fn">GetEmployees</span>();
+
+<span class="cm">// Project into anonymous type (common for DTOs)</span>
+<span class="pk">var</span> summaries = employees.<span class="fn">Select</span>(e =&gt; <span class="pk">new</span>
+{
+    FullName = <span class="str">$"{e.FirstName} {e.LastName}"</span>,
+    AnnualPay = e.MonthlySalary * <span class="num">12</span>,
+    IsManager = e.DirectReports.Count &gt; <span class="num">0</span>
+});
+
+<span class="cm">// Select with index overload — the lambda receives the index as well</span>
+<span class="pk">var</span> indexed = names.<span class="fn">Select</span>((name, i) =&gt; <span class="str">$"{i + 1}. {name}"</span>);
+<span class="cm">// "1. Alice", "2. Bob", "3. Charlie"</span></pre>
+
+  <div class="callout tip">
+    <strong>Overload with index</strong>
+    Many LINQ methods have a second overload that provides the element's index. <code>Select</code>, <code>Where</code>, <code>SkipWhile</code>, and <code>TakeWhile</code> all support this. It is extremely handy and often overlooked.
+  </div>
+
+  <!-- ===== SECTION: SelectMany ===== -->
+  <h2>SelectMany — Flattening (One-to-Many)</h2>
+  <p><code>SelectMany</code> is one of the most powerful — and most confusing — LINQ operators. Where <code>Select</code> produces one output per input, <code>SelectMany</code> produces zero, one, or many outputs per input, then flattens them all into a single sequence.</p>
+
+  <h3>The Problem SelectMany Solves</h3>
+<pre><span class="kw">public class</span> <span class="tp">Order</span>
+{
+    <span class="kw">public</span> <span class="tp">int</span> OrderId { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt; Items { <span class="kw">get</span>; <span class="kw">set</span>; }
+}
+
+<span class="tp">List</span>&lt;<span class="tp">Order</span>&gt; orders = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">Order</span>&gt;
+{
+    <span class="pk">new</span> <span class="tp">Order</span> { OrderId = <span class="num">1</span>, Items = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt; { <span class="str">"Laptop"</span>, <span class="str">"Mouse"</span> } },
+    <span class="pk">new</span> <span class="tp">Order</span> { OrderId = <span class="num">2</span>, Items = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt; { <span class="str">"Keyboard"</span> } },
+    <span class="pk">new</span> <span class="tp">Order</span> { OrderId = <span class="num">3</span>, Items = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt; { <span class="str">"Monitor"</span>, <span class="str">"Cable"</span>, <span class="str">"Stand"</span> } }
+};
+
+<span class="cm">// Select gives you a LIST OF LISTS:</span>
+<span class="pk">var</span> nested = orders.<span class="fn">Select</span>(o =&gt; o.Items);
+<span class="cm">// Type: IEnumerable&lt;List&lt;string&gt;&gt;</span>
+<span class="cm">// [["Laptop","Mouse"], ["Keyboard"], ["Monitor","Cable","Stand"]]</span>
+
+<span class="cm">// SelectMany FLATTENS into a single sequence:</span>
+<span class="pk">var</span> allItems = orders.<span class="fn">SelectMany</span>(o =&gt; o.Items);
+<span class="cm">// Type: IEnumerable&lt;string&gt;</span>
+<span class="cm">// ["Laptop","Mouse","Keyboard","Monitor","Cable","Stand"]</span></pre>
+
+  <h3>SelectMany with Result Selector</h3>
+  <p>There's a powerful overload that gives you access to both the parent element and each child element, allowing you to combine them:</p>
+
+<pre><span class="cm">// Get each item paired with its order ID</span>
+<span class="pk">var</span> itemDetails = orders.<span class="fn">SelectMany</span>(
+    order =&gt; order.Items,               <span class="cm">// collection selector</span>
+    (order, item) =&gt; <span class="pk">new</span>               <span class="cm">// result selector</span>
+    {
+        order.OrderId,
+        ItemName = item
+    }
+);
+<span class="cm">// [{OrderId=1, ItemName="Laptop"}, {OrderId=1, ItemName="Mouse"}, ...]</span></pre>
+
+  <h3>Visualizing Select vs. SelectMany</h3>
+<pre style="color:var(--accent-light);font-size:.82rem;line-height:1.8;overflow-x:auto;">
+  <span class="cm">Select(o =&gt; o.Items):</span>
+    Order 1 ──→  [ Laptop, Mouse ]
+    Order 2 ──→  [ Keyboard ]
+    Order 3 ──→  [ Monitor, Cable, Stand ]
+    <span class="tp">Result: IEnumerable&lt;List&lt;string&gt;&gt;</span>   (nested — each element is a list)
+
+  <span class="cm">SelectMany(o =&gt; o.Items):</span>
+    Order 1 ──→  Laptop, Mouse
+    Order 2 ──→  Keyboard
+    Order 3 ──→  Monitor, Cable, Stand
+    <span class="tp">Result: IEnumerable&lt;string&gt;</span>          (flat — all items in one sequence)
+</pre>
+
+  <!-- ===== SECTION: GroupBy ===== -->
+  <h2>GroupBy — Organizing Data by Key</h2>
+  <p><code>GroupBy</code> partitions a sequence into groups based on a key you define. Each group is an <code>IGrouping&lt;TKey, TElement&gt;</code>, which is itself an <code>IEnumerable&lt;TElement&gt;</code> with a <code>.Key</code> property.</p>
+
+<pre><span class="pk">var</span> employees = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">Employee</span>&gt;
+{
+    <span class="pk">new</span>(<span class="str">"Alice"</span>,   <span class="str">"Engineering"</span>, <span class="num">95000</span>),
+    <span class="pk">new</span>(<span class="str">"Bob"</span>,     <span class="str">"Marketing"</span>,   <span class="num">72000</span>),
+    <span class="pk">new</span>(<span class="str">"Charlie"</span>, <span class="str">"Engineering"</span>, <span class="num">88000</span>),
+    <span class="pk">new</span>(<span class="str">"Diana"</span>,   <span class="str">"Marketing"</span>,   <span class="num">68000</span>),
+    <span class="pk">new</span>(<span class="str">"Eve"</span>,     <span class="str">"Engineering"</span>, <span class="num">110000</span>)
+};
+
+<span class="cm">// Basic GroupBy</span>
+<span class="pk">var</span> byDept = employees.<span class="fn">GroupBy</span>(e =&gt; e.Department);
+
+<span class="kw">foreach</span> (<span class="pk">var</span> group <span class="kw">in</span> byDept)
+{
+    Console.<span class="fn">WriteLine</span>(<span class="str">$"--- {group.Key} ---"</span>);
+    <span class="kw">foreach</span> (<span class="pk">var</span> emp <span class="kw">in</span> group)
+    {
+        Console.<span class="fn">WriteLine</span>(<span class="str">$"  {emp.Name}: ${emp.Salary:N0}"</span>);
+    }
+}</pre>
+
+  <h3>GroupBy with Element and Result Selectors</h3>
+<pre><span class="cm">// Element selector: choose what goes INTO each group</span>
+<span class="pk">var</span> namesByDept = employees.<span class="fn">GroupBy</span>(
+    e =&gt; e.Department,   <span class="cm">// Key selector</span>
+    e =&gt; e.Name          <span class="cm">// Element selector — group contains only names</span>
+);
+
+<span class="cm">// Result selector: transform each group into a final shape</span>
+<span class="pk">var</span> deptStats = employees.<span class="fn">GroupBy</span>(
+    e =&gt; e.Department,
+    (dept, emps) =&gt; <span class="pk">new</span>  <span class="cm">// Result selector</span>
+    {
+        Department = dept,
+        Count = emps.<span class="fn">Count</span>(),
+        AvgSalary = emps.<span class="fn">Average</span>(e =&gt; e.Salary),
+        TopEarner = emps.<span class="fn">OrderByDescending</span>(e =&gt; e.Salary).<span class="fn">First</span>().Name
+    }
+);</pre>
+
+  <div class="callout">
+    <strong>GroupBy vs. ToDictionary vs. ToLookup</strong>
+    <code>GroupBy</code> is deferred — it doesn't execute until iterated. <code>ToLookup</code> is the immediate-execution equivalent that creates an <code>ILookup&lt;TKey, TElement&gt;</code> (like a read-only dictionary of lists). <code>ToDictionary</code> creates a <code>Dictionary</code> and throws on duplicate keys, whereas <code>ToLookup</code> naturally handles multiple values per key.
+  </div>
+
+  <!-- ===== SECTION: Aggregate ===== -->
+  <h2>Aggregate — Custom Folding</h2>
+  <p><code>Aggregate</code> reduces a sequence to a single value using a custom accumulator function. It's the most flexible aggregation method — <code>Sum</code>, <code>Count</code>, <code>Min</code>, and <code>Max</code> are all specialized forms of <code>Aggregate</code>.</p>
+
+  <h3>The Three Overloads</h3>
+
+<pre><span class="pk">var</span> words = <span class="pk">new</span>[] { <span class="str">"LINQ"</span>, <span class="str">"is"</span>, <span class="str">"incredibly"</span>, <span class="str">"powerful"</span> };
+
+<span class="cm">// Overload 1: Accumulator only (first element is initial seed)</span>
+<span class="tp">string</span> sentence = words.<span class="fn">Aggregate</span>((acc, w) =&gt; acc + <span class="str">", "</span> + w);
+<span class="cm">// "LINQ, is, incredibly, powerful"</span>
+
+<span class="cm">// Overload 2: Seed + Accumulator</span>
+<span class="tp">int</span> totalLength = words.<span class="fn">Aggregate</span>(
+    <span class="num">0</span>,                         <span class="cm">// seed</span>
+    (acc, w) =&gt; acc + w.Length  <span class="cm">// accumulator</span>
+);
+<span class="cm">// 0 + 4 + 2 + 10 + 8 = 24</span>
+
+<span class="cm">// Overload 3: Seed + Accumulator + Result Selector</span>
+<span class="tp">string</span> result = words.<span class="fn">Aggregate</span>(
+    <span class="pk">new</span> <span class="tp">StringBuilder</span>(),                    <span class="cm">// seed</span>
+    (sb, w) =&gt; sb.<span class="fn">Append</span>(w).<span class="fn">Append</span>(<span class="str">' '</span>),   <span class="cm">// accumulator</span>
+    sb =&gt; sb.<span class="fn">ToString</span>().<span class="fn">Trim</span>()              <span class="cm">// result selector</span>
+);
+<span class="cm">// "LINQ is incredibly powerful"</span></pre>
+
+  <div class="callout warn">
+    <strong>Performance trap</strong>
+    The first overload using string concatenation (<code>acc + ", " + w</code>) creates a new string object on every iteration — this is O(n²) for strings. For joining strings, <strong>always prefer <code>string.Join(", ", words)</code></strong> — it is the idiomatic solution, pre-calculates the total length, and allocates only once. Use <code>StringBuilder</code> via overload 3 when your aggregation logic is more complex than simple concatenation. Reserve <code>Aggregate</code> for non-string reductions (numeric computations, building custom objects, etc.).
+  </div>
+
+  <!-- ===== SECTION: Set Operations ===== -->
+  <h2>Set Operations: Union, Concat, Intersect, Except</h2>
+  <p>LINQ provides mathematical set operations as extension methods. Understanding the difference between <code>Union</code> and <code>Concat</code> is a common interview question:</p>
+
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Method</th><th>Duplicates?</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>Concat</code></td><td>Keeps all</td><td>Appends second sequence to first. Like SQL <code>UNION ALL</code>.</td></tr>
+      <tr><td><code>Union</code></td><td>Removes</td><td>Combines and deduplicates. Like SQL <code>UNION</code>.</td></tr>
+      <tr><td><code>Intersect</code></td><td>Removes</td><td>Elements present in both sequences.</td></tr>
+      <tr><td><code>Except</code></td><td>Removes</td><td>Elements in the first but not the second.</td></tr>
+    </tbody>
+  </table></div>
+
+<pre><span class="tp">int</span>[] a = { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span> };
+<span class="tp">int</span>[] b = { <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span> };
+
+<span class="pk">var</span> concat    = a.<span class="fn">Concat</span>(b);    <span class="cm">// [1, 2, 3, 4, 3, 4, 5, 6]</span>
+<span class="pk">var</span> union     = a.<span class="fn">Union</span>(b);     <span class="cm">// [1, 2, 3, 4, 5, 6]</span>
+<span class="pk">var</span> intersect = a.<span class="fn">Intersect</span>(b); <span class="cm">// [3, 4]</span>
+<span class="pk">var</span> except    = a.<span class="fn">Except</span>(b);    <span class="cm">// [1, 2]</span>
+
+<span class="cm">// .NET 6+ "By" variants — use a key selector for comparisons</span>
+<span class="pk">var</span> uniqueByName = employees.<span class="fn">UnionBy</span>(contractors, e =&gt; e.Email);
+<span class="pk">var</span> onlyInFirst  = employees.<span class="fn">ExceptBy</span>(
+    contractors.<span class="fn">Select</span>(c =&gt; c.Email), e =&gt; e.Email
+);</pre>
+
+  <!-- ===== SECTION: Join ===== -->
+  <h2>Bonus: Join and GroupJoin</h2>
+  <p>LINQ can join two sequences, similar to SQL JOINs. <code>Join</code> performs an inner join; <code>GroupJoin</code> performs a left outer join (where each left element gets a collection of matching right elements).</p>
+
+<pre><span class="pk">var</span> departments = <span class="pk">new</span>[]
+{
+    <span class="pk">new</span> { Id = <span class="num">1</span>, Name = <span class="str">"Engineering"</span> },
+    <span class="pk">new</span> { Id = <span class="num">2</span>, Name = <span class="str">"Marketing"</span> }
+};
+
+<span class="pk">var</span> employees = <span class="pk">new</span>[]
+{
+    <span class="pk">new</span> { Name = <span class="str">"Alice"</span>, DeptId = <span class="num">1</span> },
+    <span class="pk">new</span> { Name = <span class="str">"Bob"</span>, DeptId = <span class="num">2</span> },
+    <span class="pk">new</span> { Name = <span class="str">"Charlie"</span>, DeptId = <span class="num">1</span> }
+};
+
+<span class="cm">// Inner Join: employees with their department names</span>
+<span class="pk">var</span> joined = departments.<span class="fn">Join</span>(
+    employees,             <span class="cm">// inner sequence</span>
+    d =&gt; d.Id,             <span class="cm">// outer key selector</span>
+    e =&gt; e.DeptId,         <span class="cm">// inner key selector</span>
+    (d, e) =&gt; <span class="pk">new</span>          <span class="cm">// result selector</span>
+    {
+        Employee = e.Name,
+        Department = d.Name
+    }
+);
+<span class="cm">// Query syntax is often cleaner for joins:</span>
+<span class="pk">var</span> joined2 = <span class="kw">from</span> d <span class="kw">in</span> departments
+              <span class="kw">join</span> e <span class="kw">in</span> employees <span class="kw">on</span> d.Id <span class="kw">equals</span> e.DeptId
+              <span class="kw">select</span> <span class="pk">new</span> { e.Name, Dept = d.Name };</pre>
+
+  <!-- ===== SECTION: Chaining It All Together ===== -->
+  <h2>Chaining It All Together</h2>
+  <p>The real power of LINQ comes from chaining multiple operators into a readable pipeline. Here's a realistic example that combines most of the operators from this lesson:</p>
+
+<pre><span class="cm">// Real-world pipeline: Build a department salary report</span>
+<span class="pk">var</span> report = company.Departments
+    .<span class="fn">SelectMany</span>(d =&gt; d.Employees, (dept, emp) =&gt; <span class="pk">new</span>
+    {
+        dept.DepartmentName,
+        emp.Name,
+        emp.Salary,
+        emp.JobTitle
+    })
+    .<span class="fn">Where</span>(x =&gt; x.Salary &gt; <span class="num">50000</span>)
+    .<span class="fn">GroupBy</span>(x =&gt; x.DepartmentName)
+    .<span class="fn">Select</span>(g =&gt; <span class="pk">new</span>
+    {
+        Department = g.Key,
+        HeadCount = g.<span class="fn">Count</span>(),
+        AverageSalary = g.<span class="fn">Average</span>(x =&gt; x.Salary),
+        TotalPayroll = g.<span class="fn">Sum</span>(x =&gt; x.Salary),
+        TopEarner = g.<span class="fn">OrderByDescending</span>(x =&gt; x.Salary).<span class="fn">First</span>().Name
+    })
+    .<span class="fn">OrderByDescending</span>(x =&gt; x.TotalPayroll);</pre>
+
+  <!-- ===== CHALLENGE ===== -->
+  <div class="challenge">
+    <h3>Coding Challenge</h3>
+    <p>Create a class <code>Department</code> containing a <code>Name</code> property and a <code>List&lt;Employee&gt;</code>. The <code>Employee</code> class should have <code>Name</code>, <code>JobTitle</code>, and <code>Salary</code> properties. Create a list of several departments with employees. Then:</p>
+    <ol>
+      <li>Use <code>SelectMany</code> to get a flat list of all employees across all departments.</li>
+      <li>Use <code>Where</code> to filter those earning over $50,000.</li>
+      <li>Use <code>GroupBy</code> to group these high-earners back by their <code>JobTitle</code>.</li>
+    </ol>
+  </div>
+
+  <details>
+    <summary>View Solution</summary>
+    <div class="solution-body">
+<pre><span class="kw">public class</span> <span class="tp">Employee</span>
+{
+    <span class="kw">public</span> <span class="tp">string</span> Name { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">string</span> JobTitle { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">decimal</span> Salary { <span class="kw">get</span>; <span class="kw">set</span>; }
+}
+
+<span class="kw">public class</span> <span class="tp">Department</span>
+{
+    <span class="kw">public</span> <span class="tp">string</span> Name { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">Employee</span>&gt; Employees { <span class="kw">get</span>; <span class="kw">set</span>; } = <span class="pk">new</span>();
+}
+
+<span class="cm">// Setup test data</span>
+<span class="pk">var</span> departments = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">Department</span>&gt;
+{
+    <span class="pk">new</span> <span class="tp">Department</span>
+    {
+        Name = <span class="str">"Engineering"</span>,
+        Employees = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">Employee</span>&gt;
+        {
+            <span class="pk">new</span> <span class="tp">Employee</span> { Name = <span class="str">"Alice"</span>,   JobTitle = <span class="str">"Senior Dev"</span>,   Salary = <span class="num">95000m</span> },
+            <span class="pk">new</span> <span class="tp">Employee</span> { Name = <span class="str">"Charlie"</span>, JobTitle = <span class="str">"Junior Dev"</span>,   Salary = <span class="num">45000m</span> },
+            <span class="pk">new</span> <span class="tp">Employee</span> { Name = <span class="str">"Eve"</span>,     JobTitle = <span class="str">"Senior Dev"</span>,   Salary = <span class="num">110000m</span> }
+        }
+    },
+    <span class="pk">new</span> <span class="tp">Department</span>
+    {
+        Name = <span class="str">"Marketing"</span>,
+        Employees = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">Employee</span>&gt;
+        {
+            <span class="pk">new</span> <span class="tp">Employee</span> { Name = <span class="str">"Bob"</span>,   JobTitle = <span class="str">"Manager"</span>,      Salary = <span class="num">72000m</span> },
+            <span class="pk">new</span> <span class="tp">Employee</span> { Name = <span class="str">"Diana"</span>, JobTitle = <span class="str">"Junior Dev"</span>,   Salary = <span class="num">48000m</span> },
+            <span class="pk">new</span> <span class="tp">Employee</span> { Name = <span class="str">"Frank"</span>, JobTitle = <span class="str">"Manager"</span>,      Salary = <span class="num">85000m</span> }
+        }
+    }
+};
+
+<span class="cm">// The LINQ pipeline</span>
+<span class="pk">var</span> highEarnersByTitle = departments
+    .<span class="fn">SelectMany</span>(d =&gt; d.Employees)          <span class="cm">// Step 1: Flatten</span>
+    .<span class="fn">Where</span>(e =&gt; e.Salary &gt; <span class="num">50000m</span>)          <span class="cm">// Step 2: Filter</span>
+    .<span class="fn">GroupBy</span>(e =&gt; e.JobTitle);              <span class="cm">// Step 3: Group</span>
+
+<span class="cm">// Print results</span>
+<span class="kw">foreach</span> (<span class="pk">var</span> group <span class="kw">in</span> highEarnersByTitle)
+{
+    Console.<span class="fn">WriteLine</span>(<span class="str">$"\n--- {group.Key} ---"</span>);
+    <span class="kw">foreach</span> (<span class="pk">var</span> emp <span class="kw">in</span> group)
+    {
+        Console.<span class="fn">WriteLine</span>(<span class="str">$"  {emp.Name}: ${emp.Salary:N0}"</span>);
+    }
+}
+
+<span class="cm">// Output:</span>
+<span class="cm">// --- Senior Dev ---</span>
+<span class="cm">//   Alice: $95,000</span>
+<span class="cm">//   Eve: $110,000</span>
+<span class="cm">// --- Manager ---</span>
+<span class="cm">//   Bob: $72,000</span>
+<span class="cm">//   Frank: $85,000</span></pre>
+    </div>
+  </details>
+
+  <!-- NAV -->
+  <div class="page-nav">
+    <a href="lesson3.html">
+      <span class="label">Previous</span>
+      <span class="title">← Intro to LINQ &amp; Execution Models</span>
+    </a>
+    <a href="lesson5.html" class="next">
+      <span class="label">Next Lesson</span>
+      <span class="title">High-Performance C# &amp; Real-World →</span>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>C# Data Structures &amp; LINQ — Study Guide</p>
+</footer>
+
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var icon = toggle.querySelector('.theme-toggle__icon');
+  var label = toggle.querySelector('.theme-toggle__label');
+
+  function getPreferred() {
+    var saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'light') {
+      icon.textContent = '\u263E';
+      label.textContent = 'Dark';
+    } else {
+      icon.textContent = '\u2600';
+      label.textContent = 'Light';
+    }
+  }
+
+  apply(getPreferred());
+
+
+  // Hamburger menu
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.querySelector('nav');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function() {
+      var expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+    });
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    apply(current === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3: Introduction to LINQ &amp; Execution Models — C# DS &amp; LINQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">
+      <span class="menu-btn__open">&#9776;</span>
+      <span class="menu-btn__close">&#10005;</span>
+    </button>
+    <a href="index.html" class="site-header__logo">C# <span>DS &amp; LINQ</span></a>
+    <nav>
+      <a href="lesson1.html">Lesson 1</a>
+      <a href="lesson2.html">Lesson 2</a>
+      <a href="lesson3.html" class="active">Lesson 3</a>
+      <a href="lesson4.html">Lesson 4</a>
+      <a href="lesson5.html">Lesson 5</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <span class="theme-toggle__icon"></span>
+      <span class="theme-toggle__label"></span>
+    </button>
+  </div>
+</header>
+
+<main class="page">
+  <h1>Lesson 3: Introduction to LINQ &amp; Execution Models</h1>
+  <p class="subtitle">Connect your knowledge of <code>IEnumerable</code> to LINQ and master the execution lifecycle that interviewers love to test.</p>
+
+  <!-- ===== SECTION: What Is LINQ? ===== -->
+  <h2>What Is LINQ?</h2>
+  <p>LINQ (Language-Integrated Query) is a set of features in C# that adds query capabilities directly into the language. Rather than writing loops, conditionals, and temporary variables to filter and transform data, LINQ lets you express these operations declaratively. Under the hood, LINQ is powered by extension methods on <code>IEnumerable&lt;T&gt;</code> (defined in the <code>System.Linq</code> namespace) and lambda expressions.</p>
+
+  <p>The key insight: because LINQ operates on <code>IEnumerable&lt;T&gt;</code>, it works with anything that implements that interface — lists, arrays, dictionaries, hash sets, database query results, XML documents, and even your own custom collections.</p>
+
+  <!-- ===== SECTION: The Three Parts ===== -->
+  <h2>The 3 Parts of Every LINQ Operation</h2>
+  <p>Every LINQ operation has three distinct phases. Understanding this separation is critical for reasoning about when code executes:</p>
+
+  <h3>1. Obtain the Data Source</h3>
+  <p>Any object that implements <code>IEnumerable&lt;T&gt;</code> (or <code>IQueryable&lt;T&gt;</code> for remote sources) can serve as a data source. No special preparation is needed:</p>
+
+<pre><span class="cm">// Arrays, lists, sets — anything IEnumerable&lt;T&gt;</span>
+<span class="tp">int</span>[] numbers = { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>, <span class="num">7</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span> };
+<span class="tp">List</span>&lt;<span class="tp">string</span>&gt; names = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt; { <span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Charlie"</span> };
+<span class="tp">HashSet</span>&lt;<span class="tp">int</span>&gt; primes = <span class="pk">new</span> <span class="tp">HashSet</span>&lt;<span class="tp">int</span>&gt; { <span class="num">2</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">11</span> };</pre>
+
+  <h3>2. Create the Query</h3>
+  <p>This is where you define <em>what</em> you want — filtering, transforming, ordering, grouping. You can use either query syntax (SQL-like) or method syntax (fluent chaining). Both compile to the same code:</p>
+
+<pre><span class="cm">// Method syntax (more common in real-world code)</span>
+<span class="pk">var</span> evens = numbers.<span class="fn">Where</span>(n =&gt; n % <span class="num">2</span> == <span class="num">0</span>)
+                   .<span class="fn">Select</span>(n =&gt; n * n);
+
+<span class="cm">// Query syntax (more readable for complex joins)</span>
+<span class="pk">var</span> evens2 = <span class="kw">from</span> n <span class="kw">in</span> numbers
+             <span class="kw">where</span> n % <span class="num">2</span> == <span class="num">0</span>
+             <span class="kw">select</span> n * n;
+
+<span class="cm">// IMPORTANT: At this point, NOTHING has executed yet!</span></pre>
+
+  <h3>3. Execute the Query</h3>
+  <p>Execution happens when you actually consume the results — by iterating with <code>foreach</code>, calling <code>ToList()</code>, or using an aggregate like <code>Count()</code>:</p>
+
+<pre><span class="cm">// Execution happens HERE, when we iterate</span>
+<span class="kw">foreach</span> (<span class="pk">var</span> e <span class="kw">in</span> evens)
+{
+    Console.<span class="fn">WriteLine</span>(e);
+}
+
+<span class="cm">// Or force execution with a materializing method</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; evenList = evens.<span class="fn">ToList</span>();</pre>
+
+  <!-- ===== SECTION: Deferred vs Immediate ===== -->
+  <h2>Deferred vs. Immediate Execution</h2>
+  <p>This is the single most important concept in LINQ, and the source of many subtle bugs.</p>
+
+  <h3>Deferred Execution</h3>
+  <p>Most LINQ operators (<code>Where</code>, <code>Select</code>, <code>OrderBy</code>, <code>Skip</code>, <code>Take</code>, <code>GroupBy</code>, <code>SelectMany</code>, etc.) use <strong>deferred execution</strong>. They do not process any elements when called. Instead, they build up a pipeline — a chain of iterators — that only executes when you enumerate the result.</p>
+
+  <p>This has a profound consequence: if the underlying data changes between query creation and query execution, the query reflects the <em>latest</em> data:</p>
+
+<pre><span class="tp">List</span>&lt;<span class="tp">int</span>&gt; numbers = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">int</span>&gt; { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span> };
+
+<span class="cm">// Define the query (NOT executed yet)</span>
+<span class="pk">var</span> evens = numbers.<span class="fn">Where</span>(n =&gt; n % <span class="num">2</span> == <span class="num">0</span>);
+
+<span class="cm">// Modify the source AFTER defining the query</span>
+numbers.<span class="fn">Add</span>(<span class="num">4</span>);
+numbers.<span class="fn">Add</span>(<span class="num">6</span>);
+
+<span class="cm">// Execute NOW — sees the latest state of 'numbers'</span>
+<span class="kw">foreach</span> (<span class="pk">var</span> e <span class="kw">in</span> evens)
+{
+    Console.<span class="fn">WriteLine</span>(e); <span class="cm">// Prints: 2, 4, 6</span>
+}
+
+<span class="cm">// If we iterate AGAIN, it re-executes the entire pipeline</span>
+<span class="cm">// from scratch on the current state of 'numbers'</span></pre>
+
+  <div class="callout danger">
+    <strong>The re-execution trap</strong>
+    Every time you iterate a deferred query, the entire pipeline runs again from the source. If the pipeline includes expensive computations (database calls, file I/O, network requests), this can cause serious performance issues. If you need the results more than once, materialize with <code>.ToList()</code> or <code>.ToArray()</code>.
+  </div>
+
+  <h3>Immediate Execution</h3>
+  <p>These operators force the query to execute right away and return a concrete result:</p>
+
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Category</th><th>Methods</th><th>Returns</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Materializing</td><td><code>ToList()</code>, <code>ToArray()</code>, <code>ToDictionary()</code>, <code>ToHashSet()</code></td><td>A new collection (snapshot)</td></tr>
+      <tr><td>Single-value</td><td><code>First()</code>, <code>Last()</code>, <code>Single()</code>, <code>ElementAt()</code></td><td>One element</td></tr>
+      <tr><td>Aggregates</td><td><code>Count()</code>, <code>Sum()</code>, <code>Min()</code>, <code>Max()</code>, <code>Average()</code></td><td>A scalar value</td></tr>
+      <tr><td>Boolean</td><td><code>Any()</code>, <code>All()</code>, <code>Contains()</code></td><td><code>bool</code></td></tr>
+    </tbody>
+  </table></div>
+
+<pre><span class="cm">// Snapshot: captures the current state. Future changes won't affect it.</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; snapshot = numbers.<span class="fn">Where</span>(n =&gt; n &gt; <span class="num">2</span>).<span class="fn">ToList</span>();
+numbers.<span class="fn">Add</span>(<span class="num">100</span>);
+<span class="cm">// 'snapshot' does NOT contain 100</span></pre>
+
+  <h3>Visualizing the Pipeline</h3>
+  <p>Think of a deferred query as an assembly line that only starts when someone is at the end ready to receive items:</p>
+
+<pre style="text-align:center;color:var(--accent-light);font-size:.82rem;line-height:2;">
+  Source         Where()          Select()         foreach/ToList()
+┌─────────┐   ┌───────────┐   ┌────────────┐   ┌──────────────────┐
+│ 1,2,3,4 │──→│ n % 2 == 0│──→│ n * n      │──→│ Pulls one at a   │
+│ 5,6,7,8 │   │ pass/skip │   │ transforms │   │ time, on demand  │
+└─────────┘   └───────────┘   └────────────┘   └──────────────────┘
+                                                  ↑ Execution starts HERE
+</pre>
+
+  <!-- ===== SECTION: IEnumerable vs IQueryable ===== -->
+  <h2>IEnumerable&lt;T&gt; vs. IQueryable&lt;T&gt;</h2>
+
+  <div class="callout">
+    <strong>Top interview question</strong>
+    This is one of the most frequently asked LINQ questions. The distinction has real performance implications in any application that talks to a database.
+  </div>
+
+  <h3>IEnumerable&lt;T&gt; — In-Memory Execution</h3>
+  <p>When you chain LINQ operations on an <code>IEnumerable&lt;T&gt;</code>, the runtime uses <strong>delegates</strong> (compiled C# lambdas) to filter and transform data in memory. Each element is passed through the pipeline on the calling machine's RAM.</p>
+
+<pre><span class="cm">// All 1,000,000 rows are loaded into memory first,</span>
+<span class="cm">// then filtered in C# on the application server</span>
+<span class="tp">IEnumerable</span>&lt;<span class="tp">Customer</span>&gt; allCustomers = dbContext.Customers;
+<span class="pk">var</span> active = allCustomers.<span class="fn">Where</span>(c =&gt; c.IsActive).<span class="fn">ToList</span>();</pre>
+
+  <h3>IQueryable&lt;T&gt; — Server-Side Execution</h3>
+  <p><code>IQueryable&lt;T&gt;</code> extends <code>IEnumerable&lt;T&gt;</code> but instead of delegates, it uses <strong>expression trees</strong>. An expression tree is a data structure representing your lambda as raw data (nodes, operators, property references) that can be translated into another language — typically SQL.</p>
+
+<pre><span class="cm">// The Where clause is translated to SQL:</span>
+<span class="cm">// SELECT * FROM Customers WHERE IsActive = 1</span>
+<span class="cm">// Only matching rows are transferred over the network</span>
+<span class="tp">IQueryable</span>&lt;<span class="tp">Customer</span>&gt; query = dbContext.Customers;
+<span class="pk">var</span> active = query.<span class="fn">Where</span>(c =&gt; c.IsActive).<span class="fn">ToList</span>();</pre>
+
+  <h3>The Danger of Premature Materialization</h3>
+  <p>If you accidentally convert an <code>IQueryable</code> to an <code>IEnumerable</code> too early in the chain, all subsequent operations run in memory instead of on the server:</p>
+
+<pre><span class="cm">// BAD: AsEnumerable() switches from Queryable to Enumerable LINQ provider.</span>
+<span class="cm">// The .Where() that follows now uses in-memory delegates, not expression trees.</span>
+<span class="cm">// When .ToList() triggers execution, ALL rows are fetched first, THEN filtered in C#.</span>
+<span class="pk">var</span> result = dbContext.Customers
+    .<span class="fn">AsEnumerable</span>()       <span class="cm">// ← Switches LINQ provider (rows load at iteration time)</span>
+    .<span class="fn">Where</span>(c =&gt; c.IsActive) <span class="cm">// ← Delegate, not expression tree — runs in C#</span>
+    .<span class="fn">ToList</span>();              <span class="cm">// ← NOW all rows are fetched and filtered in memory</span>
+
+<span class="cm">// GOOD: Keep it as IQueryable so the database does the work</span>
+<span class="pk">var</span> result = dbContext.Customers
+    .<span class="fn">Where</span>(c =&gt; c.IsActive) <span class="cm">// ← Expression tree — translated to SQL WHERE clause</span>
+    .<span class="fn">ToList</span>();              <span class="cm">// ← Only matching rows are fetched from DB</span></pre>
+
+  <h3>Side-by-Side Comparison</h3>
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Feature</th><th><code>IEnumerable&lt;T&gt;</code></th><th><code>IQueryable&lt;T&gt;</code></th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Namespace</td><td><code>System.Collections.Generic</code></td><td><code>System.Linq</code></td></tr>
+      <tr><td>Execution location</td><td>In memory (application)</td><td>Remote (database server)</td></tr>
+      <tr><td>Lambda representation</td><td>Delegates (compiled code)</td><td>Expression trees (data)</td></tr>
+      <tr><td>When to use</td><td>In-memory collections</td><td>ORMs like Entity Framework</td></tr>
+      <tr><td>Can translate to SQL?</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Supports deferred execution?</td><td>Yes</td><td>Yes</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ===== SECTION: Query Syntax vs Method Syntax ===== -->
+  <h2>Query Syntax vs. Method Syntax</h2>
+  <p>C# supports two ways to write LINQ. They compile to identical IL code. The choice is purely about readability:</p>
+
+<pre><span class="tp">List</span>&lt;<span class="tp">Student</span>&gt; students = <span class="fn">GetStudents</span>();
+
+<span class="cm">// Query syntax — reads like SQL, great for joins and grouping</span>
+<span class="pk">var</span> honors = <span class="kw">from</span> s <span class="kw">in</span> students
+             <span class="kw">where</span> s.GPA &gt;= <span class="num">3.5</span>
+             <span class="kw">orderby</span> s.LastName
+             <span class="kw">select</span> <span class="pk">new</span> { s.FirstName, s.LastName, s.GPA };
+
+<span class="cm">// Method syntax — more common, supports all operators</span>
+<span class="pk">var</span> honors2 = students
+    .<span class="fn">Where</span>(s =&gt; s.GPA &gt;= <span class="num">3.5</span>)
+    .<span class="fn">OrderBy</span>(s =&gt; s.LastName)
+    .<span class="fn">Select</span>(s =&gt; <span class="pk">new</span> { s.FirstName, s.LastName, s.GPA });</pre>
+
+  <div class="callout tip">
+    <strong>When to prefer query syntax</strong>
+    Use query syntax when you have <code>join</code> operations or <code>let</code> clauses (intermediate variables). The method syntax equivalent of a join is much harder to read. For everything else, method syntax is generally preferred in industry.
+  </div>
+
+  <!-- ===== SECTION: Common LINQ Methods Reference ===== -->
+  <h2>Essential LINQ Methods Reference</h2>
+
+  <h3>Filtering</h3>
+<pre><span class="cm">// Where — keep elements matching a condition</span>
+<span class="pk">var</span> adults = people.<span class="fn">Where</span>(p =&gt; p.Age &gt;= <span class="num">18</span>);
+
+<span class="cm">// OfType — filter by runtime type</span>
+<span class="pk">var</span> strings = mixedList.<span class="fn">OfType</span>&lt;<span class="tp">string</span>&gt;();
+
+<span class="cm">// Distinct — remove duplicates</span>
+<span class="pk">var</span> unique = numbers.<span class="fn">Distinct</span>();</pre>
+
+  <h3>Ordering</h3>
+<pre><span class="cm">// OrderBy / ThenBy for multi-level sorting</span>
+<span class="pk">var</span> sorted = employees
+    .<span class="fn">OrderBy</span>(e =&gt; e.Department)
+    .<span class="fn">ThenByDescending</span>(e =&gt; e.Salary);</pre>
+
+  <h3>Quantifiers</h3>
+<pre><span class="cm">// Any — at least one element matches?</span>
+<span class="tp">bool</span> hasAdmin = users.<span class="fn">Any</span>(u =&gt; u.Role == <span class="str">"Admin"</span>);
+
+<span class="cm">// All — every element matches?</span>
+<span class="tp">bool</span> allActive = users.<span class="fn">All</span>(u =&gt; u.IsActive);
+
+<span class="cm">// Contains — is a specific value in the collection?</span>
+<span class="tp">bool</span> hasFive = numbers.<span class="fn">Contains</span>(<span class="num">5</span>);</pre>
+
+  <h3>Element Operators (with safe variants)</h3>
+<pre><span class="cm">// First / FirstOrDefault — get the first element</span>
+<span class="pk">var</span> first = list.<span class="fn">First</span>();              <span class="cm">// Throws if empty</span>
+<span class="pk">var</span> firstSafe = list.<span class="fn">FirstOrDefault</span>(); <span class="cm">// Returns default(T) if empty</span>
+
+<span class="cm">// Single / SingleOrDefault — exactly one element expected</span>
+<span class="pk">var</span> one = list.<span class="fn">Single</span>(x =&gt; x.Id == <span class="num">42</span>);  <span class="cm">// Throws if 0 or 2+ matches</span>
+
+<span class="cm">// ElementAt / ElementAtOrDefault</span>
+<span class="pk">var</span> third = list.<span class="fn">ElementAt</span>(<span class="num">2</span>);</pre>
+
+  <div class="callout warn">
+    <strong>First() vs. Single()</strong>
+    Use <code>First()</code> when you want one result but there might be many. Use <code>Single()</code> when your business logic demands exactly one result — it validates this assumption by throwing if zero or multiple matches exist. In database queries, <code>Single()</code> adds a guard rail against bad data.
+  </div>
+
+  <!-- ===== CHALLENGE ===== -->
+  <div class="challenge">
+    <h3>Coding Challenge</h3>
+    <p>Write a LINQ query that extracts all words starting with "A" from a <code>List&lt;string&gt;</code>. Then, add a new word starting with "A" to the list <strong>after</strong> the query is defined. Print the results. Afterwards, fix the code using <code>.ToList()</code> so the new word is <strong>not</strong> included.</p>
+  </div>
+
+  <details>
+    <summary>View Solution</summary>
+    <div class="solution-body">
+<pre><span class="cm">// Part 1: Demonstrate deferred execution</span>
+<span class="tp">List</span>&lt;<span class="tp">string</span>&gt; words = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt;
+    { <span class="str">"Apple"</span>, <span class="str">"Banana"</span>, <span class="str">"Avocado"</span>, <span class="str">"Cherry"</span>, <span class="str">"Apricot"</span> };
+
+<span class="cm">// Define the query — NOT executed yet</span>
+<span class="pk">var</span> aWords = words.<span class="fn">Where</span>(w =&gt; w.<span class="fn">StartsWith</span>(<span class="str">"A"</span>));
+
+<span class="cm">// Add a new "A" word AFTER query definition</span>
+words.<span class="fn">Add</span>(<span class="str">"Artichoke"</span>);
+
+Console.<span class="fn">WriteLine</span>(<span class="str">"=== Deferred execution (includes Artichoke) ==="</span>);
+<span class="kw">foreach</span> (<span class="pk">var</span> w <span class="kw">in</span> aWords)
+{
+    Console.<span class="fn">WriteLine</span>(w);
+}
+<span class="cm">// Output: Apple, Avocado, Apricot, Artichoke</span>
+
+<span class="cm">// Part 2: Fix with immediate execution</span>
+<span class="tp">List</span>&lt;<span class="tp">string</span>&gt; words2 = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt;
+    { <span class="str">"Apple"</span>, <span class="str">"Banana"</span>, <span class="str">"Avocado"</span>, <span class="str">"Cherry"</span>, <span class="str">"Apricot"</span> };
+
+<span class="cm">// ToList() forces immediate execution — takes a snapshot</span>
+<span class="pk">var</span> aWordsFixed = words2.<span class="fn">Where</span>(w =&gt; w.<span class="fn">StartsWith</span>(<span class="str">"A"</span>)).<span class="fn">ToList</span>();
+
+words2.<span class="fn">Add</span>(<span class="str">"Artichoke"</span>);
+
+Console.<span class="fn">WriteLine</span>(<span class="str">"=== Immediate execution (NO Artichoke) ==="</span>);
+<span class="kw">foreach</span> (<span class="pk">var</span> w <span class="kw">in</span> aWordsFixed)
+{
+    Console.<span class="fn">WriteLine</span>(w);
+}
+<span class="cm">// Output: Apple, Avocado, Apricot</span></pre>
+
+      <p><strong>Key takeaway:</strong> Deferred execution means the query is a live view of the data source. <code>.ToList()</code> freezes the results at a point in time. Both behaviors are useful — the choice depends on whether you want a live view or a snapshot.</p>
+    </div>
+  </details>
+
+  <!-- NAV -->
+  <div class="page-nav">
+    <a href="lesson2.html">
+      <span class="label">Previous</span>
+      <span class="title">← Hash-Based &amp; Sorted Structures</span>
+    </a>
+    <a href="lesson4.html" class="next">
+      <span class="label">Next Lesson</span>
+      <span class="title">Advanced LINQ Transformations →</span>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>C# Data Structures &amp; LINQ — Study Guide</p>
+</footer>
+
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var icon = toggle.querySelector('.theme-toggle__icon');
+  var label = toggle.querySelector('.theme-toggle__label');
+
+  function getPreferred() {
+    var saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'light') {
+      icon.textContent = '\u263E';
+      label.textContent = 'Dark';
+    } else {
+      icon.textContent = '\u2600';
+      label.textContent = 'Light';
+    }
+  }
+
+  apply(getPreferred());
+
+
+  // Hamburger menu
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.querySelector('nav');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function() {
+      var expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+    });
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    apply(current === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
+</body>
+</html>

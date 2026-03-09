@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1: Core Interfaces &amp; Linear Data Structures — C# DS &amp; LINQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">
+      <span class="menu-btn__open">&#9776;</span>
+      <span class="menu-btn__close">&#10005;</span>
+    </button>
+    <a href="index.html" class="site-header__logo">C# <span>DS &amp; LINQ</span></a>
+    <nav>
+      <a href="lesson1.html" class="active">Lesson 1</a>
+      <a href="lesson2.html">Lesson 2</a>
+      <a href="lesson3.html">Lesson 3</a>
+      <a href="lesson4.html">Lesson 4</a>
+      <a href="lesson5.html">Lesson 5</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <span class="theme-toggle__icon"></span>
+      <span class="theme-toggle__label"></span>
+    </button>
+  </div>
+</header>
+
+<main class="page">
+  <h1>Lesson 1: Core Interfaces &amp; Linear Data Structures</h1>
+  <p class="subtitle">Understand the hierarchy of collection interfaces and the performance characteristics of <code>List&lt;T&gt;</code>.</p>
+
+  <!-- ===== SECTION: Why Interfaces Matter ===== -->
+  <h2>Why Collection Interfaces Matter</h2>
+  <p>In C#, the collection framework is built on a layered system of interfaces. Each interface in the chain adds more capabilities. Understanding these layers is not just academic — it directly impacts the APIs you design. When you accept an <code>IEnumerable&lt;T&gt;</code> as a parameter, you're telling callers "I only need to read your data." When you require an <code>IList&lt;T&gt;</code>, you're saying "I need random access." This informs your consumers about your intent, keeps coupling low, and makes your code far more testable.</p>
+
+  <!-- ===== SECTION: IEnumerable ===== -->
+  <h2>IEnumerable&lt;T&gt; — The Root of Everything</h2>
+  <p><code>IEnumerable&lt;T&gt;</code> lives in <code>System.Collections.Generic</code> and is the most fundamental collection interface in .NET. It exposes a single method: <code>GetEnumerator()</code>, which returns an <code>IEnumerator&lt;T&gt;</code>. That enumerator has three members:</p>
+
+  <ul>
+    <li><code>Current</code> — Returns the element at the current position.</li>
+    <li><code>MoveNext()</code> — Advances the enumerator to the next element. Returns <code>false</code> when there are no more elements.</li>
+    <li><code>Reset()</code> — Resets the enumerator back to the beginning (rarely used and often not implemented).</li>
+  </ul>
+
+  <div class="callout tip">
+    <strong>Key insight</strong>
+    <code>IEnumerable&lt;T&gt;</code> is <em>forward-only</em> and <em>read-only</em>. You cannot go back, you cannot jump to an index, and you cannot modify the collection through it. This minimal contract is precisely what makes it so powerful — it supports deferred execution and is the foundation of LINQ (which we explore in Lesson 3).
+  </div>
+
+  <p>Under the hood, a <code>foreach</code> loop is syntactic sugar for calling <code>GetEnumerator()</code> and advancing with <code>MoveNext()</code>:</p>
+
+<pre><span class="cm">// What the compiler generates from a foreach loop</span>
+<span class="tp">IEnumerator</span>&lt;<span class="tp">int</span>&gt; enumerator = collection.<span class="fn">GetEnumerator</span>();
+<span class="kw">try</span>
+{
+    <span class="kw">while</span> (enumerator.<span class="fn">MoveNext</span>())
+    {
+        <span class="tp">int</span> item = enumerator.Current;
+        <span class="cm">// Use item...</span>
+    }
+}
+<span class="kw">finally</span>
+{
+    enumerator.<span class="fn">Dispose</span>();  <span class="cm">// IEnumerator&lt;T&gt; implements IDisposable</span>
+}</pre>
+
+  <h3>yield return — Lazy Sequences</h3>
+  <p>One of the most powerful features tied to <code>IEnumerable&lt;T&gt;</code> is the <code>yield return</code> keyword. It allows you to build a state machine that produces elements one at a time, on demand. No array or list is created in memory — the values are generated as the consumer iterates:</p>
+
+<pre><span class="kw">public static</span> <span class="tp">IEnumerable</span>&lt;<span class="tp">int</span>&gt; <span class="fn">FibonacciSequence</span>(<span class="tp">int</span> count)
+{
+    <span class="tp">int</span> a = <span class="num">0</span>, b = <span class="num">1</span>;
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; count; i++)
+    {
+        <span class="kw">yield return</span> a;
+        <span class="tp">int</span> temp = a;
+        a = b;
+        b = temp + b;
+    }
+}
+
+<span class="cm">// Usage — nothing runs until we iterate</span>
+<span class="kw">foreach</span> (<span class="pk">var</span> num <span class="kw">in</span> <span class="fn">FibonacciSequence</span>(<span class="num">10</span>))
+{
+    Console.<span class="fn">WriteLine</span>(num);
+}</pre>
+
+  <div class="callout warn">
+    <strong>Watch out</strong>
+    Because <code>yield return</code> methods are lazy, exceptions inside the method body are not thrown until iteration begins — not when the method is called. This can make debugging confusing if you're not expecting deferred execution.
+  </div>
+
+  <!-- ===== SECTION: ICollection ===== -->
+  <h2>ICollection&lt;T&gt; — Adding Mutation</h2>
+  <p><code>ICollection&lt;T&gt;</code> extends <code>IEnumerable&lt;T&gt;</code> and introduces the ability to mutate the collection. It adds:</p>
+
+  <ul>
+    <li><code>Add(T item)</code> — Adds an element to the collection.</li>
+    <li><code>Remove(T item)</code> — Removes the first occurrence of a specific element.</li>
+    <li><code>Contains(T item)</code> — Determines whether the collection contains a specific element.</li>
+    <li><code>Clear()</code> — Removes all elements from the collection.</li>
+    <li><code>Count</code> — Gets the number of elements (this is a property, not a method — unlike LINQ's <code>.Count()</code>).</li>
+    <li><code>IsReadOnly</code> — Indicates whether the collection is read-only.</li>
+    <li><code>CopyTo(T[] array, int index)</code> — Copies elements to an array starting at a particular index.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Interview insight</strong>
+    A common interview question is: "What is the difference between <code>.Count</code> (property) and <code>.Count()</code> (LINQ method)?" The property on <code>ICollection&lt;T&gt;</code> returns a stored value in O(1). The LINQ extension method <code>.Count()</code> on <code>IEnumerable&lt;T&gt;</code> must enumerate the entire sequence in O(n) — unless the runtime detects the underlying type implements <code>ICollection&lt;T&gt;</code>, in which case it short-circuits to the property. Always prefer the property when available.
+  </div>
+
+  <!-- ===== SECTION: IList ===== -->
+  <h2>IList&lt;T&gt; — Random Access</h2>
+  <p><code>IList&lt;T&gt;</code> extends both <code>ICollection&lt;T&gt;</code> and <code>IEnumerable&lt;T&gt;</code>. Its major addition is index-based access:</p>
+
+  <ul>
+    <li><code>this[int index]</code> — The indexer. Allows you to get or set elements by position (e.g., <code>list[5]</code>).</li>
+    <li><code>IndexOf(T item)</code> — Returns the zero-based index of the first occurrence of a value.</li>
+    <li><code>Insert(int index, T item)</code> — Inserts an element at the specified index.</li>
+    <li><code>RemoveAt(int index)</code> — Removes the element at the specified index.</li>
+  </ul>
+
+  <p>Choosing between these interfaces in method signatures is about communicating intent:</p>
+
+<pre><span class="cm">// "I will only read through your data"</span>
+<span class="kw">public void</span> <span class="fn">PrintAll</span>(<span class="tp">IEnumerable</span>&lt;<span class="tp">string</span>&gt; items) { ... }
+
+<span class="cm">// "I need to add or remove elements"</span>
+<span class="kw">public void</span> <span class="fn">ProcessQueue</span>(<span class="tp">ICollection</span>&lt;<span class="tp">string</span>&gt; items) { ... }
+
+<span class="cm">// "I need to access items by their position"</span>
+<span class="kw">public void</span> <span class="fn">SwapFirstAndLast</span>(<span class="tp">IList</span>&lt;<span class="tp">string</span>&gt; items) { ... }</pre>
+
+  <!-- ===== SECTION: Read-Only Interfaces ===== -->
+  <h2>IReadOnlyCollection&lt;T&gt; and IReadOnlyList&lt;T&gt;</h2>
+  <p>A parallel branch of the hierarchy that is critical for modern API design and frequently tested in interviews:</p>
+
+  <ul>
+    <li><code>IReadOnlyCollection&lt;T&gt;</code> — Extends <code>IEnumerable&lt;T&gt;</code> and adds only <code>Count</code>. No mutation methods at all.</li>
+    <li><code>IReadOnlyList&lt;T&gt;</code> — Extends <code>IReadOnlyCollection&lt;T&gt;</code> and adds the read-only indexer <code>this[int index]</code>.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Interview insight: IEnumerable vs. IReadOnlyList</strong>
+    A common question is: "If <code>IEnumerable&lt;T&gt;</code> is read-only, why do we need <code>IReadOnlyList&lt;T&gt;</code>?" The answer is that <code>IEnumerable&lt;T&gt;</code> only communicates "I can iterate" — but a caller can still cast it back to <code>List&lt;T&gt;</code> and mutate the underlying collection. <code>IReadOnlyList&lt;T&gt;</code> provides a stronger contract: it promises indexed access <em>and</em> the absence of mutation methods. Additionally, <code>IReadOnlyCollection&lt;T&gt;</code> exposes a <code>Count</code> property, whereas with plain <code>IEnumerable&lt;T&gt;</code> you'd need to call the LINQ <code>.Count()</code> method which may enumerate the entire sequence.
+  </div>
+
+<pre><span class="cm">// Exposing data safely: return IReadOnlyList, not List</span>
+<span class="kw">public class</span> <span class="tp">OrderService</span>
+{
+    <span class="kw">private readonly</span> <span class="tp">List</span>&lt;<span class="tp">Order</span>&gt; _orders = <span class="pk">new</span>();
+
+    <span class="cm">// BAD: Caller can cast to List&lt;Order&gt; and call .Add()</span>
+    <span class="kw">public</span> <span class="tp">IEnumerable</span>&lt;<span class="tp">Order</span>&gt; <span class="fn">GetOrdersUnsafe</span>() =&gt; _orders;
+
+    <span class="cm">// BETTER: IReadOnlyList exposes Count + indexer, no mutation</span>
+    <span class="kw">public</span> <span class="tp">IReadOnlyList</span>&lt;<span class="tp">Order</span>&gt; <span class="fn">GetOrders</span>() =&gt; _orders.<span class="fn">AsReadOnly</span>();
+    <span class="cm">// .AsReadOnly() returns a ReadOnlyCollection&lt;T&gt; wrapper</span>
+    <span class="cm">// that throws on any mutation attempt, even after casting</span>
+}</pre>
+
+  <!-- ===== SECTION: The Interface Hierarchy Diagram ===== -->
+  <h2>The Interface Hierarchy</h2>
+  <p>Visualizing the relationship helps cement the concept. The mutable and read-only branches both stem from <code>IEnumerable&lt;T&gt;</code>:</p>
+
+<pre style="color:var(--accent-light);font-size:.82rem;line-height:1.9;overflow-x:auto;">
+            ┌──────────────────────────────┐
+            │   <span class="tp">IEnumerable&lt;T&gt;</span>             │  GetEnumerator()
+            └──────────────┬───────────────┘
+                 ┌─────────┴─────────┐
+          <span class="cm">mutable branch</span>       <span class="cm">read-only branch</span>
+                 │                   │
+  ┌──────────────▼────┐   ┌──────────▼──────────────────┐
+  │ <span class="tp">ICollection&lt;T&gt;</span>    │   │ <span class="tp">IReadOnlyCollection&lt;T&gt;</span>      │
+  │ Add, Remove, Count│   │ Count (no mutation)         │
+  └──────────────┬────┘   └──────────┬──────────────────┘
+                 │                   │
+  ┌──────────────▼────┐   ┌──────────▼──────────────────┐
+  │ <span class="tp">IList&lt;T&gt;</span>          │   │ <span class="tp">IReadOnlyList&lt;T&gt;</span>            │
+  │ this[i], Insert   │   │ this[i] (read-only)         │
+  └──────────────┬────┘   └──────────┬──────────────────┘
+                 │                   │
+                 └─────────┬─────────┘
+            ┌──────────────▼───────────────┐
+            │   <span class="tp">List&lt;T&gt;</span>                    │  Implements BOTH branches
+            └──────────────────────────────┘
+</pre>
+
+  <!-- ===== SECTION: List<T> Deep Dive ===== -->
+  <h2>List&lt;T&gt; — Under the Hood</h2>
+  <p><code>List&lt;T&gt;</code> is the most commonly used collection in C#. It implements <code>IList&lt;T&gt;</code> and is backed by an internal array (<code>T[]</code>). Understanding its internals is crucial for performance-sensitive code.</p>
+
+  <h3>How the Internal Array Grows</h3>
+  <p>When you call <code>Add()</code> and the internal array is full, <code>List&lt;T&gt;</code> allocates a <em>new</em> array of double the current capacity, copies all existing elements, and then adds the new one. This means:</p>
+
+  <ul>
+    <li>If the array has room, <code>Add()</code> is <span class="bigo o1">O(1)</span>.</li>
+    <li>If the array needs to resize, that single call is <span class="bigo on">O(n)</span> due to the copy.</li>
+    <li>Averaged over many additions, this "doubling strategy" yields an <em>amortized</em> <span class="bigo o1">O(1)</span> per addition.</li>
+  </ul>
+
+  <p>However, if you know the expected size upfront, you can eliminate resizing entirely by setting the capacity in the constructor:</p>
+
+<pre><span class="cm">// BAD: Will resize multiple times as elements are added</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; numbers = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">int</span>&gt;();
+
+<span class="cm">// GOOD: Pre-allocate for 10,000 elements — no resizing needed</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; numbers = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">int</span>&gt;(<span class="num">10000</span>);</pre>
+
+  <h3>Big O Summary for List&lt;T&gt;</h3>
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Operation</th><th>Complexity</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Access by index <code>[i]</code></td><td><span class="bigo o1">O(1)</span></td><td>Direct array access</td></tr>
+      <tr><td><code>Add()</code></td><td><span class="bigo o1">O(1)</span> amortized</td><td>O(n) on resize</td></tr>
+      <tr><td><code>Insert(index, item)</code></td><td><span class="bigo on">O(n)</span></td><td>Shifts all elements after index</td></tr>
+      <tr><td><code>Remove(item)</code></td><td><span class="bigo on">O(n)</span></td><td>Must search + shift</td></tr>
+      <tr><td><code>RemoveAt(index)</code></td><td><span class="bigo on">O(n)</span></td><td>Shifts elements after index</td></tr>
+      <tr><td><code>Contains(item)</code></td><td><span class="bigo on">O(n)</span></td><td>Linear search</td></tr>
+      <tr><td><code>Find(predicate)</code></td><td><span class="bigo on">O(n)</span></td><td>Linear search with lambda</td></tr>
+      <tr><td><code>Sort()</code></td><td><span class="bigo onlogn">O(n log n)</span></td><td>Uses introspective sort</td></tr>
+      <tr><td><code>BinarySearch()</code></td><td><span class="bigo ologn">O(log n)</span></td><td>List must be sorted first</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Other Useful List&lt;T&gt; Methods</h3>
+  <p>Beyond the basics, <code>List&lt;T&gt;</code> offers several methods worth knowing for interviews:</p>
+
+  <ul>
+    <li><code>FindAll(Predicate&lt;T&gt;)</code> — Returns a new <code>List&lt;T&gt;</code> containing all matching elements.</li>
+    <li><code>Exists(Predicate&lt;T&gt;)</code> — Returns <code>true</code> if any element matches the predicate.</li>
+    <li><code>TrueForAll(Predicate&lt;T&gt;)</code> — Returns <code>true</code> if every element matches.</li>
+    <li><code>ConvertAll&lt;TOutput&gt;(Converter)</code> — Projects each element into a new form (similar to LINQ's <code>Select</code>).</li>
+    <li><code>GetRange(int index, int count)</code> — Extracts a shallow copy of a range of elements.</li>
+    <li><code>TrimExcess()</code> — Reduces the capacity to the actual count (useful after heavy deletions).</li>
+  </ul>
+
+  <!-- ===== SECTION: Polymorphic Views ===== -->
+  <h2>Polymorphic Views of the Same Object</h2>
+  <p>Because <code>List&lt;T&gt;</code> implements all three interfaces, a single list object can be referenced through different "lenses," each exposing a different level of capability:</p>
+
+<pre><span class="cm">// Pre-defining capacity keeps Add() at O(1)</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; numbers = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">int</span>&gt;(<span class="num">1000</span>);
+numbers.<span class="fn">Add</span>(<span class="num">42</span>);
+numbers.<span class="fn">Add</span>(<span class="num">99</span>);
+numbers.<span class="fn">Add</span>(<span class="num">7</span>);
+
+<span class="cm">// View 1: Read-only iteration (no access to Add, Remove, or indexer)</span>
+<span class="tp">IEnumerable</span>&lt;<span class="tp">int</span>&gt; readOnlyView = numbers;
+
+<span class="cm">// View 2: Full indexable access</span>
+<span class="tp">IList</span>&lt;<span class="tp">int</span>&gt; indexableView = numbers;
+<span class="tp">int</span> value = indexableView[<span class="num">0</span>]; <span class="cm">// 42 — Allowed!</span>
+
+<span class="cm">// View 3: Mutation without indexing</span>
+<span class="tp">ICollection</span>&lt;<span class="tp">int</span>&gt; collectionView = numbers;
+collectionView.<span class="fn">Add</span>(<span class="num">55</span>);     <span class="cm">// Allowed</span>
+<span class="cm">// collectionView[0];         // NOT allowed — ICollection has no indexer</span></pre>
+
+  <div class="callout">
+    <strong>Design principle</strong>
+    In your method signatures, always accept the <em>least capable</em> interface that still allows you to do your work. If you only need to iterate, accept <code>IEnumerable&lt;T&gt;</code>. This makes your methods more flexible (they work with arrays, lists, sets, LINQ queries, etc.) and communicates your intent clearly.
+  </div>
+
+  <!-- ===== SECTION: Bonus — Arrays & Other Linear Structures ===== -->
+  <h2>Bonus: Arrays and Other Linear Structures</h2>
+
+  <h3>Arrays (<code>T[]</code>)</h3>
+  <p>Arrays are the most primitive collection in C#. They have a fixed size set at creation time and offer the fastest possible element access. Arrays implement <code>IList&lt;T&gt;</code> but throw <code>NotSupportedException</code> for <code>Add()</code> and <code>Remove()</code> since they cannot be resized. Use arrays when the size is known and fixed, and performance is critical.</p>
+
+  <h3>LinkedList&lt;T&gt;</h3>
+  <p>A doubly-linked list where each node points to its previous and next neighbor. It excels at <span class="bigo o1">O(1)</span> insertions and deletions at known positions (via <code>LinkedListNode&lt;T&gt;</code>) but has <span class="bigo on">O(n)</span> search and no indexing. It is rarely used in modern C# because <code>List&lt;T&gt;</code>'s CPU cache locality typically makes it faster in practice for most workloads.</p>
+
+  <h3>Queue&lt;T&gt; and Stack&lt;T&gt;</h3>
+  <p><code>Queue&lt;T&gt;</code> is a FIFO (First-In, First-Out) collection — elements are enqueued at the back and dequeued from the front. <code>Stack&lt;T&gt;</code> is LIFO (Last-In, First-Out) — elements are pushed and popped from the top. Both offer <span class="bigo o1">O(1)</span> for their primary operations.</p>
+
+<pre><span class="cm">// Queue: FIFO</span>
+<span class="tp">Queue</span>&lt;<span class="tp">string</span>&gt; printJobs = <span class="pk">new</span> <span class="tp">Queue</span>&lt;<span class="tp">string</span>&gt;();
+printJobs.<span class="fn">Enqueue</span>(<span class="str">"Report.pdf"</span>);
+printJobs.<span class="fn">Enqueue</span>(<span class="str">"Invoice.pdf"</span>);
+<span class="tp">string</span> next = printJobs.<span class="fn">Dequeue</span>(); <span class="cm">// "Report.pdf"</span>
+
+<span class="cm">// Stack: LIFO</span>
+<span class="tp">Stack</span>&lt;<span class="tp">string</span>&gt; undoHistory = <span class="pk">new</span> <span class="tp">Stack</span>&lt;<span class="tp">string</span>&gt;();
+undoHistory.<span class="fn">Push</span>(<span class="str">"Typed 'Hello'"</span>);
+undoHistory.<span class="fn">Push</span>(<span class="str">"Deleted line"</span>);
+<span class="tp">string</span> lastAction = undoHistory.<span class="fn">Pop</span>(); <span class="cm">// "Deleted line"</span></pre>
+
+  <h3>PriorityQueue&lt;TElement, TPriority&gt; (.NET 6+)</h3>
+  <p>A min-heap-based priority queue that dequeues elements in order of their priority value. Unlike <code>Queue&lt;T&gt;</code> (FIFO), it always returns the element with the <em>lowest</em> priority first. This is essential for algorithms like Dijkstra's shortest path, event scheduling, and merging K sorted lists.</p>
+
+<pre><span class="pk">var</span> pq = <span class="pk">new</span> <span class="tp">PriorityQueue</span>&lt;<span class="tp">string</span>, <span class="tp">int</span>&gt;();
+
+pq.<span class="fn">Enqueue</span>(<span class="str">"Low priority task"</span>, <span class="num">10</span>);
+pq.<span class="fn">Enqueue</span>(<span class="str">"Critical fix"</span>, <span class="num">1</span>);
+pq.<span class="fn">Enqueue</span>(<span class="str">"Medium task"</span>, <span class="num">5</span>);
+
+<span class="tp">string</span> next = pq.<span class="fn">Dequeue</span>(); <span class="cm">// "Critical fix" (priority 1 — lowest first)</span>
+
+<span class="cm">// Peek without removing</span>
+pq.<span class="fn">TryPeek</span>(<span class="kw">out</span> <span class="tp">string</span> element, <span class="kw">out</span> <span class="tp">int</span> priority);
+<span class="cm">// element = "Medium task", priority = 5</span></pre>
+
+  <div class="callout warn">
+    <strong>Gotcha</strong>
+    .NET's <code>PriorityQueue</code> does not support updating the priority of an existing element. If you need decrease-key for algorithms like Dijkstra, you typically re-enqueue with the new priority and track visited nodes separately. There is also no built-in way to enumerate in priority order — you must dequeue repeatedly.
+  </div>
+
+  <!-- ===== CHALLENGE ===== -->
+  <div class="challenge">
+    <h3>Coding Challenge</h3>
+    <p>Write a method that takes an <code>IEnumerable&lt;string&gt;</code>, iterates through it <strong>without using LINQ</strong>, filters out strings shorter than 5 characters, and returns them as an <code>IList&lt;string&gt;</code>. Optimize your underlying list for performance if you can estimate the capacity.</p>
+    <p><strong>Constraints:</strong> No LINQ methods (<code>Where</code>, <code>Select</code>, <code>ToList</code>, etc.). Use only manual iteration.</p>
+  </div>
+
+  <details>
+    <summary>View Solution</summary>
+    <div class="solution-body">
+<pre><span class="kw">public static</span> <span class="tp">IList</span>&lt;<span class="tp">string</span>&gt; <span class="fn">FilterLongStrings</span>(<span class="tp">IEnumerable</span>&lt;<span class="tp">string</span>&gt; input)
+{
+    <span class="cm">// We can't know the exact count from IEnumerable alone,</span>
+    <span class="cm">// but if the underlying type is ICollection, we can get a hint.</span>
+    <span class="tp">int</span> estimatedCapacity = <span class="num">16</span>; <span class="cm">// sensible default</span>
+
+    <span class="kw">if</span> (input <span class="kw">is</span> <span class="tp">ICollection</span>&lt;<span class="tp">string</span>&gt; collection)
+    {
+        <span class="cm">// At most, all items match, so use the collection's count</span>
+        estimatedCapacity = collection.Count;
+    }
+
+    <span class="tp">List</span>&lt;<span class="tp">string</span>&gt; result = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">string</span>&gt;(estimatedCapacity);
+
+    <span class="kw">foreach</span> (<span class="tp">string</span> s <span class="kw">in</span> input)
+    {
+        <span class="kw">if</span> (s != <span class="kw">null</span> &amp;&amp; s.Length &gt;= <span class="num">5</span>)
+        {
+            result.<span class="fn">Add</span>(s);
+        }
+    }
+
+    <span class="cm">// Optional: reclaim unused memory if the result is much smaller</span>
+    result.<span class="fn">TrimExcess</span>();
+
+    <span class="kw">return</span> result;
+}
+
+<span class="cm">// Usage:</span>
+<span class="tp">string</span>[] words = { <span class="str">"cat"</span>, <span class="str">"elephant"</span>, <span class="str">"dog"</span>, <span class="str">"giraffe"</span>, <span class="str">"owl"</span>, <span class="str">"zebra"</span> };
+<span class="tp">IList</span>&lt;<span class="tp">string</span>&gt; longWords = <span class="fn">FilterLongStrings</span>(words);
+<span class="cm">// Result: ["elephant", "giraffe", "zebra"]</span></pre>
+
+      <p><strong>Why this solution is strong:</strong></p>
+      <ul>
+        <li>It accepts the most generic interface (<code>IEnumerable&lt;T&gt;</code>) as input, maximizing flexibility.</li>
+        <li>It attempts to optimize capacity by checking if the runtime type is <code>ICollection&lt;T&gt;</code>.</li>
+        <li>It returns <code>IList&lt;T&gt;</code> (interface) rather than <code>List&lt;T&gt;</code> (concrete class), following the principle of coding to an interface.</li>
+        <li>It handles <code>null</code> strings defensively.</li>
+        <li>It calls <code>TrimExcess()</code> to reclaim unused capacity after filtering.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- NAV -->
+  <div class="page-nav">
+    <a href="index.html">
+      <span class="label">Home</span>
+      <span class="title">Course Overview</span>
+    </a>
+    <a href="lesson2.html" class="next">
+      <span class="label">Next Lesson</span>
+      <span class="title">Hash-Based &amp; Sorted Structures →</span>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>C# Data Structures &amp; LINQ — Study Guide</p>
+</footer>
+
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var icon = toggle.querySelector('.theme-toggle__icon');
+  var label = toggle.querySelector('.theme-toggle__label');
+
+  function getPreferred() {
+    var saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'light') {
+      icon.textContent = '\u263E';
+      label.textContent = 'Dark';
+    } else {
+      icon.textContent = '\u2600';
+      label.textContent = 'Light';
+    }
+  }
+
+  apply(getPreferred());
+
+
+  // Hamburger menu
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.querySelector('nav');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function() {
+      var expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+    });
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    apply(current === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
+</body>
+</html>

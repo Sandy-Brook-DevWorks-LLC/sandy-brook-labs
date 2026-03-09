@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5: Modern High-Performance C# &amp; Real-World Scenarios — C# DS &amp; LINQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">
+      <span class="menu-btn__open">&#9776;</span>
+      <span class="menu-btn__close">&#10005;</span>
+    </button>
+    <a href="index.html" class="site-header__logo">C# <span>DS &amp; LINQ</span></a>
+    <nav>
+      <a href="lesson1.html">Lesson 1</a>
+      <a href="lesson2.html">Lesson 2</a>
+      <a href="lesson3.html">Lesson 3</a>
+      <a href="lesson4.html">Lesson 4</a>
+      <a href="lesson5.html" class="active">Lesson 5</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <span class="theme-toggle__icon"></span>
+      <span class="theme-toggle__label"></span>
+    </button>
+  </div>
+</header>
+
+<main class="page">
+  <h1>Lesson 5: Modern High-Performance C# &amp; Real-World Scenarios</h1>
+  <p class="subtitle">Explore zero-allocation data structures, pagination patterns, and the N+1 query problem — common interview and architecture topics.</p>
+
+  <!-- ===== SECTION: Span<T> ===== -->
+  <h2>Span&lt;T&gt; — Zero-Allocation Memory Access</h2>
+  <p>Introduced in C# 7.2, <code>Span&lt;T&gt;</code> is a <code>ref struct</code> that provides a type-safe, bounds-checked window into a contiguous region of memory. It can point into arrays, stack-allocated buffers, or even unmanaged memory — all without allocating anything on the garbage-collected heap.</p>
+
+  <h3>Why Does This Matter?</h3>
+  <p>Consider how <code>string.Substring()</code> works: it allocates an entirely new <code>string</code> object on the heap, copies the characters, and returns it. In a hot loop processing millions of strings (like a log parser or CSV reader), these allocations create enormous pressure on the garbage collector.</p>
+
+  <p><code>Span&lt;T&gt;</code> solves this by creating a <em>view</em> (a pointer + length) into the existing memory. No copy, no allocation:</p>
+
+<pre><span class="cm">// Traditional approach — allocates a NEW string on the heap</span>
+<span class="tp">string</span> logLine = <span class="str">"2024-01-15|ERROR|Connection timeout to db-primary"</span>;
+<span class="tp">string</span> level = logLine.<span class="fn">Substring</span>(<span class="num">11</span>, <span class="num">5</span>);  <span class="cm">// "ERROR" — heap allocation!</span>
+
+<span class="cm">// Span approach — zero allocations, just a view into the same memory</span>
+<span class="tp">ReadOnlySpan</span>&lt;<span class="tp">char</span>&gt; logSpan = logLine.<span class="fn">AsSpan</span>();
+<span class="tp">ReadOnlySpan</span>&lt;<span class="tp">char</span>&gt; levelSpan = logSpan.<span class="fn">Slice</span>(<span class="num">11</span>, <span class="num">5</span>); <span class="cm">// "ERROR" — no allocation!</span>
+
+<span class="cm">// You can compare spans without allocating strings</span>
+<span class="kw">if</span> (levelSpan.<span class="fn">SequenceEqual</span>(<span class="str">"ERROR"</span>))
+{
+    <span class="cm">// Handle error — still zero allocations</span>
+}</pre>
+
+  <h3>Span&lt;T&gt; Rules and Constraints</h3>
+  <p><code>Span&lt;T&gt;</code> is a <code>ref struct</code>, which means the compiler enforces strict rules to ensure it always lives on the stack:</p>
+
+  <ul>
+    <li>Cannot be a field in a class (classes live on the heap).</li>
+    <li>Cannot be boxed (boxing puts a value on the heap).</li>
+    <li>Cannot be used in <code>async</code> methods (the state machine captures variables on the heap).</li>
+    <li>Cannot be captured in a lambda or local function.</li>
+    <li>Cannot implement any interfaces (including <code>IEnumerable&lt;T&gt;</code>).</li>
+  </ul>
+
+  <div class="callout tip">
+    <strong>C# 13 update (.NET 9)</strong>
+    C# 13 introduced the <code>allows ref struct</code> anti-constraint, which relaxes several of these restrictions. <code>Span&lt;T&gt;</code> can now be used in certain lambda expressions, <code>async</code> methods (before the first <code>await</code>), and as generic type arguments in methods marked with <code>allows ref struct</code>. However, most production codebases are still on C# 12 or earlier, so interviewers will typically expect you to know the original restrictions listed above. If asked, mentioning C# 13's relaxations demonstrates up-to-date knowledge.
+  </div>
+
+  <div class="callout warn">
+    <strong>No LINQ support</strong>
+    Because <code>Span&lt;T&gt;</code> cannot implement <code>IEnumerable&lt;T&gt;</code>, you cannot use standard LINQ methods on it. You must use manual loops or the specialized methods on the <code>MemoryExtensions</code> class (like <code>Contains</code>, <code>IndexOf</code>, <code>Trim</code>, <code>StartsWith</code>, etc.).
+  </div>
+
+  <h3>Span&lt;T&gt; with Arrays</h3>
+<pre><span class="tp">int</span>[] bigArray = <span class="pk">new</span> <span class="tp">int</span>[<span class="num">1_000_000</span>];
+
+<span class="cm">// Create a span over just the first 100 elements</span>
+<span class="tp">Span</span>&lt;<span class="tp">int</span>&gt; slice = bigArray.<span class="fn">AsSpan</span>(<span class="num">0</span>, <span class="num">100</span>);
+
+<span class="cm">// Modify through the span — this modifies the ORIGINAL array</span>
+slice[<span class="num">0</span>] = <span class="num">42</span>;
+Console.<span class="fn">WriteLine</span>(bigArray[<span class="num">0</span>]); <span class="cm">// 42</span>
+
+<span class="cm">// Stack-allocated span (no heap at all)</span>
+<span class="tp">Span</span>&lt;<span class="tp">int</span>&gt; stackBuffer = <span class="kw">stackalloc</span> <span class="tp">int</span>[<span class="num">128</span>];
+stackBuffer[<span class="num">0</span>] = <span class="num">99</span>;</pre>
+
+  <!-- ===== SECTION: Memory<T> ===== -->
+  <h2>Memory&lt;T&gt; — The Heap-Safe Cousin</h2>
+  <p>When you need span-like slicing but in contexts where <code>Span&lt;T&gt;</code> can't be used (async methods, class fields, lambdas), use <code>Memory&lt;T&gt;</code>. It is not a <code>ref struct</code>, so it can live on the heap. You convert it to a <code>Span&lt;T&gt;</code> when you need to do actual work:</p>
+
+<pre><span class="kw">public class</span> <span class="tp">BufferProcessor</span>
+{
+    <span class="kw">private</span> <span class="tp">Memory</span>&lt;<span class="tp">byte</span>&gt; _buffer; <span class="cm">// OK — can be a class field</span>
+
+    <span class="kw">public</span> <span class="fn">BufferProcessor</span>(<span class="tp">byte</span>[] data)
+    {
+        _buffer = data.<span class="fn">AsMemory</span>();
+    }
+
+    <span class="kw">public async</span> <span class="tp">Task</span> <span class="fn">ProcessAsync</span>()
+    {
+        <span class="tp">Memory</span>&lt;<span class="tp">byte</span>&gt; chunk = _buffer.<span class="fn">Slice</span>(<span class="num">0</span>, <span class="num">256</span>);
+        <span class="kw">await</span> <span class="fn">SomeAsyncOperation</span>(chunk); <span class="cm">// OK — Memory works in async</span>
+
+        <span class="cm">// When you need fast, synchronous access, get a Span</span>
+        <span class="tp">Span</span>&lt;<span class="tp">byte</span>&gt; span = chunk.Span;
+        span[<span class="num">0</span>] = <span class="num">0xFF</span>;
+    }
+}</pre>
+
+  <h3>Quick Comparison</h3>
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Feature</th><th><code>Span&lt;T&gt;</code></th><th><code>Memory&lt;T&gt;</code></th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Type</td><td><code>ref struct</code> (stack only)</td><td>Regular struct (heap OK)</td></tr>
+      <tr><td>Class fields</td><td>Not allowed</td><td>Allowed</td></tr>
+      <tr><td>Async methods</td><td>Not allowed</td><td>Allowed</td></tr>
+      <tr><td>Lambdas</td><td>Not allowed</td><td>Allowed</td></tr>
+      <tr><td>Performance</td><td>Fastest (no indirection)</td><td>Slightly slower (extra layer)</td></tr>
+      <tr><td>LINQ support</td><td>No</td><td>No</td></tr>
+      <tr><td>Best for</td><td>Synchronous, hot-path code</td><td>Async pipelines, buffering</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ===== SECTION: Pagination ===== -->
+  <h2>Pagination with Skip and Take</h2>
+  <p>Pagination is one of the most common patterns in web APIs and database-backed applications. LINQ's <code>Skip</code> and <code>Take</code> operators map directly to SQL <code>OFFSET</code> and <code>FETCH</code>.</p>
+
+<pre><span class="cm">// Generic pagination method</span>
+<span class="kw">public static</span> <span class="tp">IQueryable</span>&lt;<span class="tp">T</span>&gt; <span class="fn">GetPage</span>&lt;<span class="tp">T</span>&gt;(
+    <span class="tp">IQueryable</span>&lt;<span class="tp">T</span>&gt; source,
+    <span class="tp">int</span> pageNumber,
+    <span class="tp">int</span> pageSize)
+{
+    <span class="kw">return</span> source
+        .<span class="fn">Skip</span>((pageNumber - <span class="num">1</span>) * pageSize)
+        .<span class="fn">Take</span>(pageSize);
+}
+
+<span class="cm">// Usage with Entity Framework</span>
+<span class="tp">int</span> pageSize = <span class="num">10</span>;
+<span class="tp">int</span> pageNumber = <span class="num">3</span>; <span class="cm">// Get the 3rd page</span>
+
+<span class="pk">var</span> page = dbContext.Products
+    .<span class="fn">OrderBy</span>(p =&gt; p.Name)             <span class="cm">// IMPORTANT: always order before Skip</span>
+    .<span class="fn">Skip</span>((pageNumber - <span class="num">1</span>) * pageSize)  <span class="cm">// Skip first 20 items</span>
+    .<span class="fn">Take</span>(pageSize)                     <span class="cm">// Take items 21-30</span>
+    .<span class="fn">ToList</span>();
+
+<span class="cm">// This generates SQL like:</span>
+<span class="cm">// SELECT * FROM Products ORDER BY Name OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY</span></pre>
+
+  <div class="callout">
+    <strong>Interview insight</strong>
+    Always <code>OrderBy</code> before <code>Skip</code>/<code>Take</code>. Without an explicit ordering, SQL Server can return rows in any order, meaning your pages might have duplicate or missing items. This is a common gotcha in interviews.
+  </div>
+
+  <h3>Building a Complete Paged Response</h3>
+<pre><span class="kw">public class</span> <span class="tp">PagedResult</span>&lt;<span class="tp">T</span>&gt;
+{
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">T</span>&gt; Items { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">int</span> TotalCount { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">int</span> PageNumber { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">int</span> PageSize { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">int</span> TotalPages =&gt; (<span class="tp">int</span>)Math.<span class="fn">Ceiling</span>(TotalCount / (<span class="tp">double</span>)PageSize);
+    <span class="kw">public</span> <span class="tp">bool</span> HasPrevious =&gt; PageNumber &gt; <span class="num">1</span>;
+    <span class="kw">public</span> <span class="tp">bool</span> HasNext =&gt; PageNumber &lt; TotalPages;
+}
+
+<span class="kw">public static async</span> <span class="tp">Task</span>&lt;<span class="tp">PagedResult</span>&lt;<span class="tp">T</span>&gt;&gt; <span class="fn">ToPagedResultAsync</span>&lt;<span class="tp">T</span>&gt;(
+    <span class="kw">this</span> <span class="tp">IQueryable</span>&lt;<span class="tp">T</span>&gt; query,
+    <span class="tp">int</span> pageNumber,
+    <span class="tp">int</span> pageSize)
+{
+    <span class="tp">int</span> totalCount = <span class="kw">await</span> query.<span class="fn">CountAsync</span>();
+
+    <span class="tp">List</span>&lt;<span class="tp">T</span>&gt; items = <span class="kw">await</span> query
+        .<span class="fn">Skip</span>((pageNumber - <span class="num">1</span>) * pageSize)
+        .<span class="fn">Take</span>(pageSize)
+        .<span class="fn">ToListAsync</span>();
+
+    <span class="kw">return new</span> <span class="tp">PagedResult</span>&lt;<span class="tp">T</span>&gt;
+    {
+        Items = items,
+        TotalCount = totalCount,
+        PageNumber = pageNumber,
+        PageSize = pageSize
+    };
+}</pre>
+
+  <!-- ===== SECTION: N+1 Problem ===== -->
+  <h2>The N+1 Query Problem</h2>
+  <p>This is one of the most critical performance pitfalls when using LINQ with an ORM like Entity Framework, and a very popular interview topic.</p>
+
+  <h3>What Happens</h3>
+  <p>Imagine you have <code>Order</code> entities, each with a collection of <code>OrderItem</code> child entities. If you load the orders and then iterate over their items, EF fires one query for the orders and then <em>one additional query per order</em> to load its items. For 100 orders, that's 101 database round-trips:</p>
+
+<pre><span class="cm">// N+1 PROBLEM: This fires 1 + N queries!</span>
+<span class="pk">var</span> orders = dbContext.Orders.<span class="fn">ToList</span>(); <span class="cm">// Query 1: Get all orders</span>
+
+<span class="kw">foreach</span> (<span class="pk">var</span> order <span class="kw">in</span> orders)
+{
+    <span class="cm">// Each access to .Items fires a NEW query (lazy loading)</span>
+    <span class="kw">foreach</span> (<span class="pk">var</span> item <span class="kw">in</span> order.Items)  <span class="cm">// Query 2, 3, 4... N+1</span>
+    {
+        Console.<span class="fn">WriteLine</span>(item.ProductName);
+    }
+}</pre>
+
+  <h3>The Fix: Eager Loading with Include()</h3>
+<pre><span class="cm">// FIXED: One query with a JOIN — everything loaded upfront</span>
+<span class="pk">var</span> orders = dbContext.Orders
+    .<span class="fn">Include</span>(o =&gt; o.Items)          <span class="cm">// Eager load the child collection</span>
+    .<span class="fn">ThenInclude</span>(i =&gt; i.Product)    <span class="cm">// Can go deeper into nested entities</span>
+    .<span class="fn">ToList</span>();                       <span class="cm">// Single query with JOINs</span>
+
+<span class="cm">// Now iterating is free — all data is already in memory</span>
+<span class="kw">foreach</span> (<span class="pk">var</span> order <span class="kw">in</span> orders)
+{
+    <span class="kw">foreach</span> (<span class="pk">var</span> item <span class="kw">in</span> order.Items)
+    {
+        Console.<span class="fn">WriteLine</span>(item.ProductName); <span class="cm">// No additional queries</span>
+    }
+}</pre>
+
+  <h3>Other Solutions</h3>
+
+  <ul>
+    <li><strong>Explicit Loading:</strong> Load related data manually with <code>dbContext.Entry(order).Collection(o => o.Items).Load()</code>. Gives you precise control but still requires awareness.</li>
+    <li><strong>Projection (Select):</strong> Instead of loading full entities, project into a DTO with <code>.Select(o => new { o.Id, Items = o.Items.Select(...) })</code>. This generates optimized SQL that only fetches the columns you need.</li>
+    <li><strong>Split Queries (.AsSplitQuery()):</strong> EF Core 5+ can split a complex Include into multiple simpler queries instead of one massive JOIN, which can be faster when the JOIN produces a cartesian explosion.</li>
+  </ul>
+
+<pre><span class="cm">// Projection approach — most efficient, fetches only what's needed</span>
+<span class="pk">var</span> orderSummaries = dbContext.Orders
+    .<span class="fn">Select</span>(o =&gt; <span class="pk">new</span>
+    {
+        o.OrderId,
+        o.OrderDate,
+        ItemCount = o.Items.<span class="fn">Count</span>(),
+        Total = o.Items.<span class="fn">Sum</span>(i =&gt; i.Price * i.Quantity)
+    })
+    .<span class="fn">ToList</span>();
+<span class="cm">// Generates a single, optimized SQL query with subqueries</span></pre>
+
+  <div class="callout danger">
+    <strong>How to detect N+1 in practice</strong>
+    Enable EF Core logging (<code>optionsBuilder.LogTo(Console.WriteLine)</code>) during development and watch for repeated queries. Tools like MiniProfiler and the EF Core "query tags" feature also help. In production, monitor your database's query count per request.
+  </div>
+
+  <!-- ===== SECTION: Bonus Modern C# ===== -->
+  <h2>Bonus: Modern C# Collection Features</h2>
+
+  <h3>Collection Expressions (C# 12)</h3>
+  <p>C# 12 introduced a new terse syntax for creating collections:</p>
+
+<pre><span class="cm">// Old way</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; nums = <span class="pk">new</span> <span class="tp">List</span>&lt;<span class="tp">int</span>&gt; { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span> };
+
+<span class="cm">// C# 12 collection expression</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>];
+<span class="tp">int</span>[] arr = [<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>];
+
+<span class="cm">// Spread operator — combine collections</span>
+<span class="tp">List</span>&lt;<span class="tp">int</span>&gt; combined = [..nums, ..arr, <span class="num">7</span>, <span class="num">8</span>];
+<span class="cm">// [1, 2, 3, 4, 5, 6, 7, 8]</span></pre>
+
+  <h3>FrozenDictionary and FrozenSet (.NET 8)</h3>
+  <p>When you have a dictionary or set that is populated once and then only read, <code>FrozenDictionary</code> and <code>FrozenSet</code> (in <code>System.Collections.Frozen</code>) optimize the internal structure at creation time for the fastest possible reads:</p>
+
+<pre><span class="kw">using</span> System.Collections.Frozen;
+
+<span class="pk">var</span> config = <span class="pk">new</span> <span class="tp">Dictionary</span>&lt;<span class="tp">string</span>, <span class="tp">string</span>&gt;
+{
+    [<span class="str">"host"</span>] = <span class="str">"localhost"</span>,
+    [<span class="str">"port"</span>] = <span class="str">"5432"</span>,
+    [<span class="str">"db"</span>] = <span class="str">"myapp"</span>
+};
+
+<span class="cm">// Freeze it — optimized for reads, immutable afterward</span>
+<span class="tp">FrozenDictionary</span>&lt;<span class="tp">string</span>, <span class="tp">string</span>&gt; frozenConfig = config.<span class="fn">ToFrozenDictionary</span>();
+<span class="tp">string</span> host = frozenConfig[<span class="str">"host"</span>]; <span class="cm">// Faster than Dictionary for reads</span></pre>
+
+  <h3>ImmutableCollections</h3>
+  <p>For thread-safe, immutable collections that still allow "modifications" (by returning new instances), use the types in <code>System.Collections.Immutable</code>:</p>
+
+<pre><span class="kw">using</span> System.Collections.Immutable;
+
+<span class="pk">var</span> list = <span class="tp">ImmutableList</span>&lt;<span class="tp">int</span>&gt;.Empty;
+<span class="pk">var</span> list2 = list.<span class="fn">Add</span>(<span class="num">1</span>);  <span class="cm">// Returns a NEW list; 'list' is still empty</span>
+<span class="pk">var</span> list3 = list2.<span class="fn">Add</span>(<span class="num">2</span>); <span class="cm">// list2 is [1], list3 is [1, 2]</span></pre>
+
+  <!-- ===== CHALLENGES ===== -->
+  <div class="challenge">
+    <h3>Coding Challenge 1: Pagination</h3>
+    <p>Write a generic pagination function that takes an <code>IQueryable&lt;T&gt;</code>, a page number, and a page size. It should return a <code>PagedResult&lt;T&gt;</code> object containing the items, total count, and navigation properties (has next, has previous, total pages).</p>
+  </div>
+
+  <details>
+    <summary>View Solution</summary>
+    <div class="solution-body">
+      <p>Reusing the <code>PagedResult&lt;T&gt;</code> class defined earlier in this lesson:</p>
+<pre><span class="cm">// Using the PagedResult&lt;T&gt; class from the section above,
+// but upgraded with init-only setters for immutability</span>
+
+<span class="kw">public static</span> <span class="tp">PagedResult</span>&lt;<span class="tp">T</span>&gt; <span class="fn">Paginate</span>&lt;<span class="tp">T</span>&gt;(
+    <span class="tp">IQueryable</span>&lt;<span class="tp">T</span>&gt; source,
+    <span class="tp">int</span> pageNumber,
+    <span class="tp">int</span> pageSize)
+{
+    <span class="kw">if</span> (pageNumber &lt; <span class="num">1</span>) pageNumber = <span class="num">1</span>;
+    <span class="kw">if</span> (pageSize &lt; <span class="num">1</span>) pageSize = <span class="num">10</span>;
+
+    <span class="tp">int</span> totalCount = source.<span class="fn">Count</span>();
+
+    <span class="tp">List</span>&lt;<span class="tp">T</span>&gt; items = source
+        .<span class="fn">Skip</span>((pageNumber - <span class="num">1</span>) * pageSize)
+        .<span class="fn">Take</span>(pageSize)
+        .<span class="fn">ToList</span>();
+
+    <span class="kw">return new</span> <span class="tp">PagedResult</span>&lt;<span class="tp">T</span>&gt;
+    {
+        Items = items,
+        TotalCount = totalCount,
+        PageNumber = pageNumber,
+        PageSize = pageSize
+    };
+}
+
+<span class="cm">// Usage:</span>
+<span class="pk">var</span> page3 = <span class="fn">Paginate</span>(dbContext.Products.<span class="fn">OrderBy</span>(p =&gt; p.Name), <span class="num">3</span>, <span class="num">10</span>);</pre>
+    </div>
+  </details>
+
+  <div class="challenge" style="margin-top:32px;">
+    <h3>Coding Challenge 2: Span-Based Domain Extraction</h3>
+    <p>Use <code>ReadOnlySpan&lt;char&gt;</code> to extract the domain name from a list of 10 email addresses <strong>without</strong> calling <code>.Split()</code> or <code>.Substring()</code>. The function should process each email and print the domain.</p>
+  </div>
+
+  <details>
+    <summary>View Solution</summary>
+    <div class="solution-body">
+<pre><span class="kw">public static</span> <span class="tp">ReadOnlySpan</span>&lt;<span class="tp">char</span>&gt; <span class="fn">ExtractDomain</span>(<span class="tp">ReadOnlySpan</span>&lt;<span class="tp">char</span>&gt; email)
+{
+    <span class="tp">int</span> atIndex = email.<span class="fn">IndexOf</span>(<span class="str">'@'</span>);
+    <span class="kw">if</span> (atIndex == -<span class="num">1</span>)
+        <span class="kw">return</span> <span class="tp">ReadOnlySpan</span>&lt;<span class="tp">char</span>&gt;.Empty;
+
+    <span class="cm">// Slice from the character AFTER '@' to the end</span>
+    <span class="kw">return</span> email.<span class="fn">Slice</span>(atIndex + <span class="num">1</span>);
+}
+
+<span class="cm">// Usage</span>
+<span class="tp">string</span>[] emails =
+{
+    <span class="str">"alice@gmail.com"</span>,       <span class="str">"bob@outlook.com"</span>,
+    <span class="str">"charlie@company.org"</span>,   <span class="str">"diana@university.edu"</span>,
+    <span class="str">"eve@startup.io"</span>,        <span class="str">"frank@enterprise.com"</span>,
+    <span class="str">"grace@research.net"</span>,    <span class="str">"henry@design.co"</span>,
+    <span class="str">"iris@consulting.biz"</span>,   <span class="str">"jack@engineering.dev"</span>
+};
+
+<span class="kw">foreach</span> (<span class="tp">string</span> email <span class="kw">in</span> emails)
+{
+    <span class="tp">ReadOnlySpan</span>&lt;<span class="tp">char</span>&gt; domain = <span class="fn">ExtractDomain</span>(email.<span class="fn">AsSpan</span>());
+
+    <span class="cm">// Print without allocating a new string</span>
+    Console.<span class="fn">Write</span>(<span class="str">"Domain: "</span>);
+    <span class="kw">foreach</span> (<span class="tp">char</span> c <span class="kw">in</span> domain)
+        Console.<span class="fn">Write</span>(c);
+    Console.<span class="fn">WriteLine</span>();
+}
+
+<span class="cm">// Output:</span>
+<span class="cm">// Domain: gmail.com</span>
+<span class="cm">// Domain: outlook.com</span>
+<span class="cm">// Domain: company.org</span>
+<span class="cm">// ... etc.</span>
+
+<span class="cm">// NOTE: If you need the domain as a string (e.g., for a dictionary key),</span>
+<span class="cm">// you can call .ToString() on the span — but that DOES allocate.</span>
+<span class="cm">// The power of Span is when you can stay in "span world" for the</span>
+<span class="cm">// entire operation without materializing strings.</span></pre>
+
+      <p><strong>Key points:</strong> <code>IndexOf</code> and <code>Slice</code> on <code>ReadOnlySpan&lt;char&gt;</code> are both zero-allocation operations. The entire pipeline processes all 10 emails without creating a single new string object on the heap. In a real log-processing or data-parsing scenario, this can reduce GC pressure by orders of magnitude.</p>
+    </div>
+  </details>
+
+  <!-- ===== SECTION: What's Next ===== -->
+  <h2>Where to Go From Here</h2>
+  <p>You've now covered the complete arc from foundational interfaces through high-performance modern C#. Here are some recommended next steps to deepen your practice:</p>
+
+  <ul>
+    <li><strong>Benchmark your code</strong> using BenchmarkDotNet — it's the gold standard for .NET micro-benchmarks and will reveal surprising performance truths about your assumptions.</li>
+    <li><strong>Explore System.IO.Pipelines</strong> — the next evolution beyond <code>Span&lt;T&gt;</code> for high-throughput I/O processing (used internally by Kestrel, the ASP.NET Core web server).</li>
+    <li><strong>Practice LeetCode problems</strong> focusing on <code>Dictionary</code>, <code>HashSet</code>, two-pointer techniques, and sliding window — these map directly to the data structures covered in this course.</li>
+    <li><strong>Read EF Core's generated SQL</strong> — enable logging on every query you write and verify the SQL matches your expectations. This habit alone prevents most N+1 issues.</li>
+  </ul>
+
+  <div class="callout tip">
+    <strong>Final advice</strong>
+    The gap between "understanding the concept" and "writing it fluently under interview pressure" is bridged by repetition. Revisit the challenges in each lesson until you can solve them from memory, and you'll walk into any C# technical interview with confidence.
+  </div>
+
+  <!-- NAV -->
+  <div class="page-nav">
+    <a href="lesson4.html">
+      <span class="label">Previous</span>
+      <span class="title">← Advanced LINQ Transformations</span>
+    </a>
+    <a href="index.html" class="next">
+      <span class="label">Back to</span>
+      <span class="title">Course Overview →</span>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>C# Data Structures &amp; LINQ — Study Guide</p>
+</footer>
+
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var icon = toggle.querySelector('.theme-toggle__icon');
+  var label = toggle.querySelector('.theme-toggle__label');
+
+  function getPreferred() {
+    var saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'light') {
+      icon.textContent = '\u263E';
+      label.textContent = 'Dark';
+    } else {
+      icon.textContent = '\u2600';
+      label.textContent = 'Light';
+    }
+  }
+
+  apply(getPreferred());
+
+
+  // Hamburger menu
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.querySelector('nav');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function() {
+      var expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+    });
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    apply(current === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
+</body>
+</html>

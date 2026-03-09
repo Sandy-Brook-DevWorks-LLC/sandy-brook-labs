@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# Data Structures &amp; LINQ — Complete Course</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="site-header__inner">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">
+      <span class="menu-btn__open">&#9776;</span>
+      <span class="menu-btn__close">&#10005;</span>
+    </button>
+    <a href="index.html" class="site-header__logo">C# <span>DS &amp; LINQ</span></a>
+    <nav>
+      <a href="lesson1.html">Lesson 1</a>
+      <a href="lesson2.html">Lesson 2</a>
+      <a href="lesson3.html">Lesson 3</a>
+      <a href="lesson4.html">Lesson 4</a>
+      <a href="lesson5.html">Lesson 5</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <span class="theme-toggle__icon"></span>
+      <span class="theme-toggle__label"></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Master <span class="highlight">Data Structures</span> &amp; <span class="highlight">LINQ</span> in C#</h1>
+  <p>A 5-lesson study guide designed for experienced developers who want to sharpen their day-to-day coding skills, ace technical interviews, and bridge the gap between architectural thinking and hands-on implementation.</p>
+</section>
+
+<!-- COURSE ROADMAP -->
+<section style="max-width:var(--max-w);margin:0 auto;padding:0 24px 48px;">
+  <div class="callout tip">
+    <strong>Who is this for?</strong>
+    Welcome back to hands-on coding! It is incredibly common for developers transitioning back from a systems architect role to feel a bit rusty with specific syntax and standard library nuances. Since you already possess a strong architectural foundation, you will likely pick up the internal mechanics of these tools very quickly. Stick to this guide for 1–2 hours a day and your gap in day-to-day coding muscle memory will close rapidly, backed by your deep understanding of execution lifecycles.
+  </div>
+</section>
+
+<!-- LESSON CARDS -->
+<section class="lessons-grid">
+
+  <a href="lesson1.html" class="lesson-card">
+    <span class="lesson-card__number">Lesson 1</span>
+    <h3>Core Interfaces &amp; Linear Data Structures</h3>
+    <p>Understand the hierarchy of <code>IEnumerable</code>, <code>ICollection</code>, and <code>IList</code>. Learn how <code>List&lt;T&gt;</code> works under the hood and how to optimize its performance.</p>
+    <span class="lesson-card__link">Start lesson</span>
+  </a>
+
+  <a href="lesson2.html" class="lesson-card">
+    <span class="lesson-card__number">Lesson 2</span>
+    <h3>Hash-Based &amp; Sorted Data Structures</h3>
+    <p>Master <code>Dictionary</code>, <code>HashSet</code>, and sorted collections. Understand hashing algorithms and Big O tradeoffs between O(1) and O(log n).</p>
+    <span class="lesson-card__link">Start lesson</span>
+  </a>
+
+  <a href="lesson3.html" class="lesson-card">
+    <span class="lesson-card__number">Lesson 3</span>
+    <h3>Introduction to LINQ &amp; Execution Models</h3>
+    <p>Connect <code>IEnumerable</code> to LINQ. Master deferred vs. immediate execution and understand the critical <code>IEnumerable</code> vs. <code>IQueryable</code> distinction.</p>
+    <span class="lesson-card__link">Start lesson</span>
+  </a>
+
+  <a href="lesson4.html" class="lesson-card">
+    <span class="lesson-card__number">Lesson 4</span>
+    <h3>Advanced LINQ Transformations &amp; Set Operations</h3>
+    <p>Learn to project, flatten, group, and aggregate data with <code>Select</code>, <code>SelectMany</code>, <code>GroupBy</code>, <code>Aggregate</code>, and set operations.</p>
+    <span class="lesson-card__link">Start lesson</span>
+  </a>
+
+  <a href="lesson5.html" class="lesson-card">
+    <span class="lesson-card__number">Lesson 5</span>
+    <h3>Modern High-Performance C# &amp; Real-World Scenarios</h3>
+    <p>Explore <code>Span&lt;T&gt;</code>, <code>Memory&lt;T&gt;</code>, pagination patterns, and the N+1 query problem. Prepare for real-world architecture interview questions.</p>
+    <span class="lesson-card__link">Start lesson</span>
+  </a>
+
+</section>
+
+<!-- WHAT IS BIG-O? -->
+<section style="max-width:var(--max-w);margin:0 auto;padding:0 24px 48px;">
+  <h2 style="font-size:1.45rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border);">What Is Big O Notation?</h2>
+
+  <p>Big O notation describes <strong>how an algorithm's performance scales</strong> as the input size (<em>n</em>) grows. It doesn't measure exact execution time — it captures the <em>growth rate</em> of time or space requirements in the <strong>worst case</strong>. This is the language interviewers use to discuss algorithmic efficiency, so fluency here is essential.</p>
+
+  <h3 style="margin-top:24px;">How to Read It</h3>
+  <p>When we say an operation is <strong>O(n)</strong>, we mean: "as <em>n</em> doubles, the work <em>roughly</em> doubles." Big O strips away constants and lower-order terms — <code>3n² + 5n + 100</code> simplifies to <strong>O(n²)</strong> because <em>n²</em> dominates as <em>n</em> gets large. Think of it as a ceiling on growth, not a precise stopwatch.</p>
+
+  <h3 style="margin-top:24px;">Common Complexities (Best → Worst)</h3>
+
+<pre style="color:var(--accent-light);font-size:.82rem;line-height:1.9;overflow-x:auto;">
+  <span class="bigo o1">O(1)</span>       Constant      — Array index access, dictionary lookup.
+                              Performance is the same whether n = 10 or n = 10 million.
+
+  <span class="bigo ologn">O(log n)</span>   Logarithmic   — Binary search, balanced-tree operations.
+                              Doubling n adds only one extra step.
+
+  <span class="bigo on">O(n)</span>       Linear        — Scanning a list, <code>List&lt;T&gt;.Contains()</code>.
+                              Work grows proportionally with input size.
+
+  <span class="bigo onlogn">O(n log n)</span> Log-linear    — Efficient sorting (<code>Array.Sort</code>, merge sort).
+                              The practical speed limit for comparison-based sorting.
+
+  <span class="bigo on">O(n²)</span>      Quadratic     — Nested loops over the same collection.
+                              Doubling n quadruples the work. Avoid for large n.
+</pre>
+
+  <h3 style="margin-top:24px;">Why It Matters in Interviews</h3>
+  <p>Interviewers expect you to state the Big O of your solution <em>before they ask</em>. A working O(n²) brute-force is a fine starting point, but you'll be asked to optimize. Knowing Big O lets you reason about trade-offs: "I can reduce this from O(n²) to O(n) by swapping the inner loop for a <code>HashSet&lt;T&gt;</code> lookup, trading O(n) extra space for O(n) time." That's exactly the kind of analysis that demonstrates depth.</p>
+
+  <div class="callout tip">
+    <strong>Quick rule of thumb:</strong> for typical interview constraints (n ≤ 10⁶), O(n log n) is fast, O(n²) is borderline, and O(2ⁿ) is only feasible for very small inputs (n ≤ 20–25). Always consider both time <em>and</em> space complexity — interviewers care about both.
+  </div>
+</section>
+
+<!-- QUICK-REF BIG-O TABLE -->
+<section style="max-width:var(--max-w);margin:0 auto;padding:0 24px 80px;">
+  <h2 style="font-size:1.45rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border);">Quick-Reference: Big O Cheat Sheet</h2>
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Data Structure</th><th>Add</th><th>Search</th><th>Remove</th><th>Access by Index</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>List&lt;T&gt;</code></td>
+        <td><span class="bigo on">O(n)</span> / <span class="bigo o1">O(1)*</span></td>
+        <td><span class="bigo on">O(n)</span></td>
+        <td><span class="bigo on">O(n)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+      </tr>
+      <tr>
+        <td><code>Dictionary&lt;K,V&gt;</code></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><code>HashSet&lt;T&gt;</code></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><code>SortedList&lt;K,V&gt;</code></td>
+        <td><span class="bigo on">O(n)</span></td>
+        <td><span class="bigo ologn">O(log n)</span></td>
+        <td><span class="bigo on">O(n)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+      </tr>
+      <tr>
+        <td><code>LinkedList&lt;T&gt;</code></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td><span class="bigo on">O(n)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td><span class="bigo on">O(n)</span></td>
+      </tr>
+      <tr>
+        <td><code>Queue&lt;T&gt;</code> / <code>Stack&lt;T&gt;</code></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td><span class="bigo on">O(n)</span></td>
+        <td><span class="bigo o1">O(1)</span></td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><code>PriorityQueue&lt;E,P&gt;</code></td>
+        <td><span class="bigo ologn">O(log n)</span></td>
+        <td><span class="bigo on">O(n)</span></td>
+        <td><span class="bigo ologn">O(log n)</span></td>
+        <td>N/A</td>
+      </tr>
+    </tbody>
+  </table></div>
+  <p style="color:var(--text-dim);font-size:.85rem;">* O(1) amortized when capacity is pre-defined or the list hasn't exceeded its internal array size. SortedList Add/Remove are O(n) due to array shifting despite O(log n) binary search to find the position.</p>
+</section>
+
+<footer class="site-footer">
+  <p>C# Data Structures &amp; LINQ — Study Guide</p>
+</footer>
+
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var icon = toggle.querySelector('.theme-toggle__icon');
+  var label = toggle.querySelector('.theme-toggle__label');
+
+  function getPreferred() {
+    var saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'light') {
+      icon.textContent = '\u263E';
+      label.textContent = 'Dark';
+    } else {
+      icon.textContent = '\u2600';
+      label.textContent = 'Light';
+    }
+  }
+
+  apply(getPreferred());
+
+
+  // Hamburger menu
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.querySelector('nav');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function() {
+      var expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+    });
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    apply(current === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
+</body>
+</html>

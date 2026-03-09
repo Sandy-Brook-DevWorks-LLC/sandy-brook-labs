@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 2: Hash-Based &amp; Sorted Data Structures — C# DS &amp; LINQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">
+      <span class="menu-btn__open">&#9776;</span>
+      <span class="menu-btn__close">&#10005;</span>
+    </button>
+    <a href="index.html" class="site-header__logo">C# <span>DS &amp; LINQ</span></a>
+    <nav>
+      <a href="lesson1.html">Lesson 1</a>
+      <a href="lesson2.html" class="active">Lesson 2</a>
+      <a href="lesson3.html">Lesson 3</a>
+      <a href="lesson4.html">Lesson 4</a>
+      <a href="lesson5.html">Lesson 5</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <span class="theme-toggle__icon"></span>
+      <span class="theme-toggle__label"></span>
+    </button>
+  </div>
+</header>
+
+<main class="page">
+  <h1>Lesson 2: Hash-Based &amp; Sorted Data Structures</h1>
+  <p class="subtitle">Master non-linear data structures, hashing fundamentals, and their Big O tradeoffs.</p>
+
+  <!-- ===== SECTION: Hashing Fundamentals ===== -->
+  <h2>How Hashing Works in .NET</h2>
+  <p>Before diving into <code>Dictionary</code> and <code>HashSet</code>, it's essential to understand the hashing mechanism that powers them. Every object in .NET has a <code>GetHashCode()</code> method (inherited from <code>System.Object</code>). When you store a key in a hash-based collection, the runtime calls <code>GetHashCode()</code> to compute a numeric hash, which is then mapped to a "bucket" — a slot in an internal array.</p>
+
+  <p>Retrieving an element means: compute the hash, find the bucket, then compare with <code>Equals()</code> to locate the exact item. Because this lookup doesn't depend on how many elements are in the collection (it goes directly to the right bucket), it runs in <span class="bigo o1">O(1)</span> average time.</p>
+
+  <div class="callout warn">
+    <strong>Hash collisions</strong>
+    When two different keys produce the same hash code, they land in the same bucket — this is called a collision. .NET handles this with chaining (storing a linked list of entries per bucket). In the worst case (all keys collide), operations degrade to <span class="bigo on">O(n)</span>. In practice, the default hash functions distribute well, and you rarely encounter this.
+  </div>
+
+  <h3>The Contract: GetHashCode() and Equals()</h3>
+  <p>If you use custom objects as dictionary keys or in hash sets, you must correctly implement both <code>GetHashCode()</code> and <code>Equals()</code>. The rules are:</p>
+
+  <ul>
+    <li>If <code>a.Equals(b)</code> is <code>true</code>, then <code>a.GetHashCode()</code> must equal <code>b.GetHashCode()</code>.</li>
+    <li>The reverse is not required — two unequal objects may share the same hash code (collisions are allowed).</li>
+    <li><code>GetHashCode()</code> must be consistent: calling it multiple times on the same object should return the same value (as long as the object hasn't changed).</li>
+    <li>Mutable objects used as keys are dangerous — if you change a field that affects the hash code after inserting the object, the dictionary can never find it again.</li>
+  </ul>
+
+<pre><span class="kw">public class</span> <span class="tp">Employee</span>
+{
+    <span class="kw">public</span> <span class="tp">int</span> Id { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="tp">string</span> Name { <span class="kw">get</span>; <span class="kw">set</span>; }
+
+    <span class="kw">public override</span> <span class="tp">bool</span> <span class="fn">Equals</span>(<span class="tp">object</span> obj)
+    {
+        <span class="kw">return</span> obj <span class="kw">is</span> <span class="tp">Employee</span> other &amp;&amp; Id == other.Id;
+    }
+
+    <span class="kw">public override</span> <span class="tp">int</span> <span class="fn">GetHashCode</span>()
+    {
+        <span class="kw">return</span> Id.<span class="fn">GetHashCode</span>(); <span class="cm">// Consistent with Equals</span>
+    }
+}</pre>
+
+  <div class="callout tip">
+    <strong>Modern shortcut</strong>
+    In C# 9+, <code>record</code> types automatically generate correct <code>Equals()</code> and <code>GetHashCode()</code> implementations based on all their properties. Using <code>record</code> for dictionary keys is a clean, safe approach.
+  </div>
+
+  <!-- ===== SECTION: Dictionary ===== -->
+  <h2>Dictionary&lt;TKey, TValue&gt;</h2>
+  <p>The workhorse of key-value storage in C#. It maps a unique key to a value using hashing. It is unordered — you cannot rely on the order of enumeration.</p>
+
+  <h3>Core Operations and Complexity</h3>
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Operation</th><th>Complexity</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>Add(key, value)</code></td><td><span class="bigo o1">O(1)</span></td><td>Amortized; O(n) on resize</td></tr>
+      <tr><td><code>[key]</code> (get/set)</td><td><span class="bigo o1">O(1)</span></td><td>Throws <code>KeyNotFoundException</code> on missing key</td></tr>
+      <tr><td><code>ContainsKey(key)</code></td><td><span class="bigo o1">O(1)</span></td><td>Checks existence without retrieving value</td></tr>
+      <tr><td><code>ContainsValue(value)</code></td><td><span class="bigo on">O(n)</span></td><td>Must scan all values (no hash on values)</td></tr>
+      <tr><td><code>Remove(key)</code></td><td><span class="bigo o1">O(1)</span></td><td>Removes by key</td></tr>
+      <tr><td><code>TryGetValue(key, out value)</code></td><td><span class="bigo o1">O(1)</span></td><td>Safe lookup — no exception on missing key</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Best Practices</h3>
+
+<pre><span class="cm">// ALWAYS prefer TryGetValue over ContainsKey + indexer</span>
+<span class="cm">// BAD: Two hash lookups</span>
+<span class="kw">if</span> (userMap.<span class="fn">ContainsKey</span>(userId))
+{
+    <span class="pk">var</span> user = userMap[userId]; <span class="cm">// Second lookup!</span>
+}
+
+<span class="cm">// GOOD: Single hash lookup</span>
+<span class="kw">if</span> (userMap.<span class="fn">TryGetValue</span>(userId, <span class="kw">out</span> <span class="pk">var</span> user))
+{
+    <span class="cm">// Use 'user' directly</span>
+}
+
+<span class="cm">// Pre-define capacity when you know the size</span>
+<span class="pk">var</span> lookup = <span class="pk">new</span> <span class="tp">Dictionary</span>&lt;<span class="tp">string</span>, <span class="tp">int</span>&gt;(<span class="num">50000</span>);</pre>
+
+  <div class="callout">
+    <strong>Interview favorite</strong>
+    "Why use <code>TryGetValue</code> instead of checking <code>ContainsKey</code> and then accessing the indexer?" Because <code>ContainsKey</code> + <code>[key]</code> performs <em>two</em> hash lookups, while <code>TryGetValue</code> does it in one. In hot loops, this doubles your hash computation cost unnecessarily.
+  </div>
+
+  <h3>C# 9+ Collection Expressions and Patterns</h3>
+<pre><span class="cm">// Collection initializer syntax</span>
+<span class="pk">var</span> capitals = <span class="pk">new</span> <span class="tp">Dictionary</span>&lt;<span class="tp">string</span>, <span class="tp">string</span>&gt;
+{
+    [<span class="str">"France"</span>] = <span class="str">"Paris"</span>,
+    [<span class="str">"Japan"</span>] = <span class="str">"Tokyo"</span>,
+    [<span class="str">"Brazil"</span>] = <span class="str">"Brasília"</span>
+};
+
+<span class="cm">// GetValueOrDefault (since .NET Core 2.0 / .NET 5+)</span>
+<span class="tp">string</span> capital = capitals.<span class="fn">GetValueOrDefault</span>(<span class="str">"Italy"</span>, <span class="str">"Unknown"</span>);</pre>
+
+  <!-- ===== SECTION: HashSet ===== -->
+  <h2>HashSet&lt;T&gt;</h2>
+  <p><code>HashSet&lt;T&gt;</code> is a collection of unique elements. Think of it as a <code>Dictionary</code> where you only care about the keys. It uses the same hashing mechanism, giving it <span class="bigo o1">O(1)</span> for <code>Add</code>, <code>Contains</code>, and <code>Remove</code>.</p>
+
+  <h3>Set Operations</h3>
+  <p>What makes <code>HashSet&lt;T&gt;</code> truly powerful are its mathematical set operations:</p>
+
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Method</th><th>Description</th><th>Math Equivalent</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>UnionWith(other)</code></td><td>Adds all elements from <code>other</code></td><td>A ∪ B</td></tr>
+      <tr><td><code>IntersectWith(other)</code></td><td>Keeps only elements also in <code>other</code></td><td>A ∩ B</td></tr>
+      <tr><td><code>ExceptWith(other)</code></td><td>Removes elements that are in <code>other</code></td><td>A \ B</td></tr>
+      <tr><td><code>SymmetricExceptWith(other)</code></td><td>Keeps elements in one set but not both</td><td>A △ B</td></tr>
+      <tr><td><code>IsSubsetOf(other)</code></td><td>Checks if all elements are in <code>other</code></td><td>A ⊆ B</td></tr>
+      <tr><td><code>IsSupersetOf(other)</code></td><td>Checks if all elements of <code>other</code> are here</td><td>A ⊇ B</td></tr>
+      <tr><td><code>Overlaps(other)</code></td><td>Checks if any element is shared</td><td>A ∩ B ≠ ∅</td></tr>
+    </tbody>
+  </table></div>
+
+<pre><span class="tp">HashSet</span>&lt;<span class="tp">string</span>&gt; teamA = <span class="pk">new</span> <span class="tp">HashSet</span>&lt;<span class="tp">string</span>&gt; { <span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Charlie"</span> };
+<span class="tp">HashSet</span>&lt;<span class="tp">string</span>&gt; teamB = <span class="pk">new</span> <span class="tp">HashSet</span>&lt;<span class="tp">string</span>&gt; { <span class="str">"Bob"</span>, <span class="str">"Diana"</span>, <span class="str">"Eve"</span> };
+
+<span class="cm">// Who is on BOTH teams?</span>
+<span class="pk">var</span> both = <span class="pk">new</span> <span class="tp">HashSet</span>&lt;<span class="tp">string</span>&gt;(teamA);
+both.<span class="fn">IntersectWith</span>(teamB); <span class="cm">// {"Bob"}</span>
+
+<span class="cm">// Who is on team A but NOT team B?</span>
+<span class="pk">var</span> onlyA = <span class="pk">new</span> <span class="tp">HashSet</span>&lt;<span class="tp">string</span>&gt;(teamA);
+onlyA.<span class="fn">ExceptWith</span>(teamB); <span class="cm">// {"Alice", "Charlie"}</span>
+
+<span class="cm">// Case-insensitive set</span>
+<span class="pk">var</span> uniqueNames = <span class="pk">new</span> <span class="tp">HashSet</span>&lt;<span class="tp">string</span>&gt;(<span class="tp">StringComparer</span>.OrdinalIgnoreCase);
+uniqueNames.<span class="fn">Add</span>(<span class="str">"Alice"</span>);
+uniqueNames.<span class="fn">Add</span>(<span class="str">"ALICE"</span>); <span class="cm">// Returns false — already exists</span></pre>
+
+  <!-- ===== SECTION: Sorted Collections ===== -->
+  <h2>Sorted Collections</h2>
+  <p>When you need your data to stay in sorted order at all times, .NET provides several options. They sacrifice the <span class="bigo o1">O(1)</span> performance of hash-based structures for <span class="bigo ologn">O(log n)</span> operations in exchange for ordering.</p>
+
+  <h3>SortedList&lt;TKey, TValue&gt; vs. SortedDictionary&lt;TKey, TValue&gt;</h3>
+  <p>Both keep keys sorted, but their internal implementations differ significantly:</p>
+
+  <div class="table-wrap"><table>
+    <thead>
+      <tr><th>Feature</th><th><code>SortedList</code></th><th><code>SortedDictionary</code></th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Internal structure</td><td>Two parallel arrays (keys + values)</td><td>Red-black tree</td></tr>
+      <tr><td>Memory usage</td><td>Lower (contiguous arrays)</td><td>Higher (tree node overhead)</td></tr>
+      <tr><td>Insert / Remove</td><td><span class="bigo on">O(n)</span> (array shifting)</td><td><span class="bigo ologn">O(log n)</span></td></tr>
+      <tr><td>Lookup by key</td><td><span class="bigo ologn">O(log n)</span> (binary search)</td><td><span class="bigo ologn">O(log n)</span></td></tr>
+      <tr><td>Access by index</td><td><span class="bigo o1">O(1)</span> via <code>.Keys[i]</code></td><td>Not supported</td></tr>
+      <tr><td>Best for</td><td>Data loaded once, queried often</td><td>Frequent insertions/removals</td></tr>
+    </tbody>
+  </table></div>
+
+<pre><span class="cm">// SortedList — keeps entries sorted by key</span>
+<span class="pk">var</span> scores = <span class="pk">new</span> <span class="tp">SortedList</span>&lt;<span class="tp">string</span>, <span class="tp">int</span>&gt;();
+scores.<span class="fn">Add</span>(<span class="str">"Charlie"</span>, <span class="num">92</span>);
+scores.<span class="fn">Add</span>(<span class="str">"Alice"</span>, <span class="num">88</span>);
+scores.<span class="fn">Add</span>(<span class="str">"Bob"</span>, <span class="num">95</span>);
+
+<span class="cm">// Iterating produces: Alice=88, Bob=95, Charlie=92</span>
+<span class="kw">foreach</span> (<span class="pk">var</span> kvp <span class="kw">in</span> scores)
+{
+    Console.<span class="fn">WriteLine</span>(<span class="str">$"{kvp.Key}: {kvp.Value}"</span>);
+}
+
+<span class="cm">// Access by index (unique to SortedList)</span>
+<span class="tp">string</span> firstKey = scores.Keys[<span class="num">0</span>]; <span class="cm">// "Alice"</span></pre>
+
+  <h3>SortedSet&lt;T&gt;</h3>
+  <p>The sorted counterpart of <code>HashSet&lt;T&gt;</code>. It keeps elements in sorted order using a red-black tree. It supports the same set operations (<code>UnionWith</code>, <code>IntersectWith</code>, etc.) and also offers <code>GetViewBetween(lower, upper)</code> to get a live view of a range of elements.</p>
+
+<pre><span class="pk">var</span> sortedNums = <span class="pk">new</span> <span class="tp">SortedSet</span>&lt;<span class="tp">int</span>&gt; { <span class="num">50</span>, <span class="num">10</span>, <span class="num">30</span>, <span class="num">20</span>, <span class="num">40</span> };
+<span class="cm">// Iteration order: 10, 20, 30, 40, 50</span>
+
+<span class="cm">// Get a live range view (20 to 40 inclusive)</span>
+<span class="pk">var</span> range = sortedNums.<span class="fn">GetViewBetween</span>(<span class="num">20</span>, <span class="num">40</span>);
+<span class="cm">// range: {20, 30, 40}</span>
+<span class="cm">// If you add 25 to sortedNums, range automatically includes it</span></pre>
+
+  <!-- ===== SECTION: Choosing the Right Structure ===== -->
+  <h2>Decision Guide: Which Structure to Use?</h2>
+
+  <div class="callout tip">
+    <strong>Quick decision tree</strong>
+    Do you need key-value pairs? → <code>Dictionary</code> or <code>SortedDictionary</code>. Just unique values? → <code>HashSet</code> or <code>SortedSet</code>. Need ordering? → Use the "Sorted" variant. Need max speed? → Use the hash-based variant. Need indexed access to sorted data? → <code>SortedList</code>.
+  </div>
+
+  <!-- ===== SECTION: ConcurrentDictionary Bonus ===== -->
+  <h2>Bonus: ConcurrentDictionary&lt;TKey, TValue&gt;</h2>
+  <p>In multi-threaded scenarios, a regular <code>Dictionary</code> is not thread-safe. <code>ConcurrentDictionary</code> (in <code>System.Collections.Concurrent</code>) uses fine-grained locking (striped locks across buckets) to allow safe concurrent reads and writes without locking the entire collection.</p>
+
+  <p>Key methods:</p>
+  <ul>
+    <li><code>TryAdd(key, value)</code> — Adds if the key doesn't exist.</li>
+    <li><code>TryRemove(key, out value)</code> — Atomically removes and returns.</li>
+    <li><code>GetOrAdd(key, valueFactory)</code> — Returns the existing value or computes and adds a new one. The dictionary state is thread-safe, but <strong>the factory delegate may execute multiple times</strong> under contention (only one result is stored). If the factory has side effects (e.g., opening a connection), use <code>Lazy&lt;T&gt;</code> as the value type.</li>
+    <li><code>AddOrUpdate(key, addValue, updateFactory)</code> — Adds or updates depending on key existence.</li>
+  </ul>
+
+<pre><span class="pk">var</span> cache = <span class="pk">new</span> <span class="tp">ConcurrentDictionary</span>&lt;<span class="tp">string</span>, <span class="tp">int</span>&gt;();
+
+<span class="cm">// Thread-safe "get or compute" pattern</span>
+<span class="tp">int</span> count = cache.<span class="fn">GetOrAdd</span>(<span class="str">"pageViews"</span>, key =&gt; <span class="fn">LoadFromDatabase</span>(key));
+
+<span class="cm">// Atomic increment</span>
+cache.<span class="fn">AddOrUpdate</span>(<span class="str">"pageViews"</span>, <span class="num">1</span>, (key, old) =&gt; old + <span class="num">1</span>);
+
+<span class="cm">// Safe pattern: Lazy&lt;T&gt; ensures factory runs only once</span>
+<span class="pk">var</span> safeCache = <span class="pk">new</span> <span class="tp">ConcurrentDictionary</span>&lt;<span class="tp">string</span>, <span class="tp">Lazy</span>&lt;<span class="tp">ExpensiveObject</span>&gt;&gt;();
+<span class="pk">var</span> value = safeCache.<span class="fn">GetOrAdd</span>(
+    <span class="str">"key"</span>,
+    k =&gt; <span class="pk">new</span> <span class="tp">Lazy</span>&lt;<span class="tp">ExpensiveObject</span>&gt;(() =&gt; <span class="pk">new</span> <span class="tp">ExpensiveObject</span>(k))
+).Value;</pre>
+
+  <div class="callout warn">
+    <strong>Interview trap: GetOrAdd is not fully atomic</strong>
+    The <code>GetOrAdd</code> and <code>AddOrUpdate</code> factory delegates may execute more than once under thread contention. Only one result is stored, but if your factory allocates resources (database connections, file handles), you can leak the duplicates. The standard fix is to wrap the value in <code>Lazy&lt;T&gt;</code> so the expensive work only happens once, when <code>.Value</code> is accessed.
+  </div>
+
+  <!-- ===== CHALLENGE ===== -->
+  <div class="challenge">
+    <h3>Coding Challenge</h3>
+    <p>Given an array of integers with many duplicates, write a function that returns a <code>Dictionary&lt;int, int&gt;</code> where the key is the number and the value is its frequency. Do this in O(n) time.</p>
+    <p><strong>Bonus:</strong> Make the function generic so it works with any <code>IEnumerable&lt;T&gt;</code>.</p>
+  </div>
+
+  <details>
+    <summary>View Solution</summary>
+    <div class="solution-body">
+<pre><span class="cm">// Basic solution — int-specific</span>
+<span class="kw">public static</span> <span class="tp">Dictionary</span>&lt;<span class="tp">int</span>, <span class="tp">int</span>&gt; <span class="fn">CountFrequencies</span>(<span class="tp">int</span>[] numbers)
+{
+    <span class="pk">var</span> freq = <span class="pk">new</span> <span class="tp">Dictionary</span>&lt;<span class="tp">int</span>, <span class="tp">int</span>&gt;(numbers.Length);
+
+    <span class="kw">foreach</span> (<span class="tp">int</span> num <span class="kw">in</span> numbers)
+    {
+        <span class="cm">// TryGetValue: single lookup instead of ContainsKey + indexer</span>
+        <span class="kw">if</span> (freq.<span class="fn">TryGetValue</span>(num, <span class="kw">out</span> <span class="tp">int</span> count))
+        {
+            freq[num] = count + <span class="num">1</span>;
+        }
+        <span class="kw">else</span>
+        {
+            freq[num] = <span class="num">1</span>;
+        }
+    }
+
+    <span class="kw">return</span> freq;
+}
+
+<span class="cm">// BONUS: Generic version using CollectionsMarshal (since .NET 6)</span>
+<span class="kw">using</span> System.Runtime.InteropServices;
+
+<span class="kw">public static</span> <span class="tp">Dictionary</span>&lt;<span class="tp">T</span>, <span class="tp">int</span>&gt; <span class="fn">CountFrequencies</span>&lt;<span class="tp">T</span>&gt;(
+    <span class="tp">IEnumerable</span>&lt;<span class="tp">T</span>&gt; items) <span class="kw">where</span> <span class="tp">T</span> : <span class="kw">notnull</span>
+{
+    <span class="pk">var</span> freq = <span class="pk">new</span> <span class="tp">Dictionary</span>&lt;<span class="tp">T</span>, <span class="tp">int</span>&gt;();
+
+    <span class="kw">foreach</span> (<span class="tp">T</span> item <span class="kw">in</span> items)
+    {
+        <span class="cm">// GetValueRefOrAddDefault returns a ref to the value slot</span>
+        <span class="kw">ref</span> <span class="tp">int</span> count = <span class="kw">ref</span> <span class="tp">CollectionsMarshal</span>
+            .<span class="fn">GetValueRefOrAddDefault</span>(freq, item, <span class="kw">out</span> _);
+        count++;
+    }
+
+    <span class="kw">return</span> freq;
+}
+
+<span class="cm">// Usage:</span>
+<span class="tp">int</span>[] data = { <span class="num">1</span>, <span class="num">3</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">4</span>, <span class="num">3</span> };
+<span class="pk">var</span> result = <span class="fn">CountFrequencies</span>(data);
+<span class="cm">// {1: 3, 3: 3, 2: 1, 4: 1}</span></pre>
+
+      <p><strong>Analysis:</strong> We iterate once through the array, performing one O(1) dictionary lookup per element. Total: O(n). Pre-allocating the dictionary capacity avoids internal resizing. The bonus solution uses <code>CollectionsMarshal.GetValueRefOrAddDefault</code> for a single-lookup increment — the fastest possible pattern in .NET 6+.</p>
+    </div>
+  </details>
+
+  <!-- NAV -->
+  <div class="page-nav">
+    <a href="lesson1.html">
+      <span class="label">Previous</span>
+      <span class="title">← Core Interfaces &amp; Linear Structures</span>
+    </a>
+    <a href="lesson3.html" class="next">
+      <span class="label">Next Lesson</span>
+      <span class="title">Intro to LINQ &amp; Execution Models →</span>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>C# Data Structures &amp; LINQ — Study Guide</p>
+</footer>
+
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var icon = toggle.querySelector('.theme-toggle__icon');
+  var label = toggle.querySelector('.theme-toggle__label');
+
+  function getPreferred() {
+    var saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'light') {
+      icon.textContent = '\u263E';
+      label.textContent = 'Dark';
+    } else {
+      icon.textContent = '\u2600';
+      label.textContent = 'Light';
+    }
+  }
+
+  apply(getPreferred());
+
+
+  // Hamburger menu
+  var menuBtn = document.getElementById('menuBtn');
+  var nav = document.querySelector('nav');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function() {
+      var expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+    });
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    apply(current === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
+</body>
+</html>
