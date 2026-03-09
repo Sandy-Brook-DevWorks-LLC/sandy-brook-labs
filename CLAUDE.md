@@ -14,7 +14,7 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 |------------------|---------|
 | `index.html` | Main ProjectLab page (Relay, CogniWatch) |
 | `styles/brand.css` | **Shared** — CSS custom properties, brand colors, grid bg, dark mode overrides |
-| `styles/theme.js` | **Shared** — `toggleTheme()` function for dark mode button |
+| `styles/theme.js` | **Shared** — `toggleTheme()`, `toggleMenu()`, `closeMenu()` functions |
 | `guides/index.html` | Guides hub page |
 | `guides/content.css` | **Shared** — Content styling for all guide pages (typography, callouts, code blocks, tables, etc.) |
 | `guides/linq/` | C# Data Structures & LINQ course (index + 5 lessons) |
@@ -29,9 +29,9 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 
 Three files eliminate duplication across all pages:
 
-1. **`styles/brand.css`** — CSS variables (`--brand-teal`, `--font-sans`), body font stack, grid background SVGs, `.dark` utility overrides. Linked via `<link rel="stylesheet">`.
+1. **`styles/brand.css`** — CSS variables (`--brand-teal`, `--font-sans`), body font stack, grid background SVGs, `.dark` utility overrides, mobile bottom sheet menu styles. Linked via `<link rel="stylesheet">`.
 
-2. **`styles/theme.js`** — The `toggleTheme()` function. Loaded via `<script src="...">` (no defer). Dark mode *init* is a 1-line inline `<script>` in each page's `<head>` to prevent FOUC.
+2. **`styles/theme.js`** — `toggleTheme()` for dark mode, `toggleMenu()`/`closeMenu()` for the mobile bottom sheet menu. Loaded via `<script src="...">` (no defer). Dark mode *init* is a 1-line inline `<script>` in each page's `<head>` to prevent FOUC.
 
 3. **`guides/content.css`** — Content styling for guide pages. Targets elements inside `<main>` via descendant selectors (`main h1`, `main p`, etc.). Includes callout system (`.callout.tip/warn/danger`), code block styling, table styling, challenge boxes, page nav, syntax highlighting spans, Big-O badges.
 
@@ -67,7 +67,7 @@ Class-based using `@custom-variant dark (&:where(.dark, .dark *))`. Toggle persi
 
 ### Main Page (`index.html`)
 
-1. **Navigation** — Sticky nav, logo, "Sandy Brook ProjectLab", links to Building/Shipped sections, dark mode toggle
+1. **Navigation** — Sticky nav, logo, "Sandy Brook ProjectLab", links to Building/Shipped/Developers sections, dark mode toggle, mobile hamburger menu (bottom sheet)
 2. **Hero** — Logo, badge, headline, subtitle
 3. **Currently Building** — Dark section with Relay project card
 4. **Past Projects** — CogniWatch project card with "Shipped" badge

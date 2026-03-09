@@ -14,7 +14,7 @@ A reference for anyone adding pages or guides to the Sandy Brook ProjectLab site
 | File | Purpose |
 |------|---------|
 | `styles/brand.css` | CSS custom properties (brand colors, fonts), grid background, dark mode utility overrides |
-| `styles/theme.js` | `toggleTheme()` function for the dark mode button |
+| `styles/theme.js` | `toggleTheme()`, `toggleMenu()`, `closeMenu()` functions |
 | `guides/content.css` | Content styling for guide pages: typography, callouts, code blocks, tables, challenge boxes, page nav, syntax highlighting |
 
 ## Color Palette
@@ -117,7 +117,15 @@ The nav adapts per page. Key parameters: logo path, subtitle text, nav links.
             </div>
         </div>
         <div class="flex items-center gap-4 md:gap-8">
-            <!-- Page-specific nav links here -->
+            <!-- Page-specific nav links (hidden on mobile, shown md+) -->
+            <!-- e.g. <a href="#section" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Link</a> -->
+
+            <!-- Hamburger menu button (mobile only) -->
+            <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Open Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+
+            <!-- Dark mode toggle -->
             <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
@@ -126,6 +134,26 @@ The nav adapts per page. Key parameters: logo path, subtitle text, nav links.
     </div>
 </nav>
 ```
+
+## Mobile Bottom Sheet Template
+
+Place this before `</body>` on every page. The links should match the desktop nav links for that page.
+
+```html
+<!-- Mobile Bottom Sheet -->
+<div id="mobile-menu">
+    <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
+    <div class="mobile-menu-sheet">
+        <div class="mobile-menu-handle"></div>
+        <!-- Page-specific links. For anchor links on the same page, add onclick="closeMenu()" -->
+        <a href="#section" onclick="closeMenu()">Section Name</a>
+        <a href="other-page/">Other Page</a>
+        <a href="https://example.com" target="_blank" rel="noopener noreferrer">External Link</a>
+    </div>
+</div>
+```
+
+Styles are defined in `styles/brand.css`. JS functions (`toggleMenu`, `closeMenu`) are in `styles/theme.js`.
 
 ## Footer Template
 
@@ -253,8 +281,9 @@ Span classes: `.kw` (keyword/blue), `.tp` (type/teal), `.str` (string/orange), `
    - The inline dark mode init script (1 line)
    - `<script src="../../styles/theme.js"></script>`
 4. Update the nav subtitle and lesson links for your guide
-5. Write content inside `<main>` using the components above
-6. Add a card linking to your guide in `guides/index.html`
+5. Add a hamburger button and mobile bottom sheet with matching links (see templates above)
+6. Write content inside `<main>` using the components above
+7. Add a card linking to your guide in `guides/index.html`
 
 ## How to Add a New Top-Level Page
 
@@ -262,4 +291,5 @@ Span classes: `.kw` (keyword/blue), `.tp` (type/teal), `.str` (string/orange), `
 2. Copy the `<head>` from `index.html` as a template
 3. Use `styles/brand.css` and `styles/theme.js` (no depth prefix needed)
 4. Do NOT link `guides/content.css` unless the page has guide-style content
-5. Add a nav link if appropriate
+5. Add a hamburger button and mobile bottom sheet with matching links (see templates above)
+6. Add a nav link if appropriate

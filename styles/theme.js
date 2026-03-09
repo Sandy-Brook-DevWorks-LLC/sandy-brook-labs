@@ -20,3 +20,29 @@ function toggleTheme() {
         localStorage.theme = 'dark'
     }
 }
+
+/**
+ * Mobile Menu — Bottom Sheet Toggle
+ *
+ * Requires an element with id="mobile-menu" in the page.
+ * See STYLE_GUIDE.md for the markup template.
+ */
+function toggleMenu() {
+    var menu = document.getElementById('mobile-menu')
+    if (!menu) return
+    if (menu.classList.contains('open')) {
+        menu.classList.remove('open')
+        document.body.style.overflow = ''
+    } else {
+        menu.classList.add('open')
+        document.body.style.overflow = 'hidden'
+    }
+}
+
+function closeMenu() {
+    var menu = document.getElementById('mobile-menu')
+    if (menu) {
+        menu.classList.remove('open')
+        document.body.style.overflow = ''
+    }
+}

@@ -54,6 +54,9 @@
                     <a href="lesson5.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">L5</a>
                 </div>
                 <a href="../" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Guides</a>
+                <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Open Menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                </button>
                 <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
@@ -382,5 +385,20 @@ cache.<span class="fn">AddOrUpdate</span>(<span class="str">"pageViews"</span>, 
             </div>
         </div>
     </footer>
+
+    <!-- Mobile Bottom Sheet -->
+    <div id="mobile-menu">
+        <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
+        <div class="mobile-menu-sheet">
+            <div class="mobile-menu-handle"></div>
+            <a href="index.html">Course Home</a>
+            <a href="lesson1.html">L1 — Core Interfaces</a>
+            <a href="lesson2.html">L2 — Hash &amp; Sorted</a>
+            <a href="lesson3.html">L3 — Specialized</a>
+            <a href="lesson4.html">L4 — LINQ Basics</a>
+            <a href="lesson5.html">L5 — Advanced LINQ</a>
+            <a href="../">All Guides</a>
+        </div>
+    </div>
 </body>
 </html>
