@@ -1,4 +1,4 @@
-# Sandy Brook ProjectLab
+# Sandy Brook Projects Lab
 
 A showcase of what [Sandy Brook DevWorks](https://sandybrookdevworks.com) is actively building and has shipped — from concept to production.
 

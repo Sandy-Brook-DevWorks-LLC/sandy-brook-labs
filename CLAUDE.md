@@ -1,4 +1,4 @@
-# Sandy Brook ProjectLab
+# Sandy Brook Projects Lab
 
 A static site showcasing Sandy Brook's internal product experiments and study guides. Sibling to the main Sandy Brook DevWorks site at `sandybrookdevworks.com` (source: `~/Repos/sandy-brook-web`).
 
@@ -12,7 +12,7 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 
 | File / Directory | Purpose |
 |------------------|---------|
-| `index.html` | Main ProjectLab page (Relay, CogniWatch) |
+| `index.html` | Main Projects Lab page (Relay, CogniWatch) |
 | `styles/brand.css` | **Shared** — CSS custom properties, brand colors, grid bg, dark mode overrides |
 | `styles/theme.js` | **Shared** — `toggleTheme()`, `toggleMenu()`, `closeMenu()` functions |
 | `guides/index.html` | Guides hub page |
@@ -67,7 +67,7 @@ Class-based using `@custom-variant dark (&:where(.dark, .dark *))`. Toggle persi
 
 ### Main Page (`index.html`)
 
-1. **Navigation** — Sticky nav, logo, "Sandy Brook ProjectLab", links to Building/Shipped/Developers sections, dark mode toggle, mobile hamburger menu (bottom sheet)
+1. **Navigation** — Sticky nav, logo, "Sandy Brook Projects Lab", links to Building/Shipped/Developers sections, dark mode toggle, mobile hamburger menu (bottom sheet)
 2. **Hero** — Logo, badge, headline, subtitle
 3. **Currently Building** — Dark section with Relay project card
 4. **Past Projects** — CogniWatch project card with "Shipped" badge
