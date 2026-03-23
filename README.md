@@ -10,7 +10,7 @@ A showcase of what [Sandy Brook DevWorks](https://sandybrookdevworks.com) is act
 
 ### Shipped
 
-- **CogniWatch** — An Apple Watch and iPhone app that brings conversational AI to your wrist. Voice-first, multilingual, with natural AI voices and privacy-first design. [Landing Page](https://cogniwatch.sandybrook.io/)
+- **KnowItOwl** — An Apple Watch and iPhone app that brings conversational AI to your wrist. Voice-first, multilingual, with natural AI voices and privacy-first design. [Landing Page](https://knowitowl.sandybrook.io)
 
 ## Tech Stack
 

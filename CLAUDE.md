@@ -12,7 +12,7 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 
 | File / Directory | Purpose |
 |------------------|---------|
-| `index.html` | Main Projects Lab page (Relay, CogniWatch) |
+| `index.html` | Main Projects Lab page (Relay, KnowItOwl) |
 | `styles/brand.css` | **Shared** — CSS custom properties, brand colors, grid bg, dark mode overrides |
 | `styles/theme.js` | **Shared** — `toggleTheme()`, `toggleMenu()`, `closeMenu()` functions |
 | `guides/index.html` | Guides hub page |
@@ -21,7 +21,7 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 | `blue_logo.jpg` | Light mode Sandy Brook logo |
 | `dark_logo.jpg` | Dark mode Sandy Brook logo |
 | `relay_logo.png` | Relay app icon |
-| `cogniwatch_logo.png` | CogniWatch app icon |
+| `cogniwatch_logo.png` | KnowItOwl app icon |
 | `STYLE_GUIDE.md` | **Human-readable design system reference** with templates and how-to guides |
 | `.claude/launch.json` | Preview server config (python3 http.server on port 8080) |
 
@@ -70,7 +70,7 @@ Class-based using `@custom-variant dark (&:where(.dark, .dark *))`. Toggle persi
 1. **Navigation** — Sticky nav, logo, "Sandy Brook Projects Lab", links to Building/Shipped/Developers sections, dark mode toggle, mobile hamburger menu (bottom sheet)
 2. **Hero** — Logo, badge, headline, subtitle
 3. **Currently Building** — Dark section with Relay project card
-4. **Past Projects** — CogniWatch project card with "Shipped" badge
+4. **Past Projects** — KnowItOwl project card with "Shipped" badge
 5. **Footer** — Logo, Services/About/Contact links, copyright
 
 ### Guides (`guides/`)
