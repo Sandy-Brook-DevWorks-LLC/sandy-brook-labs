@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquorbis - Splash Adventure | Dive In, Catch Fish, Build Your Aquarium!</title>
+    <meta name="description" content="Explore 10 ocean zones, catch 60 unique sea creatures, and build your dream aquarium in this fun underwater adventure for kids and families.">
+    <link rel="icon" type="image/png" href="images/app-icon.png">
+    <link rel="apple-touch-icon" href="images/app-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ocean-deep: #0a1628;
+            --ocean-mid: #0d2847;
+            --ocean-light: #1a4a7a;
+            --ocean-surface: #2d7bb5;
+            --sand: #f5d99a;
+            --coral: #ff6b6b;
+            --coral-light: #ff9a9a;
+            --teal: #2dd4bf;
+            --teal-dark: #14b8a6;
+            --gold: #fbbf24;
+            --purple: #a78bfa;
+            --green: #34d399;
+            --white: #ffffff;
+            --text-light: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--ocean-deep);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* ---- Bubbles background ---- */
+        .bubbles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0%   { transform: translateY(0) scale(1); opacity: 0.6; }
+            100% { transform: translateY(-110vh) scale(0.4); opacity: 0; }
+        }
+
+        /* ---- Floating fish animation ---- */
+        @keyframes swim {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(2deg); }
+            75% { transform: translateY(8px) rotate(-2deg); }
+        }
+        .swim { animation: swim 4s ease-in-out infinite; }
+        .swim-slow { animation: swim 6s ease-in-out infinite; }
+        .swim-delay { animation: swim 4s ease-in-out 1s infinite; }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .bob { animation: bob 3s ease-in-out infinite; }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* ---- Nav ---- */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 22, 40, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+            padding: 0 1.5rem;
+        }
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--white);
+        }
+        .nav-brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+        .nav-brand span {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--teal); }
+
+        /* Mobile menu */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 22, 40, 0.95);
+                padding: 1rem 1.5rem;
+                gap: 1rem;
+                border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+            }
+            .menu-toggle { display: block; }
+        }
+
+        /* ---- Sections ---- */
+        section { position: relative; z-index: 1; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ---- Hero ---- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 1.5rem;
+            background: linear-gradient(180deg, #0d2847 0%, #1a4a7a 40%, #2d7bb5 70%, #5bb5e0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(transparent, var(--ocean-deep));
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+        .hero-icon {
+            width: 140px;
+            height: 140px;
+            border-radius: 28px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 60px rgba(45,212,191,0.2);
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+        }
+        .hero h1 .splash { color: var(--teal); }
+        .hero .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        .app-store-btn {
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .app-store-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(45,212,191,0.3);
+        }
+        .app-store-btn img { height: 54px; }
+        .app-store-placeholder {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.6);
+            font-size: 1rem;
+        }
+
+        /* Decorative hero fish */
+        .hero-fish {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.4;
+        }
+        .hero-fish-1 { left: 5%; top: 30%; width: 80px; }
+        .hero-fish-2 { right: 8%; top: 45%; width: 100px; transform: scaleX(-1); }
+        .hero-fish-3 { left: 15%; bottom: 20%; width: 60px; }
+
+        /* ---- Features ---- */
+        .features {
+            padding: 5rem 0;
+            background: var(--ocean-deep);
+        }
+        .features h2 {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 3rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(45,212,191,0.3);
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--teal);
+        }
+        .feature-card p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* ---- Zones ---- */
+        .zones {
+            padding: 5rem 0;
+            background: linear-gradient(180deg, var(--ocean-deep), #0b1e3a);
+        }
+        .zones h2 {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+        .zones .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1.05rem;
+        }
+        .zones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+        .zone-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            cursor: default;
+            transition: transform 0.3s;
+        }
+        .zone-card:hover { transform: scale(1.03); }
+        .zone-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .zone-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* ---- Fish Gallery ---- */
+        .fish-gallery {
+            padding: 5rem 0;
+            background: var(--ocean-deep);
+        }
+        .fish-gallery h2 {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+        .fish-gallery .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1.05rem;
+        }
+        .fish-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 1rem 0 2rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .fish-scroll::-webkit-scrollbar { height: 6px; }
+        .fish-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 3px; }
+        .fish-scroll::-webkit-scrollbar-thumb { background: var(--teal-dark); border-radius: 3px; }
+        .fish-card {
+            flex: 0 0 160px;
+            scroll-snap-align: center;
+            background: linear-gradient(135deg, rgba(45,212,191,0.08), rgba(167,139,250,0.08));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .fish-card:hover { transform: translateY(-4px); }
+        .fish-card img {
+            width: 100px;
+            height: auto;
+            image-rendering: pixelated;
+            margin-bottom: 0.75rem;
+        }
+        .fish-card .fish-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .fish-card .fish-rarity {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+        .rarity-common { color: #94a3b8; }
+        .rarity-uncommon { color: var(--green); }
+        .rarity-rare { color: var(--purple); }
+        .rarity-legendary { color: var(--gold); }
+
+        /* ---- Growth ---- */
+        .growth {
+            padding: 5rem 0;
+            background: linear-gradient(180deg, var(--ocean-deep), #0e2240);
+        }
+        .growth h2 {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+        .growth .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1.05rem;
+        }
+        .growth-stages {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .growth-stage {
+            text-align: center;
+        }
+        .growth-stage img {
+            image-rendering: pixelated;
+            margin-bottom: 0.5rem;
+        }
+        .growth-stage .stage-label {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .growth-arrow {
+            font-size: 2rem;
+            color: var(--teal);
+            align-self: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ---- Aquarium ---- */
+        .aquarium {
+            padding: 5rem 0;
+            background: var(--ocean-deep);
+        }
+        .aquarium h2 {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+        .aquarium .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1.05rem;
+        }
+        .aquarium-preview {
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid rgba(45,212,191,0.3);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 40px rgba(45,212,191,0.1);
+        }
+        .aquarium-preview img {
+            width: 100%;
+            display: block;
+        }
+        .aquarium-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .aquarium-stat {
+            text-align: center;
+        }
+        .aquarium-stat .stat-num {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--teal);
+        }
+        .aquarium-stat .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* ---- CTA ---- */
+        .cta {
+            padding: 5rem 0;
+            text-align: center;
+            background: linear-gradient(180deg, #0e2240, var(--ocean-mid), var(--ocean-light));
+        }
+        .cta h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+        .cta p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+        .cta .diver-img {
+            width: 120px;
+            image-rendering: pixelated;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ---- Footer ---- */
+        footer {
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 2rem 1.5rem;
+        }
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--teal); }
+        .footer-copy {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubbles -->
+    <div class="bubbles" aria-hidden="true"></div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-inner">
+            <a href="./" class="nav-brand">
+                <img src="images/app-icon.png" alt="Aquorbis App Icon">
+                <span>Aquorbis</span>
+            </a>
+            <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="#zones">Zones</a></li>
+                <li><a href="#creatures">Creatures</a></li>
+                <li><a href="#aquarium">Aquarium</a></li>
+                <li><a href="support.html">Support</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <img src="images/fish-seahorse.png" alt="" class="hero-fish hero-fish-1 swim" aria-hidden="true">
+        <img src="images/fish-jellyfish.png" alt="" class="hero-fish hero-fish-2 swim-slow" aria-hidden="true">
+        <img src="images/fish-pufferfish.png" alt="" class="hero-fish hero-fish-3 swim-delay" aria-hidden="true">
+        <div class="hero-content">
+            <img src="images/app-icon.png" alt="Aquorbis - Splash Adventure" class="hero-icon bob">
+            <h1>Aquorbis<br><span class="splash">Splash Adventure</span></h1>
+            <p class="tagline">Dive into 10 ocean zones, catch 60 amazing sea creatures, and build your dream aquarium!</p>
+            <!-- Replace with actual App Store link once published -->
+            <span class="app-store-placeholder">Coming Soon on the App Store</span>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <h2>How to Play</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤿</div>
+                    <h3>Dive & Explore</h3>
+                    <p>Grab your joystick and swim through beautiful ocean zones — from sunny coral reefs to mysterious frozen caverns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎣</div>
+                    <h3>Catch Fish</h3>
+                    <p>Swim up to sea creatures and hold your net steady. Rare fish are harder to catch — upgrade your gear to land legendary finds!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🐟</div>
+                    <h3>Feed & Grow</h3>
+                    <p>Place fish in your aquarium tanks, feed them, and watch them grow from tiny babies to majestic kings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Collect & Compete</h3>
+                    <p>Fill your collection, earn gold from visitors, unlock upgrades, and climb the Game Center leaderboards!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zones -->
+    <section class="zones" id="zones">
+        <div class="container">
+            <h2>10 Ocean Zones to Explore</h2>
+            <p class="subtitle">Each zone is filled with unique creatures and stunning scenery.</p>
+            <div class="zones-grid">
+                <div class="zone-card">
+                    <img src="images/bg-coral_reef.png" alt="Coral Reef zone" loading="lazy">
+                    <div class="zone-label">Coral Reef</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-deep_sea.png" alt="Deep Sea zone" loading="lazy">
+                    <div class="zone-label">Deep Sea</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-arctic.png" alt="Arctic Waters zone" loading="lazy">
+                    <div class="zone-label">Arctic Waters</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-tropical.png" alt="Tropical Lagoon zone" loading="lazy">
+                    <div class="zone-label">Tropical Lagoon</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-kelp_forest.png" alt="Kelp Forest zone" loading="lazy">
+                    <div class="zone-label">Kelp Forest</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-shipwreck.png" alt="Sunken Shipwreck zone" loading="lazy">
+                    <div class="zone-label">Sunken Shipwreck</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-volcanic_vents.png" alt="Volcanic Vents zone" loading="lazy">
+                    <div class="zone-label">Volcanic Vents</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-mangrove.png" alt="Mangrove Shallows zone" loading="lazy">
+                    <div class="zone-label">Mangrove Shallows</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-bioluminescent_abyss.png" alt="Bioluminescent Abyss zone" loading="lazy">
+                    <div class="zone-label">Bioluminescent Abyss</div>
+                </div>
+                <div class="zone-card">
+                    <img src="images/bg-frozen_cavern.png" alt="Frozen Cavern zone" loading="lazy">
+                    <div class="zone-label">Frozen Cavern</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fish Gallery -->
+    <section class="fish-gallery" id="creatures">
+        <div class="container">
+            <h2>60 Creatures to Discover</h2>
+            <p class="subtitle">From common clownfish to legendary golden koi — scroll to meet some of them!</p>
+            <div class="fish-scroll">
+                <div class="fish-card">
+                    <img src="images/fish-clownfish.png" alt="Clownfish">
+                    <div class="fish-name">Clownfish</div>
+                    <div class="fish-rarity rarity-common">Common</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-pufferfish.png" alt="Pufferfish">
+                    <div class="fish-name">Pufferfish</div>
+                    <div class="fish-rarity rarity-common">Common</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-seahorse.png" alt="Seahorse">
+                    <div class="fish-name">Seahorse</div>
+                    <div class="fish-rarity rarity-uncommon">Uncommon</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-lionfish.png" alt="Lionfish">
+                    <div class="fish-name">Lionfish</div>
+                    <div class="fish-rarity rarity-rare">Rare</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-jellyfish.png" alt="Jellyfish">
+                    <div class="fish-name">Jellyfish</div>
+                    <div class="fish-rarity rarity-common">Common</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-octopus.png" alt="Octopus">
+                    <div class="fish-name">Octopus</div>
+                    <div class="fish-rarity rarity-uncommon">Uncommon</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-anglerfish.png" alt="Anglerfish">
+                    <div class="fish-name">Anglerfish</div>
+                    <div class="fish-rarity rarity-common">Common</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-manta_ray.png" alt="Manta Ray">
+                    <div class="fish-name">Manta Ray</div>
+                    <div class="fish-rarity rarity-uncommon">Uncommon</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-narwhal.png" alt="Narwhal">
+                    <div class="fish-name">Narwhal</div>
+                    <div class="fish-rarity rarity-rare">Rare</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-hammerhead.png" alt="Hammerhead">
+                    <div class="fish-name">Hammerhead</div>
+                    <div class="fish-rarity rarity-rare">Rare</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-dragon_fish.png" alt="Dragon Fish">
+                    <div class="fish-name">Dragon Fish</div>
+                    <div class="fish-rarity rarity-legendary">Legendary</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-whale_shark.png" alt="Whale Shark">
+                    <div class="fish-name">Whale Shark</div>
+                    <div class="fish-rarity rarity-legendary">Legendary</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-sea_turtle.png" alt="Sea Turtle">
+                    <div class="fish-name">Sea Turtle</div>
+                    <div class="fish-rarity rarity-legendary">Legendary</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-leafy_sea_dragon.png" alt="Leafy Sea Dragon">
+                    <div class="fish-name">Leafy Sea Dragon</div>
+                    <div class="fish-rarity rarity-legendary">Legendary</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-golden_koi.png" alt="Golden Koi">
+                    <div class="fish-name">Golden Koi</div>
+                    <div class="fish-rarity rarity-legendary">Legendary</div>
+                </div>
+                <div class="fish-card">
+                    <img src="images/fish-ancient_coelacanth.png" alt="Ancient Coelacanth">
+                    <div class="fish-name">Ancient Coelacanth</div>
+                    <div class="fish-rarity rarity-legendary">Legendary</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Growth -->
+    <section class="growth">
+        <div class="container">
+            <h2>Watch Them Grow!</h2>
+            <p class="subtitle">Feed your fish and watch them evolve through three stages.</p>
+            <div class="growth-stages">
+                <div class="growth-stage">
+                    <img src="images/fish-clownfish-baby.png" alt="Baby Clownfish" width="80" height="auto">
+                    <div class="stage-label">Baby</div>
+                </div>
+                <div class="growth-arrow">&#10140;</div>
+                <div class="growth-stage">
+                    <img src="images/fish-clownfish.png" alt="Adult Clownfish" width="120" height="auto">
+                    <div class="stage-label">Adult</div>
+                </div>
+                <div class="growth-arrow">&#10140;</div>
+                <div class="growth-stage">
+                    <img src="images/fish-clownfish-king.png" alt="King Clownfish" width="160" height="auto">
+                    <div class="stage-label">King</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aquarium -->
+    <section class="aquarium" id="aquarium">
+        <div class="container">
+            <h2>Build Your Dream Aquarium</h2>
+            <p class="subtitle">Manage up to 20 tanks, decorate them, and watch visitors line up to see your collection!</p>
+            <div class="aquarium-preview">
+                <img src="images/aquarium-wall.png" alt="Aquarium tank view">
+            </div>
+            <div class="aquarium-features">
+                <div class="aquarium-stat">
+                    <div class="stat-num">20</div>
+                    <div class="stat-label">Tanks</div>
+                </div>
+                <div class="aquarium-stat">
+                    <div class="stat-num">60</div>
+                    <div class="stat-label">Species</div>
+                </div>
+                <div class="aquarium-stat">
+                    <div class="stat-num">21</div>
+                    <div class="stat-label">Achievements</div>
+                </div>
+                <div class="aquarium-stat">
+                    <div class="stat-num">3</div>
+                    <div class="stat-label">Leaderboards</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <img src="images/diver.png" alt="Diver character" class="diver-img bob">
+            <h2>Ready to Dive In?</h2>
+            <p>Download Aquorbis - Splash Adventure and start your underwater journey today!</p>
+            <!-- Replace with actual App Store link once published -->
+            <span class="app-store-placeholder">Coming Soon on the App Store</span>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-copy">&copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.</div>
+            <ul class="footer-links">
+                <li><a href="support.html">Support</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        // Generate bubbles
+        (function() {
+            const container = document.querySelector('.bubbles');
+            for (let i = 0; i < 20; i++) {
+                const b = document.createElement('div');
+                b.className = 'bubble';
+                const size = 8 + Math.random() * 30;
+                b.style.width = size + 'px';
+                b.style.height = size + 'px';
+                b.style.left = Math.random() * 100 + '%';
+                b.style.animationDuration = (8 + Math.random() * 12) + 's';
+                b.style.animationDelay = (Math.random() * 10) + 's';
+                container.appendChild(b);
+            }
+        })();
+    </script>
+</body>
+</html>

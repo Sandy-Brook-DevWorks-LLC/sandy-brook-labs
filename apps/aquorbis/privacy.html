@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Aquorbis - Splash Adventure</title>
+    <meta name="description" content="Privacy policy for Aquorbis - Splash Adventure. Learn how we protect your family's privacy.">
+    <link rel="icon" type="image/png" href="images/app-icon.png">
+    <link rel="apple-touch-icon" href="images/app-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ocean-deep: #0a1628;
+            --ocean-mid: #0d2847;
+            --teal: #2dd4bf;
+            --teal-dark: #14b8a6;
+            --coral: #ff6b6b;
+            --gold: #fbbf24;
+            --white: #ffffff;
+            --text-light: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--ocean-deep);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; }
+
+        /* Bubbles */
+        .bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .bubble {
+            position: absolute; bottom: -40px; border-radius: 50%;
+            background: rgba(255,255,255,0.06); animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0%   { transform: translateY(0) scale(1); opacity: 0.6; }
+            100% { transform: translateY(-110vh) scale(0.4); opacity: 0; }
+        }
+
+        /* Nav */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10, 22, 40, 0.85); backdrop-filter: blur(12px);
+            border-bottom: 2px solid rgba(45, 212, 191, 0.2); padding: 0 1.5rem;
+        }
+        .nav-inner {
+            max-width: 1100px; margin: 0 auto; display: flex;
+            align-items: center; justify-content: space-between; height: 64px;
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; color: var(--white);
+        }
+        .nav-brand img { width: 40px; height: 40px; border-radius: 10px; }
+        .nav-brand span { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; font-weight: 600; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-light); text-decoration: none; font-weight: 600;
+            font-size: 0.9rem; transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--teal); }
+        .menu-toggle {
+            display: none; background: none; border: none;
+            color: var(--white); font-size: 1.5rem; cursor: pointer; padding: 8px;
+        }
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column; position: absolute;
+                top: 64px; left: 0; right: 0; background: rgba(10, 22, 40, 0.95);
+                padding: 1rem 1.5rem; gap: 1rem;
+                border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+            }
+            .menu-toggle { display: block; }
+        }
+
+        /* Content */
+        .container {
+            max-width: 800px; margin: 0 auto; padding: 0 1.5rem;
+            position: relative; z-index: 1;
+        }
+
+        .page-header {
+            text-align: center; padding: 3rem 0 2rem;
+        }
+        .page-header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 0.5rem;
+        }
+        .page-header h1 span { color: var(--teal); }
+        .page-header p {
+            color: var(--text-light); font-size: 1.1rem;
+        }
+        .page-header .effective {
+            color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-top: 0.5rem;
+        }
+
+        .content { padding: 2rem 0 4rem; }
+
+        .card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem;
+        }
+        .card h2 {
+            font-size: 1.3rem; color: var(--teal); margin-bottom: 1rem;
+        }
+        .card p {
+            color: var(--text-light); line-height: 1.7; font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+        .card p:last-child { margin-bottom: 0; }
+        .card ul {
+            color: var(--text-light); line-height: 1.7; font-size: 0.95rem;
+            padding-left: 1.25rem; margin-bottom: 0.75rem;
+        }
+        .card a {
+            color: var(--teal); text-decoration: none; font-weight: 600;
+        }
+        .card a:hover { text-decoration: underline; }
+
+        .highlight {
+            background: rgba(45, 212, 191, 0.08);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            border-radius: 12px; padding: 1rem 1.25rem; margin: 0.75rem 0;
+        }
+        .highlight p { margin-bottom: 0; }
+
+        /* Footer */
+        footer {
+            margin-top: auto; background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.06); padding: 2rem 1.5rem;
+        }
+        .footer-inner {
+            max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap;
+            justify-content: space-between; align-items: center; gap: 1rem;
+        }
+        .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+        .footer-links a {
+            color: var(--text-light); text-decoration: none; font-size: 0.9rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--teal); }
+        .footer-copy { color: rgba(255,255,255,0.4); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="bubbles" aria-hidden="true"></div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-inner">
+            <a href="./" class="nav-brand">
+                <img src="images/app-icon.png" alt="Aquorbis App Icon">
+                <span>Aquorbis</span>
+            </a>
+            <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="./">Home</a></li>
+                <li><a href="support.html">Support</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="container">
+        <div class="page-header">
+            <h1><span>Privacy</span> Policy</h1>
+            <p>How we protect your family's privacy in Aquorbis - Splash Adventure.</p>
+            <p class="effective">Effective date: April 5, 2026</p>
+        </div>
+
+        <div class="content">
+            <!-- Overview -->
+            <div class="card">
+                <h2>Our Commitment to Privacy</h2>
+                <p>Aquorbis - Splash Adventure ("Aquorbis," "the App") is developed by Sandy Brook DevWorks LLC ("we," "us," "our"). Aquorbis is designed for children ages 4 and up, and we take your family's privacy seriously.</p>
+                <div class="highlight">
+                    <p><strong>In short:</strong> We do not collect, store, or share any personal information from our users. The App complies with the Children's Online Privacy Protection Act (COPPA) and Apple's App Store guidelines for Kids category apps.</p>
+                </div>
+            </div>
+
+            <!-- Data Collection -->
+            <div class="card">
+                <h2>Information We Collect</h2>
+                <p><strong>We do not collect any personal information.</strong> Aquorbis does not require account creation, login, or registration of any kind. The App does not collect names, email addresses, phone numbers, locations, photos, or any other personally identifiable information.</p>
+                <p>All game progress (fish collected, gold earned, upgrades purchased, etc.) is stored locally on your device using standard iOS storage. This data never leaves your device and is not transmitted to us or any third party.</p>
+            </div>
+
+            <!-- Game Center -->
+            <div class="card">
+                <h2>Game Center</h2>
+                <p>Aquorbis integrates with Apple Game Center for achievements and leaderboards. Game Center is managed entirely by Apple and is subject to <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener noreferrer">Apple's Privacy Policy</a>. We do not have access to your Apple ID or Game Center profile information.</p>
+                <p>Game Center participation is optional and requires authentication through Apple's system.</p>
+            </div>
+
+            <!-- Advertising -->
+            <div class="card">
+                <h2>Advertising</h2>
+                <p>Aquorbis displays interstitial advertisements provided by Google AdMob. We want to be transparent about how ads work in the App:</p>
+                <ul>
+                    <li><strong>Age-appropriate ads only.</strong> The App is configured with Google AdMob's child-directed treatment enabled (COPPA compliance). The maximum ad content rating is set to "G" (General Audiences), ensuring that only age-appropriate advertisements are shown.</li>
+                    <li><strong>No personalized ads.</strong> Because child-directed treatment is enabled, ads are not personalized and are not based on user behavior or interests.</li>
+                    <li><strong>No tracking of children.</strong> The App does not use advertising identifiers to track children. Google's COPPA-compliant ad serving does not collect personal information from children.</li>
+                    <li><strong>Ad frequency.</strong> Interstitial ads are shown periodically between gameplay sessions (approximately every third dive), not during active gameplay.</li>
+                    <li><strong>Remove Ads option.</strong> A one-time in-app purchase is available to permanently remove all advertisements from the App. This purchase is protected by a parental gate.</li>
+                </ul>
+                <p>For more information about how Google handles data in ads, see <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Google's Advertising Policies</a> and their <a href="https://business.safety.google/adscontrollerterms/" target="_blank" rel="noopener noreferrer">Controller Terms</a>.</p>
+            </div>
+
+            <!-- In-App Purchases -->
+            <div class="card">
+                <h2>In-App Purchases</h2>
+                <p>Aquorbis offers a single in-app purchase: "Remove Ads." This is a non-consumable purchase processed entirely through Apple's App Store.</p>
+                <div class="highlight">
+                    <p><strong>Parental Gate:</strong> In compliance with Apple's App Store Review Guidelines for Kids category apps (Guideline 1.3), a parental gate is presented before any purchase can be initiated. The gate presents a math problem that a young child cannot easily solve, ensuring that a parent or guardian must approve the transaction.</p>
+                </div>
+                <p>We do not process, store, or have access to any payment information. All transactions are handled by Apple.</p>
+            </div>
+
+            <!-- Third-Party Services -->
+            <div class="card">
+                <h2>Third-Party Services</h2>
+                <p>The App uses the following third-party services:</p>
+                <ul>
+                    <li><strong>Apple Game Center</strong> — Achievements and leaderboards. Managed by Apple under their privacy policy.</li>
+                    <li><strong>Google AdMob</strong> — Advertising. Configured with child-directed treatment (COPPA mode) and G-rated content only.</li>
+                    <li><strong>Apple StoreKit</strong> — In-app purchase processing. Managed by Apple.</li>
+                </ul>
+                <p>We do not use any analytics, crash reporting, or other tracking services.</p>
+            </div>
+
+            <!-- Data Sharing -->
+            <div class="card">
+                <h2>Data Sharing &amp; Storage</h2>
+                <p>We do not share any user data with third parties. We do not have servers that receive data from the App. All game data is stored locally on-device.</p>
+                <p>Since we do not collect personal information, there is no data to sell, rent, or transfer to any party for any purpose.</p>
+            </div>
+
+            <!-- Parental Rights -->
+            <div class="card">
+                <h2>Parental Rights</h2>
+                <p>Since we do not collect personal information from children (or any users), there is no personal data to review, delete, or modify. Game save data stored on the device can be removed by deleting the App.</p>
+                <p>If you believe we have inadvertently collected information from a child, please contact us immediately and we will take steps to delete it.</p>
+            </div>
+
+            <!-- Changes -->
+            <div class="card">
+                <h2>Changes to This Policy</h2>
+                <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. We encourage you to review this page periodically.</p>
+            </div>
+
+            <!-- Contact -->
+            <div class="card">
+                <h2>Contact Us</h2>
+                <p>If you have any questions or concerns about this Privacy Policy or the App's privacy practices, please contact us:</p>
+                <p><strong>Sandy Brook DevWorks LLC</strong><br>
+                Email: <a href="mailto:support@sandybrook.io">support@sandybrook.io</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-copy">&copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.</div>
+            <ul class="footer-links">
+                <li><a href="./">Home</a></li>
+                <li><a href="support.html">Support</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const c = document.querySelector('.bubbles');
+            for (let i = 0; i < 15; i++) {
+                const b = document.createElement('div');
+                b.className = 'bubble';
+                const s = 8 + Math.random() * 25;
+                b.style.width = s + 'px'; b.style.height = s + 'px';
+                b.style.left = Math.random() * 100 + '%';
+                b.style.animationDuration = (8 + Math.random() * 12) + 's';
+                b.style.animationDelay = (Math.random() * 10) + 's';
+                c.appendChild(b);
+            }
+        })();
+    </script>
+</body>
+</html>

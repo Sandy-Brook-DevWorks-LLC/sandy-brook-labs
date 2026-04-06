@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support | Aquorbis - Splash Adventure</title>
+    <meta name="description" content="Get help with Aquorbis - Splash Adventure. Find answers to common questions or contact our support team.">
+    <link rel="icon" type="image/png" href="images/app-icon.png">
+    <link rel="apple-touch-icon" href="images/app-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ocean-deep: #0a1628;
+            --ocean-mid: #0d2847;
+            --teal: #2dd4bf;
+            --teal-dark: #14b8a6;
+            --coral: #ff6b6b;
+            --gold: #fbbf24;
+            --white: #ffffff;
+            --text-light: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--ocean-deep);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; }
+
+        /* Bubbles */
+        .bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .bubble {
+            position: absolute; bottom: -40px; border-radius: 50%;
+            background: rgba(255,255,255,0.06); animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0%   { transform: translateY(0) scale(1); opacity: 0.6; }
+            100% { transform: translateY(-110vh) scale(0.4); opacity: 0; }
+        }
+
+        /* Nav */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10, 22, 40, 0.85); backdrop-filter: blur(12px);
+            border-bottom: 2px solid rgba(45, 212, 191, 0.2); padding: 0 1.5rem;
+        }
+        .nav-inner {
+            max-width: 1100px; margin: 0 auto; display: flex;
+            align-items: center; justify-content: space-between; height: 64px;
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; color: var(--white);
+        }
+        .nav-brand img { width: 40px; height: 40px; border-radius: 10px; }
+        .nav-brand span { font-family: 'Fredoka', sans-serif; font-size: 1.25rem; font-weight: 600; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-light); text-decoration: none; font-weight: 600;
+            font-size: 0.9rem; transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--teal); }
+        .menu-toggle {
+            display: none; background: none; border: none;
+            color: var(--white); font-size: 1.5rem; cursor: pointer; padding: 8px;
+        }
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column; position: absolute;
+                top: 64px; left: 0; right: 0; background: rgba(10, 22, 40, 0.95);
+                padding: 1rem 1.5rem; gap: 1rem;
+                border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+            }
+            .menu-toggle { display: block; }
+        }
+
+        /* Content */
+        .container {
+            max-width: 800px; margin: 0 auto; padding: 0 1.5rem;
+            position: relative; z-index: 1;
+        }
+
+        .page-header {
+            text-align: center; padding: 3rem 0 2rem;
+        }
+        .page-header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 0.5rem;
+        }
+        .page-header h1 span { color: var(--teal); }
+        .page-header p {
+            color: var(--text-light); font-size: 1.1rem;
+        }
+
+        .content { padding: 2rem 0 4rem; }
+
+        .card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem;
+        }
+        .card h2 {
+            font-size: 1.3rem; color: var(--teal); margin-bottom: 1rem;
+        }
+        .card p, .card li {
+            color: var(--text-light); line-height: 1.7; font-size: 0.95rem;
+        }
+        .card a {
+            color: var(--teal); text-decoration: none; font-weight: 600;
+        }
+        .card a:hover { text-decoration: underline; }
+
+        .faq-item { margin-bottom: 1.25rem; }
+        .faq-item:last-child { margin-bottom: 0; }
+        .faq-q {
+            font-family: 'Fredoka', sans-serif; font-weight: 600;
+            font-size: 1.05rem; color: var(--white); margin-bottom: 0.35rem;
+        }
+        .faq-a {
+            color: var(--text-light); line-height: 1.6; font-size: 0.95rem;
+        }
+
+        .contact-btn {
+            display: inline-block; background: var(--teal-dark); color: var(--white);
+            padding: 12px 28px; border-radius: 12px; text-decoration: none;
+            font-weight: 700; font-size: 1rem; transition: transform 0.2s, background 0.2s;
+        }
+        .contact-btn:hover { transform: scale(1.05); background: var(--teal); }
+
+        /* Footer */
+        footer {
+            margin-top: auto; background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.06); padding: 2rem 1.5rem;
+        }
+        .footer-inner {
+            max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap;
+            justify-content: space-between; align-items: center; gap: 1rem;
+        }
+        .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+        .footer-links a {
+            color: var(--text-light); text-decoration: none; font-size: 0.9rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--teal); }
+        .footer-copy { color: rgba(255,255,255,0.4); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="bubbles" aria-hidden="true"></div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-inner">
+            <a href="./" class="nav-brand">
+                <img src="images/app-icon.png" alt="Aquorbis App Icon">
+                <span>Aquorbis</span>
+            </a>
+            <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="./">Home</a></li>
+                <li><a href="support.html">Support</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="container">
+        <div class="page-header">
+            <h1>Need <span>Help</span>?</h1>
+            <p>We're here to help you with Aquorbis - Splash Adventure.</p>
+        </div>
+
+        <div class="content">
+            <!-- Contact -->
+            <div class="card">
+                <h2>Contact Us</h2>
+                <p>Having trouble with the app or have a suggestion? Send us an email and we'll get back to you as soon as we can.</p>
+                <br>
+                <a href="mailto:support@sandybrook.io" class="contact-btn">support@sandybrook.io</a>
+            </div>
+
+            <!-- FAQ -->
+            <div class="card">
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <div class="faq-q">How do I catch fish?</div>
+                    <div class="faq-a">Swim close to a fish using the joystick, then tap and hold the Cast button. Keep holding until the catch meter fills up. Be careful not to drift away, or the catch will cancel!</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q">Why did my diver go back to the surface?</div>
+                    <div class="faq-a">Your oxygen tank ran out! You can upgrade your Oxygen Tank in the shop to stay underwater longer.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q">How do I unlock new ocean zones?</div>
+                    <div class="faq-a">Earn gold by collecting coins from your aquarium fish and visitors. Then open the zone picker and purchase access to new zones. Each zone costs more gold than the last!</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q">How do I grow my fish?</div>
+                    <div class="faq-a">Switch to Aquarium Mode and feed your fish. Each time you feed them, they gain experience. Fish grow from Baby to Adult to King size, and bigger fish earn more gold from visitors!</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q">How do I remove ads?</div>
+                    <div class="faq-a">You can purchase the "Remove Ads" option from the Settings menu inside the app. This is a one-time purchase that permanently removes all ads. A parental gate (math problem) is presented before any purchase to ensure a parent or guardian approves.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q">How do I restore my purchase?</div>
+                    <div class="faq-a">If you previously purchased "Remove Ads" and reinstalled the app, open Settings in the app and tap "Restore Purchases." Your purchase will be restored automatically through the App Store.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q">Is my progress saved?</div>
+                    <div class="faq-a">Yes! Your game progress is saved automatically to your device. If you delete and reinstall the app, your local save data may be lost, but your Game Center achievements and leaderboard scores will remain.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q">What age is this game for?</div>
+                    <div class="faq-a">Aquorbis is designed for kids ages 4 and up, but it's fun for the whole family! The game is rated 4+ with no violence or mature content.</div>
+                </div>
+            </div>
+
+            <!-- Bug Reports -->
+            <div class="card">
+                <h2>Report a Bug</h2>
+                <p>Found something that doesn't work right? Please send us an email at <a href="mailto:support@sandybrook.io">support@sandybrook.io</a> and include:</p>
+                <br>
+                <ul style="padding-left: 1.25rem;">
+                    <li>What happened and what you expected to happen</li>
+                    <li>Your device model (e.g., iPhone 15, iPad Air)</li>
+                    <li>Your iOS version (found in Settings &gt; General &gt; About)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-copy">&copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.</div>
+            <ul class="footer-links">
+                <li><a href="./">Home</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const c = document.querySelector('.bubbles');
+            for (let i = 0; i < 15; i++) {
+                const b = document.createElement('div');
+                b.className = 'bubble';
+                const s = 8 + Math.random() * 25;
+                b.style.width = s + 'px'; b.style.height = s + 'px';
+                b.style.left = Math.random() * 100 + '%';
+                b.style.animationDuration = (8 + Math.random() * 12) + 's';
+                b.style.animationDelay = (Math.random() * 10) + 's';
+                c.appendChild(b);
+            }
+        })();
+    </script>
+</body>
+</html>
