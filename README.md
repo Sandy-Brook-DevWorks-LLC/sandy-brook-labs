@@ -10,7 +10,8 @@ A showcase of what [Sandy Brook DevWorks](https://sandybrookdevworks.com) is act
 
 ### Shipped
 
-- **KnowItOwl** — An Apple Watch and iPhone app that brings conversational AI to your wrist. Voice-first, multilingual, with natural AI voices and privacy-first design. [Landing Page](https://knowitowl.sandybrook.io)
+- **KnowItOwl!** — An Apple Watch and iPhone app that brings conversational AI to your wrist. Voice-first, multilingual, with natural AI voices and privacy-first design. [Landing Page](https://sandybrook.io/apps/knowitowl/)
+- **Aquorbis — Splash Adventure** — A fun underwater adventure game for kids and families: explore 10 ocean zones, catch 60 unique sea creatures, and build your dream aquarium. [Landing Page](https://sandybrook.io/apps/aquorbis/)
 
 ## Tech Stack
 

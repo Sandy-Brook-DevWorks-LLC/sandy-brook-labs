@@ -1,12 +1,12 @@
-# CLAUDE.md — gnosisai-web
+# CLAUDE.md — KnowItOwl! Landing Site
 
 ## Project Overview
 
-Static landing site for the KnowItOwl! iOS/watchOS voice Q&A app. Hosted on GitHub Pages with a custom domain (`knowitowl.sandybrook.io`). Three pages: home (app marketing), privacy policy (legal/compliance), and support (contact form + FAQ).
+Static landing site for the KnowItOwl! iOS/watchOS voice Q&A app. Lives as a subpath of the Sandy Brook Projects Lab site (`sandybrook.io/apps/knowitowl/`). Three pages: home (app marketing), privacy policy (legal/compliance), and support (contact form + FAQ).
 
-- **Domain:** knowitowl.sandybrook.io (CNAME)
-- **Hosting:** GitHub Pages (static HTML/CSS/JS)
-- **Repo:** `cloudreyes/gnosisai-web` — local path: `~/Repos/gnosisai-web`
+- **URL:** https://sandybrook.io/apps/knowitowl/
+- **Hosting:** GitHub Pages (served from the parent `sandy-brook-labs` repo, which has the `sandybrook.io` CNAME)
+- **Parent Repo:** `Sandy-Brook-DevWorks-LLC/sandy-brook-labs` — local path: `~/Repos/sandy-brook-labs`
 - **Company:** Sandy Brook DevWorks LLC (Texas)
 - **Contact:** hello@sandybrook.io
 
@@ -18,9 +18,8 @@ Static landing site for the KnowItOwl! iOS/watchOS voice Q&A app. Hosted on GitH
 ## Tech Stack
 
 - **HTML/CSS/JS** — No build step, no framework, no bundler
-- **Hosting:** GitHub Pages (static, served from `main` branch root)
-- **Domain:** Custom domain via `CNAME` file (`knowitowl.sandybrook.io`)
-- **SEO:** `sitemap.xml`, `robots.txt`, Open Graph + Twitter Card meta tags, JSON-LD structured data
+- **Hosting:** GitHub Pages via the parent `sandy-brook-labs` repo (the root CNAME `sandybrook.io` covers this subpath)
+- **SEO:** Open Graph + Twitter Card meta tags, JSON-LD structured data. Sitemap and robots.txt live at the parent site root, not inside this folder.
 - **Fonts:** Google Fonts (Inter)
 - **Icons:** Favicon set in `favicon/` directory (multiple sizes + `site.webmanifest`)
 - **Analytics:** None (privacy-first)
@@ -29,19 +28,16 @@ Static landing site for the KnowItOwl! iOS/watchOS voice Q&A app. Hosted on GitH
 
 | File | URL | Purpose |
 |------|-----|---------|
-| `index.html` | `knowitowl.sandybrook.io/` | Marketing landing page — app features, screenshots, App Store link |
-| `privacy.html` | `knowitowl.sandybrook.io/privacy.html` | Privacy policy — 14 sections, CCPA/CPRA compliant |
-| `support.html` | `knowitowl.sandybrook.io/support.html` | Contact form (Formspree) + FAQ sidebar |
+| `index.html` | `sandybrook.io/apps/knowitowl/` | Marketing landing page — app features, screenshots, App Store link |
+| `privacy.html` | `sandybrook.io/apps/knowitowl/privacy.html` | Privacy policy — 14 sections, CCPA/CPRA compliant |
+| `support.html` | `sandybrook.io/apps/knowitowl/support.html` | Contact form (Formspree) + FAQ sidebar |
 
 ## Project Structure
 
 ```
-gnosisai-web/
-  CLAUDE.md               # This file
+apps/knowitowl/
+  CLAUDE.md                # This file
   README.md                # Public-facing documentation
-  CNAME                    # Custom domain: knowitowl.sandybrook.io
-  robots.txt               # Allow all crawlers, sitemap reference
-  sitemap.xml              # 3 URLs (index, privacy, support)
   index.html               # Landing page
   privacy.html             # Privacy policy (14 sections)
   support.html             # Support/contact page with FAQ
@@ -102,20 +98,20 @@ gnosisai-web/
 
 ## Deployment
 
-Push to `main` branch. GitHub Pages auto-deploys. No build step required.
+Push to `main` in the parent `sandy-brook-labs` repo. GitHub Pages auto-deploys. No build step required.
 
 ```bash
 git add -A && git commit -m "message" && git push
 ```
 
-Changes appear at `https://knowitowl.sandybrook.io` within minutes.
+Changes appear at `https://sandybrook.io/apps/knowitowl/` within minutes.
 
 ## Known Issues
 
 - **No build step** — All pages use Tailwind CSS CDN with shared config inline in each file. Changes to shared styles (nav, footer, colors, Tailwind config) must be manually replicated across all three files.
 - **Formspree contact form** — Requires a Formspree account. The form action URL is hardcoded in `support.html`.
 - **App Store link** — Currently uses a placeholder `#` href on the App Store badge. Must be updated with the real App Store URL after approval.
-- **Sitemap `lastmod` dates** — Must be manually updated in `sitemap.xml` when pages are modified.
+- **Sitemap entries** — Lives in the parent site root at `sandybrook.io/sitemap.xml`. Any new pages added here must also be listed there.
 
 ## Changelog
 
