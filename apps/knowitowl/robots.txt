@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://knowitowl.sandybrook.io/sitemap.xml

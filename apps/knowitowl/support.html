@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - KnowItOwl!</title>
+    <meta name="description" content="Get help with KnowItOwl!. Contact our support team for questions about the app, technical issues, or feedback.">
+    <link rel="canonical" href="https://knowitowl.sandybrook.io/support.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://knowitowl.sandybrook.io/support.html">
+    <meta property="og:title" content="Support - KnowItOwl!">
+    <meta property="og:description" content="Get help with KnowItOwl!. Contact us for questions, technical issues, or feedback.">
+    <meta property="og:image" content="https://knowitowl.sandybrook.io/favicon/web-app-manifest-512x512.png">
+
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#6B8E7E">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+    <link rel="shortcut icon" href="favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="favicon/site.webmanifest" />
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            DEFAULT: '#6B8E7E',
+                            50: '#F4F7F6',
+                            100: '#E9EFED',
+                            200: '#D3E0DB',
+                            300: '#BDD1C8',
+                            400: '#A7C1B6',
+                            500: '#91B2A4',
+                            600: '#7B9D8E',
+                            700: '#6B8E7E', // Primary Sage
+                            800: '#567265',
+                            900: '#41564C',
+                        },
+                        cream: {
+                            DEFAULT: '#FDFCF8',
+                            dark: '#F5F2E8',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script>
+        // Check for saved theme preference, otherwise use system preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6B8E7E;
+            ring-color: #6B8E7E;
+        }
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+        @media print {
+            .glass, #theme-toggle, nav, footer, #contact-form-section {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-cream dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <img
+                        src="favicon/favicon-96x96.png"
+                        alt="KnowItOwl! app icon"
+                        class="w-8 h-8 rounded-lg shadow-sm"
+                        width="32"
+                        height="32"
+                        loading="eager"
+                        decoding="async"
+                />
+                <span class="font-semibold text-xl tracking-tight text-sage-900 dark:text-sage-100">KnowItOwl!</span>
+            </a>
+            <div class="flex items-center space-x-8 text-sm font-medium text-slate-600 dark:text-slate-400">
+                <a href="index.html" class="hidden md:block hover:text-sage transition-colors">Home</a>
+                
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                    <!-- Sun Icon (shown in dark mode) -->
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464l-.707.707a1 1 0 001.414 1.414l.707-.707a1 1 0 00-1.414-1.414zm2.121 12.02a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                    <!-- Moon Icon (shown in light mode) -->
+                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-24">
+        <div class="max-w-4xl mx-auto px-6">
+            <!-- Hero Section -->
+            <section class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">We're Here to Help</h1>
+                <p class="text-xl text-slate-600 dark:text-slate-400">Have questions about KnowItOwl!? We'd love to hear from you.</p>
+            </section>
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Contact Form Section -->
+                <div class="md:col-span-2">
+                    <div id="form-container" class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+                        <form id="contact-form" action="https://formspree.io/f/meelawer" method="POST" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Your name" 
+                                    class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sage/20 transition-all text-slate-900 dark:text-white">
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Email</label>
+                                <input type="email" id="email" name="email" required placeholder="your@email.com" 
+                                    class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sage/20 transition-all text-slate-900 dark:text-white">
+                            </div>
+                            
+                            <div>
+                                <label for="subject" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Subject</label>
+                                <select id="subject" name="subject" required 
+                                    class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sage/20 transition-all text-slate-900 dark:text-white appearance-none">
+                                    <option value="" disabled selected>Select a subject</option>
+                                    <option value="General Question">General Question</option>
+                                    <option value="Technical Issue">Technical Issue</option>
+                                    <option value="Feature Request">Feature Request</option>
+                                    <option value="Billing Question">Billing Question</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Message</label>
+                                <textarea id="message" name="message" required rows="6" placeholder="Tell us what's on your mind..." 
+                                    class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sage/20 transition-all text-slate-900 dark:text-white resize-none"></textarea>
+                            </div>
+                            
+                            <!-- Honeypot -->
+                            <input type="text" name="_gotcha" style="display:none" />
+
+                            <button type="submit" id="submit-btn" 
+                                class="w-full py-4 bg-sage text-white rounded-2xl font-bold text-lg hover:bg-sage-600 transition-all shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span>Send Message</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Success Message (hidden by default) -->
+                    <div id="success-message" class="hidden text-center bg-white dark:bg-slate-900 p-12 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+                        <div class="w-20 h-20 bg-sage/10 rounded-full flex items-center justify-center text-sage mx-auto mb-6">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Message Sent!</h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-10">
+                            Thank you for reaching out. We'll get back to you within 24 hours at the email address you provided.
+                        </p>
+                        <a href="index.html" class="inline-block px-8 py-4 bg-sage text-white rounded-2xl font-bold hover:bg-sage-600 transition-all shadow-md">
+                            Return to Home
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Sidebar / Alternative Contact -->
+                <aside class="space-y-8">
+                    <div class="p-8 rounded-3xl bg-sage-50 dark:bg-sage-900/10 border border-sage-100 dark:border-sage-800">
+                        <h3 class="font-bold text-lg mb-4 text-slate-900 dark:text-white">Prefer Email?</h3>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4">
+                            Reach us directly at <a href="mailto:hello@sandybrook.io" class="text-sage hover:underline font-medium">hello@sandybrook.io</a>
+                        </p>
+                        <p class="text-sm text-slate-500 dark:text-slate-500 italic">
+                            We typically respond within 24 hours
+                        </p>
+                    </div>
+
+                    <!-- FAQ Section -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white px-2">Common Questions</h3>
+                        
+                        <div class="space-y-3">
+                            <details class="faq-item group">
+                                <summary class="flex justify-between items-center p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 cursor-pointer list-none transition-all">
+                                    <span class="font-semibold text-sm pr-4 dark:text-slate-200">What devices does KnowItOwl! support?</span>
+                                    <svg class="w-4 h-4 text-sage transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </summary>
+                                <div class="px-5 py-3 text-sm text-slate-600 dark:text-slate-400">
+                                    KnowItOwl! works on Apple Watch (watchOS 10+) and iPhone (iOS 17+). The Watch app works independently, and conversations sync between devices automatically.
+                                </div>
+                            </details>
+
+                            <details class="faq-item group">
+                                <summary class="flex justify-between items-center p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 cursor-pointer list-none transition-all">
+                                    <span class="font-semibold text-sm pr-4 dark:text-slate-200">How much does it cost?</span>
+                                    <svg class="w-4 h-4 text-sage transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </summary>
+                                <div class="px-5 py-3 text-sm text-slate-600 dark:text-slate-400">
+                                    KnowItOwl! gives you 20 welcome credits when you first sign up, plus 5 free credits every month. Need more? Credit packs are available: Standard $2.99 (50 credits), Popular $4.99 (100 credits), and Power $7.99 (200 credits). Credits never expire.
+                                </div>
+                            </details>
+
+                            <details class="faq-item group">
+                                <summary class="flex justify-between items-center p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 cursor-pointer list-none transition-all">
+                                    <span class="font-semibold text-sm pr-4 dark:text-slate-200">Is my data private?</span>
+                                    <svg class="w-4 h-4 text-sage transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </summary>
+                                <div class="px-5 py-3 text-sm text-slate-600 dark:text-slate-400">
+                                    Yes. All conversations and audio are encrypted on your device (AES-256-GCM) before reaching any server. We collect no personally identifiable information — not even your name or email. Your data is never sold, shared with data brokers, or used to train AI models. Read our <a href="privacy.html" class="text-sage hover:underline">Privacy Policy</a> for complete details.
+                                </div>
+                            </details>
+
+                            <details class="faq-item group">
+                                <summary class="flex justify-between items-center p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 cursor-pointer list-none transition-all">
+                                    <span class="font-semibold text-sm pr-4 dark:text-slate-200">Where can I download KnowItOwl!?</span>
+                                    <svg class="w-4 h-4 text-sage transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </summary>
+                                <div class="px-5 py-3 text-sm text-slate-600 dark:text-slate-400">
+                                    KnowItOwl! is available on the App Store for iPhone and Apple Watch. <a href="https://apps.apple.com/us/app/knowitowl-q-a-on-your-wrist/id6759131642" target="_blank" rel="noopener" class="text-sage hover:underline">Download it here</a>.
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-cream dark:bg-slate-950 text-slate-500 dark:text-slate-400 text-center border-t border-slate-100 dark:border-slate-900">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-center space-x-2 mb-8">
+                <img
+                        src="favicon/favicon-96x96.png"
+                        alt="KnowItOwl! app icon"
+                        class="w-6 h-6 rounded shadow-sm"
+                        width="24"
+                        height="24"
+                        loading="lazy"
+                        decoding="async"
+                />
+                <span class="font-semibold text-slate-900 dark:text-white">KnowItOwl!</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-sm">
+                <a href="mailto:hello@sandybrook.io" class="hover:text-sage transition-colors">hello@sandybrook.io</a>
+                <a href="index.html" class="hover:text-sage transition-colors">Home</a>
+                <a href="privacy.html" class="hover:text-sage transition-colors">Privacy Policy</a>
+            </div>
+            <p class="text-xs uppercase tracking-widest opacity-60">
+                © 2026 Sandy Brook DevWorks LLC
+            </p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle & Form Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme Toggle Logic
+            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+            const themeToggleBtn = document.getElementById('theme-toggle');
+
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+
+            themeToggleBtn.addEventListener('click', function() {
+                themeToggleDarkIcon.classList.toggle('hidden');
+                themeToggleLightIcon.classList.toggle('hidden');
+
+                if (localStorage.getItem('theme')) {
+                    if (localStorage.getItem('theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    }
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    }
+                }
+            });
+
+            // Form Handling
+            const form = document.getElementById('contact-form');
+            const formContainer = document.getElementById('form-container');
+            const successMessage = document.getElementById('success-message');
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = submitBtn.querySelector('span');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                const originalText = submitText.textContent;
+                submitText.textContent = 'Sending...';
+
+                const formData = new FormData(form);
+                
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        formContainer.classList.add('hidden');
+                        successMessage.classList.remove('hidden');
+                        window.scrollTo({ top: successMessage.offsetTop - 100, behavior: 'smooth' });
+                    } else {
+                        const data = await response.json();
+                        if (Object.hasOwn(data, 'errors')) {
+                            alert(data["errors"].map(error => error["message"]).join(", "));
+                        } else {
+                            alert("Oops! There was a problem submitting your form");
+                        }
+                        submitBtn.disabled = false;
+                        submitText.textContent = originalText;
+                    }
+                } catch (error) {
+                    alert("Oops! There was a problem submitting your form");
+                    submitBtn.disabled = false;
+                    submitText.textContent = originalText;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
