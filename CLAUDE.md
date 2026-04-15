@@ -80,6 +80,51 @@ Class-based using `@custom-variant dark (&:where(.dark, .dark *))`. Toggle persi
 
 Guide pages use `guides/content.css` for content styling. Content is wrapped in `<main>` so descendant selectors apply.
 
+### ASP.NET Core Study Guide (`guides/asp-net-core-principles/`)
+
+A 36-chapter study guide based on "ASP.NET Core in Action, 3rd Edition" plus a RecipeVault capstone project. Designed for interview preparation.
+
+| File | Purpose |
+|------|---------|
+| `index.html` | Landing page with all 5 parts and chapter cards |
+| `chapter01.html` – `chapter36.html` | One page per book chapter with summary, code examples, and 10-question quiz |
+| `capstone.html` | RecipeVault guided project tying all concepts together |
+| `crypto.js` | Client-side AES-256-GCM decryption + password prompt UI |
+| `encrypt_guide.py` | Python script to encrypt all page content for publishing |
+| `decrypt_guide.py` | Python script to decrypt all page content for editing |
+
+#### Content Protection
+
+The `<main>` content of every guide page is encrypted with AES-256-GCM. The page source contains only the nav shell, footer, and an encrypted blob. Visitors must enter the password to view content. The password is cached in `sessionStorage` so it only needs to be entered once per browser session.
+
+**Encryption uses:** PBKDF2 (100,000 iterations, SHA-256) for key derivation, AES-256-GCM for encryption. Implemented with the Web Crypto API on the browser side and Python `cryptography` library for the build scripts.
+
+#### Editing Workflow
+
+The guide pages toggle between two states: **encrypted** (for publishing) and **decrypted** (for editing). You must decrypt before making content changes, then re-encrypt before publishing.
+
+```bash
+# Step 1: Decrypt all pages so you can edit them
+cd guides/asp-net-core-principles
+python decrypt_guide.py <password>
+
+# Step 2: Make your edits to any HTML file(s)...
+#   - Content lives inside <main> tags
+#   - Use the same HTML patterns as existing chapters
+#   - See STYLE_GUIDE.md for callout, code block, and quiz templates
+
+# Step 3: Re-encrypt all pages for publishing
+python encrypt_guide.py <password>
+```
+
+Both scripts require the `cryptography` Python package (auto-installs if missing). They process all `chapter*.html`, `index.html`, and `capstone.html` in the guide folder. Files that are already in the target state are skipped automatically.
+
+**Important:** The password is not stored anywhere in the repository. You must know it to decrypt or re-encrypt. If you encrypt with a different password, the old `crypto.js` session cache won't work — visitors will simply be re-prompted.
+
+#### Chapter Structure
+
+Every chapter page follows a consistent template: `<head>` with Tailwind CDN + Google Fonts + brand.css + content.css, sticky nav with chapter links for the current part, mobile menu, `<main>` with content sections using `h2`/`h3` headings, syntax-highlighted code blocks (`.kw`, `.tp`, `.str`, `.fn`, `.cm`, `.num` spans), callout boxes (`.callout.tip`, `.callout.warn`, `.callout.danger`), a 10-question quiz using `<details>/<summary>` for expandable answers, and a `.page-nav` div with Previous/Next links. The nav bar shows abbreviated chapter links for the current book part (e.g., C1–C7 for Part 1 chapters).
+
 ## Constraints
 
 - No build step, no frameworks, no npm

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 20: Creating an HTTP API Using Web API Controllers | ASP.NET Core Study Guide</title>
+    <meta name="description" content="Learn key concepts about Creating an HTTP API Using Web API Controllers in ASP.NET Core for interview preparation.">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/brand.css">
+    <link rel="stylesheet" href="../content.css">
+
+    <style type="text/tailwindcss">
+        @theme {
+            --color-brand: #1a5f6b;
+            --color-brand-light: #2d8291;
+        }
+        @custom-variant dark (&:where(.dark, .dark *));
+    </style>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <script src="../../styles/theme.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div class="fixed inset-0 -z-10 bg-slate-50 dark:bg-slate-950" style="background-image: url('data:image/svg+xml,%3Csvg width=%2720%27 height=%2720%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg fill=%27none%27 stroke=%27%23e2e8f0%27 stroke-width=%270.5%27%3E%3Cpath d=%27M0 0h20M0 20v-20M20 20V0M20 0H0%27/%3E%3C/g%3E%3C/svg%3E'); background-size: 20px 20px;" style="opacity: 0.5;"></div>
+
+    <nav class="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="../../" class="flex items-center gap-2 font-bold text-xl group transition-transform hover:scale-105">
+                    <img src="../../blue_logo.jpg" alt="Sandy Brook Logo" class="h-8 w-8 rounded-full dark:hidden">
+                    <img src="../../dark_logo.jpg" alt="Sandy Brook Logo" class="hidden h-8 w-8 rounded-full dark:block">
+                    <span class="hidden sm:inline"><span class="text-brand">Sandy Brook</span> Projects Lab</span>
+                </a>
+
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex gap-2 text-sm">
+                        <a href="../../" class="px-3 py-2 rounded hover:text-brand transition-colors">Home</a>
+                        <a href="chapter13.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C13</a>
+                        <a href="chapter14.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C14</a>
+                        <a href="chapter15.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C15</a>
+                        <a href="chapter16.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C16</a>
+                        <a href="chapter17.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C17</a>
+                        <a href="chapter18.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C18</a>
+                        <a href="chapter19.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C19</a>
+                        <a href="chapter20.html" class="px-3 py-2 rounded bg-brand text-white">C20</a>
+                        <a href="chapter21.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C21</a>
+                        <a href="chapter22.html" class="px-3 py-2 rounded hover:text-brand transition-colors">C22</a>
+                        <a href="../index.html" class="px-3 py-2 rounded hover:text-brand transition-colors">Guides</a>
+                    </div>
+                    <button id="themeToggle" class="p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle theme">
+                        <svg class="w-5 h-5 dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zM4.22 4.22a1 1 0 011.414 0l.707.707a1 1 0 00-1.414-1.414l-.707.707zm11.314 0a1 1 0 011.414 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707zM4 10a1 1 0 110-2 1 1 0 010 2zm12 0a1 1 0 110-2 1 1 0 010 2zm-8 6a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm4.22 1.78a1 1 0 011.414-1.414l.707.707a1 1 0 11-1.414 1.414l-.707-.707zm-11.314 0a1 1 0 011.414 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707z" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="menuToggle" class="md:hidden p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle menu">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 overflow-hidden fixed bottom-0 left-0 right-0 max-h-96 overflow-y-auto z-30">
+            <div class="container mx-auto px-4 py-4 flex flex-col gap-2">
+                <a href="../../" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Home</a>
+                <a href="chapter13.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 13</a>
+                <a href="chapter14.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 14</a>
+                <a href="chapter15.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 15</a>
+                <a href="chapter16.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 16</a>
+                <a href="chapter17.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 17</a>
+                <a href="chapter18.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 18</a>
+                <a href="chapter19.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 19</a>
+                <a href="chapter20.html" class="px-4 py-2 rounded bg-brand text-white">Chapter 20 (Current)</a>
+                <a href="chapter21.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 21</a>
+                <a href="chapter22.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Chapter 22</a>
+                <a href="../index.html" class="px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">All Guides</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-12">
+<script id="rv-encrypted-data" type="application/octet-stream"
+        data-salt="It7KWEKg5Bgc+k6TZfrn2w=="
+        data-iv="b+wuGPkTx0qTY+hT">e5jP3wvEhyLB20JInQc3s4eiuk7NBXpPOg03hIrbTKQODY0i+1/vKvM35+3+UKfxpDcN+EBaQJ5+KDoXhoaEzC4BBtLs9Fzh0YhZ99zAImMUXsIV/QiesUmoB+5izxH1zZsg87LKaHA0qmvXhieHhh90tI12pgQ7U7rto2qRlL83LGiFpMxkTXF6vx/NRJ/5toVJfxI4t6W3JuK0RX5bAD2wFvDtjQJWz6tvndQd5FE7rur3iOMfsPKNqVcFvJMjHcgNda19bAjwnnBvOVn4Zlr4db73HbTRW6lCWAuZ3N/KvyOQD+8JskhQ6k3PWsc8bMR4NeNNE70jDvA0X0m5IvZ+aYMerCLA8+Rum2UANE39YYg9rj6q8TSeSY76Wu3EN35p2d5oCAq5xNW9sCwSZskGcgyOv3NcPonlfKGAXTqPLPHP6Iyo+yWWq/A8+CCHpzvdUsiIPnjPZkbdrA9hv/ahfO08UIRCLhz1ZAQgiNLfjk4kdv/xEsIskR8EeSuWtijaKKQsK7JJpi4Yzk2X/32aOx/+6YpYnLtt7wHQthCo3xiajQbMc2lcUjDRMFAVRl/kV2GtQ1mo87mdPV5QRFHKZPrx4RkHX8anxIj1wIelsysoNaa+TXDq6rlysPWftCLHjWG2VFiGBjrGWoQu2ksTULjzk/9ipYSo5KjjXy07HSwaqN9Cuv3Opg92wi8W9Vqq4RlFzePscpj01YId1W/ws2IgdQNdR4jzzWTKPW2vxj2M6X0WUcqZ+RuN569gsMlLNFvfM9T2iFozK1oWoPczQ4lxiUS/plu0oORuxX8WLVH8500TilARH1ZGdr65znIMI/Feh7pHI53WTmsg8JZ3SVLMRJVdh48xpey2Rw4Srid9ZLzANWkH4sjUgp0wTXifCzqeUIWMqRWwshsVaWCQ1puS4I6BiwWRRwmZS7MWJnwrqsM5DXEoVfyE5c4WNbh/UZretc+5BFruidAzxDYXhd1xmGYBrNPcqP0qOYCHuiwE2K7uav6IQ6/71MU6lBliTOp30Uh5kUY8t8OjThFSlXmyK8EQNcQLjILGJhfqeQlFh0mrQmB7K3hYJYmoNl+nmdWqsmTtGB9wS/4iKcg3AVwEHmYJHcZDQUeKowu/WNwN6gSS5IXggSNmKV4aKbOsZkn374zYhO7luW5mUNxNWjE1CoywoH5rYGyc4SQuPRKgvUOoe3FYOoPKomUcvw87wxrjhm1EBpfeUfO+Pwv0Jpd2rqii+pdlvfMOR3CI/rpUDgYATbwyG1IGdTGnCgv8NYNd/Ac3rN7zoYazMOBSRiFEPza53iyu2+++xkO/3fdSy20ER6auwjoxnoqqpGpCR/J0fdqREbdcOusl3iM+lUmj7FOP50h9QymLkJ76d86jSi8OLQb6Ini1h6swcFE0KkzEKi07wNms853tsIDiUqBCF0yBfwK/Pm9cFltGbMUSA/Ega6DypE2YMcm509KE1QHflsSCuON7nmaJfKGNhE6oVyhdUHIEnkWMTGQsJM2kP1YLjyzob47QqrlxX80k8FEhKvDGpjSkMoCvyEBFaQ7C+vZTLwypfAvlaldQx2v2lFkxwQedlwV8gb9kEYh3rk4zWGMbD9kxZcqFKABy5NM8Q1rPXJlO8w+VSb0gomXptclbYzfgZ+CRnQ19fdJPU9gcuT+L36RPlMrFxrt7CimrGdMRRa346bhQf6/QVY4hKcvaVNc2ID1g+khKqtMlmYKSNrs5gPwTCXDChqlaYJxA7PkyJlpEVyVfV4Ai1anU5rVsHiGJlYr/7demyrZBkbmrcQgZWKNCLpTz5N5z+fputciBzXbJmifapU94PSEPkM4PnBpqCGBCg4TolrvrcWHOziLOoHmRfD51igmQxDyHN4CnztKmwWXtcSH8pS8peaaltX5T1P5RpbRg4H1lI1Y/GpQT5eT4qSxq/STclnmMAXKaNiNgkKwmgUzPRcpi1ARu6cOagtTc1cN4DPmplmoWQqiS31yNAosooIYfOuffrwVqObYMUE4jkxw+PjE0Gmm0zbcd/0ekmbAmf16+puM425kvrtLpaHZg9+3idZ5vG38XOmRNIW0mbXSnhq8WmwPzeVUJ+AkBFk8/B9STgQC46QvsLNV0w1To6QmQSWkV2zydWGvELV9a3P35xfhGm4rwLPOJ/5v4N9rYQJxuQjw6iZzmonaRFvZ8AwEx1kEoT+44i891R9A0imf9vpXaTy5by7aqcNhT16r4dPvjNu6MUI5GcrSucbFHQKcmVao16wJx8OvU6j2yW8qdFeOexeAX1rp4tk1x6JgjXWzxoDbw6D4XK3K34/5Ut7fb9thSIrkVv1JoLDKfSdzqcCXaGdQUXCmT/5UW3Jh3jT6AXQN3l4BrD4xoVGZgJ8h4W1gUnyg0YgTXpdw04jbQCa4TDgpo0fhV20JBQnEl0BtrbgagSjibIlpKpzC+v7m24VwA+SmvAzekwmEk0rFhI/Q8nmp87EtDpjFy0rIjtBA7bkbGeinw6bt1iIm4iBGc7kIk/FcYBSKSQAqGmgMQEZKkcuRaE7S8enjWCHEu6E4r3PVo+kzFFeSRikoV7w9U4a4M72MGcjTL/BYkWgJ/0I2W5NKys46mKQhBtL3HuM+gwP30jkk4TV4SBtqviCZDdVEl/NwVLz5/92QeIoZ6jyxAmT1K+zq1BUGKZJw4pklPkeRtCfA0NaIvmByZt/yiUC4USusaWN+usIi4l6CuCens7I1BLg4juYsFG+hRykQ/tx0zr0aOkFpJo5nP/fo+iI5H4tLFi1gF2YFwXzbImeACB0XC6eI/b+5C/AM+kc1zhp8yV+NLxeKjQUDc564NdAzD1srCyFqm85TUMcue+a9e4UNQyg1dwDCB8XmQGZDJ9jaxp3PRXjooIa8XRlHkYuJzatXhH55c1IugaE1a5E4iNdfzgW5xe/TmLlGgZ+Oihg/QUZu+KMrV/4DXQ6YUW1qdMwj7iZc309U/AQbJkvwGtXT17L0NcRbI0667E166s27jmTiE8Lh2fM30rCj7v1HxArBWEIR4elCc4RFdI7uML13FN3j5HzIKGLU3O8JxvkABbOd5W+/zIb21cR5n0vbp8V1AEe4F9HcuRKmP0+3hvdgW3TB0ksmzLPRAu+D/9EQEBXnQkU2oxuNSOC7Dhpiuh0RH9TlYw7CvSEDg/6OAg5PI/NclTqwk6oqb9HgVTOEZ/cBDAxRg4QAxZHMIG7b7xf4P0LQPrZNuQr3W2LO/mSM3JYNR8LdrBCCWU9EybHr5IJ6rPSn/WXsMqITlB8UIGsJYHL/Su0nME5XAAVVyxCYLT4uS3t0hoZUKSHAg+GBruv2J6S+O8VX69j9F5uz0IOQ1NW3x4ByVYfRttHKxNL6VJXRv0muU27UuWNL+Dd4wWD0cYX1G/0lshEO7sVRPK0iS3PeD97nygyYWIH/GGu1niLArLeD9OlGMX7UC+3cZvtrqFYNxnM+jAnkgOI/V5a2IzxopQTX2sXhWggxgGjMg0ID7jiXecMdilMNYmYhmUmW45kalph53qzP3LU/pPducGvydEEKs5Lg1grOePXlIUIdX4PL/2V/zY4O1eVBnFrZoATHkDQWpVFIMPfc0jY2MzoJ27sKCGOzYWwuAeNmZuUIw0rGgNSDcfIkyWHEiH8TQ1155ZFASkmLvHHCfBcVOwawB7R9e3UdHq9SxvIf5k0w3BpYU5RZwAQNVK/MlEYr86KRstblxYoue6LlTUDRw2TK09ldwDrpVZrKLoJPKIOSEGZ5yPWhYVCw9cZJuoTlbtcQPfDrRBHsFesLKWp9ic6czFl3C0+o+fk89UMoKzPt2oJVEqklvyf+/cE5zufA1exSrunC1EGbXlN+cDegjlY3/Nf2bmuSnayQRrd6xhGbIfTr2n6c1un/L1R5ITSKqv0nNugDtSogVYw4OiwEZyYqIC4tNjFHC+wTXiBaAM9a/vlgRg5PAaUipo5UNFUa/yTpaugWKk+V9j0dSPgiNyamNh+VlQmHM9mrMIMxyp9HL8taqnPaX8gMiZL1WqBUQ/T1VaPohmFCxtTrNcysKGUWhxE3R2T6sQjMs6W9bxfPQouV9dMsgxGttcE0XZVMMYEkqOcLpW/MET/3WXiA8wl+31JGSX9PmZVfDrDu9tTVWKM2m84fywtGfIrpIa11bC+mqzTiai8DtanpUsrOd96AYh+jaXZaakBSX4hlgBX89UXuTKXwejDWtJcMaDVeFdHGhKL5Y6JJNSWKP7Vxd9yOsnnRmwkg3lYOlqLRamjMzczJYQJsHasQ69Q34+40d/RGDHd8k/l2b4JqIWUhfiz44JoyYVAf9ml95ilsiCrAzIcDDysECXjutWkeJ+mcwIWrl+/8kqxiXIn9FLQYRg2w1UyArqzIKO1UMUKh4OBij5Djb8/LEbffszRKOYZS3gX+WELisS1wWi4m0TC9FEGIloFk5E2oRc3qcLm/Z0QaEYSp8ArlN1UhIvFlNNjSkNY+3hvm9Mrj0qlVaPPYTTr8ILp1JRuteNEaAhf4Hk+24NEXuFw8WpFD9XVc7ijI5VGhpLfW3kI6d4Zy36QUYgUKJDgmF22HXCT/sRhwrvCtXeviLfOTLqrQ4BOwOaASnAnlCaHtziN+Zt8BURLP14MLSaFl3Jf1NkjCowwklPAUrrdlKGhwV7Y0+bQ8irhnv9Vj2KT5Nw4cT0pwjnWHPyOnmoC5oka0kGepCr6HZ3c0flYxYCQVeDcMqnb1pe5+TrbaOUWnOvatwIUFSw5wmIO0F24mbsO8sBADtPH2MehwVs6YhXapcukJctiDhCVeRSHeizfOfH624lw1x5OAuj+HwufeU9FoXdum3bKhiyiKXpglfNOmLvRdQAdyCl1WGy/tZBtE+suTyOR5rR0xz/KkjkSv55pQlvdmL5ktejazJaiBNZHsErnt1fIQlpbZLYLFnGyy+A0VxU/R6kGMw0zEc7EF7us/oWfYn4QZt9xnNJ/HmQe3Z1XyqD22Oj+ipY306no9w9uIQZ69h8pTNouypcwNoqT2AMQQx4Qh7m8nZlJMhDihpOksv7+ApY0sZgXsRJd35jM7sZWmL/JF6geW0YgBCbiyyaQhyIXmHQNMzPYOgd4OnG6Swuk9PLg7bNC+ZyvX4z9LRpgl4vubftVsQJ6jjWf232NAYMGxWeBO+4EJCYwhMRlbE9EKzepuvg6TBOPBBiRTTKkNwKiT+xaN38tmn5wXJBTuhyy374IHTxgTvCi4T5R8YmjAqYV0VhSS3ykZ9oetWpz1xwXFfLW1dQFqHqbK8AStDwLzBNSHaVuUUf3NmFC0/sw/794aji2FI/20LXlFeH8lZX2ax9GVQXxOeGF9F26G7L3DctLLuvvl/w4eDDAUZTOGwNtujhNOmIz+6PI2iC5/8tNaDoaWi9Ye8L4Fb9vY5v4ch5ABh96FFFAwmlTk0kXAcPpeLPMBOjnKe7MVF7Piu1DA3gUgXTKNlL038kAPLcqM+5uYJkKoXIpHIZ3OK5WceXfbuQUqEiaXuJqBbf9LFvWrQxE4pMkqnO7N1VrmV+tssM7TncSwEqTdORBQGDscWh6CxqNuOKLfK7t15dVOagZLdWimwSzBSED9yDtzDzcDpa9ynwHKSkQlvDLorVeWtY1SMB5MliEpfcMzYH+8KxUr0X6YiIRSfnNqJh/xseZCKxj/wfijAG6uKY6yOS+jtCzcaaoVi107ppsXyxyrrQliS4SAPdd2N3+kSbq4KBmVRiVgj6njb4KOQJIyZIAwfeFfTHckxLSvYq3EuaZrf/N9bw9HBFj+1WMUIiSZ+2Z3r8BpdClHAsUUEcRCn+r4H9gn9ep62eX8FwjmodopA9zauicxtwYr/TtCYlQXTIaAclPecGZYYuL//SWyRnGKoi2yIFfHnAdz/yQjaWQevM/uZG+czGmRaIXzAnD7oM7VCINoaul84PoKWSMHKbJgK70t6WNJ2vVkmvy2BUTzn0jUohpCdXGlW6PpAcJbtoffDm2pX1zCIIJnSMNO5mqd+6XHC37WpSwItoOuoWPa36MoWaUNyxuHTwooyygrVgSgO/um/JDbbCALiJrcMhpdzXKJsme30U7587Fij/1naI8iH0NJDDPC8be4h3ZeyAR5GuLtPrVueKDWSljWyVmM4l9JTWV4FvMoAW3FpSbiMRZTuvI1tXNgusXb6B6hfELkzZvX4WwxyIfFURTLjv+0PVh4nRxdgYDRiIeFE0SFu90uFUqv3Dxy9iDr8dG/ni8pKclgz4aaekZwLMglV8oKtXyKqxsj+TY2KKDuMDRTKlehjfPi1pFxDFL11A9Me56WDsB+1etFW68JEMmhOLJlULyzzjxxbmO4j24uMPWXWeP8isZn3wCgUUGdGRogzODHDSqTFNLRFqv4HwtShFYmR2xePMLFGHJ9RmL44UqVsR1bak3MjBKXwn7ruqJpLb1Q3/VDWtNpquDBWuM5z8ShXOGjWF8Q7W7FPDGWi2+9mgikW+aXFZ/St4/VkStbGxVxGMN9ZqHZg7nOYR3RDzp95wi6R+y3nelMjmOg8pkTRNwGPRfRLHzfurlx4gJ2HWROHVSVwQ5KEru5RYCDy1pXUZfDnwd6JwYpDvEZTePyrljE8H2bEd4gvcKVT2oO7CLZZIpAIxHIoFUQiPJhlz5txbzRu5UWxJUfLzDGH0F50YdJTxLkuKIS2OigZxDNavoXXSVvMyC0wOkwncckzYNa015Sz5r0xczQa2STQpXZ12jeeROTSRWJTIDwnXYotHRGpeuPUHxXeqPEYOGlBQsnd38CH5PWq+Jko6AOWHg/xUL3H4pXO6z149FItttrk4+upsczOZ0Chtms+UpNoRa8E/vLnswqyszxFKRzsu906MZ5Mg9uezqB4I8pAN3MEntj6GLtXCMOopQGjvnFrzX2UZZZIOIQD3vPxhTTskc2c233JHHvXXHrcJr7RBoGSJSWzTRXf3uiE9edYLnbdSfSgJoQKkFaBr1NtBLWwCgb9xD23v1LoAMM6kkJ3W7tki6IPRaTUsPWtLGPwA0O4z7AiqdZ9T/UCsVhnSCINOM12JZVO8WdbOuVX3EohWP+fLc4ZPgXPilZHQqkwTvYXLKMjQKyvhK71uDye628iV8xk917qcJjUggJbbm1/6YC1+42KvMtLQtBqAbw0u1amSfCXgz5HfBfrMmtrxEGmld+nVztbj14FVxCYL25MtE3d9LUg87KByX2zX4l8kbVce847IFFWXUYfHpV7IuE1TOhLKBgZtFkEzgCQuKAxl0TTpuNXQTZh2rncyaZNVDiUo3lK+1kl0wFSydtFHw5Dfm+Gz3pAHN4xG4wsHzm7ts+WDw98XVR2sC2+swO/vUgxsO/2XdT10hdrgQ9HGihLgccP5KIC+cClgkjJX/XRxFnN3EatNkm7ESjkYTb2Sp/sabMqLTUE/vOdzgidD75V44dXCoApSXCxkFWjCX4C5kQImDm793sgPio3pvK1g1KfJlVTkDTW4So5XC2runQvJM8oGcfa6U/jAw6SJZyT6nGhjQ8lV3DStWiU36VQAypIqiAJALU9Nz93ImwPVfGPWeYkqkZu4IvuALWOymaByoUcBcewjI92k8z+oaGxGyw+3+z9FQHiMFHboztMOpZwkfl9CicR35CMD3x11gU4e/ztHrrqeqjT5vH6Ml0FnxAek226QaXDJMCgMtBzcNNmHvDRNcd+j1lG8ou/idSP75Shm5GAfQ61UXuj59eb7nZY6ZIBZlh8t4rLF/zVsQszTwDzVi07AbbDp/WIfVwtmE8Y9sftEa6hvpkIJ3oyZMzg/KFN0wrNEnlEJTNONcb9KiaBZ41rT0bHQ4YqQLIgC/mWR1gt55KAuFmxeXldcw9z8jaBdQIdO4LKYJf0//PSMovWjPo6jJpiANXk6wgExrBTNyiGAaFU5slrm4iWu2FQtATeZaNKk+hkZD2CcMWN6xE1G0ClpL/z+hwktkKO9hd8NUD/ziXuJlnXGbu2os9gpee5GwnPIY5hcevQHFhEO+Ll9llJ3xs2UQ/ggHKg5walq569D70tIEva3GJDBEkBh+cxFL+dgBTgxW0aKx4LPtNkFLJQF4OnVZTUWgd8g69k/Y/ZerCa8PSxyQ0MlbLdR97fvZFuHcMQZxYynkABTmYwVG2sZMVd8nrnNSZ23k9bQy5iDscDSMFCnWpuv5jI4Dsc2eg4bq/HCnOK+lFdL/taMxIqsPIhzMtEn2JLMMTEzJJUYfc7UF65ywvJn2A2T+A4rcBw9yCsWfzq6ovxU4gOgMMyMlw4RrzKPeWBUXSv8dck+v7E/qEprQU3bEni4pyY5oJSOMKl0wDa4IlmhV2KG7nz9Zy68lPQrs+h1W1DvTs5hlDifD5Kx2FwMO4c4rwl3xMx+bg0BP7CHgA0iDZCrVtZ9Wa2uNITE8tTOqLgnRzBlkraKErBsEJpPDstbnyp0xkHW5BlJdcez+xc9RKsunsZKUR4iW4mBYUBu+pW1NkCmCrt2JV7EKJ7cgIDtNLZnjkv7nKUhwECXzH7pGatU4c/GYThPvPDLdZ4q6JyePPsfHnrZUEk6Ctow93f95Mz/aW6j7Jn2Mhi7J9BnPai14RwI1FxVSs/NwA4Du3L68ocjMUSpfNuOk/vnpunvLAEeUgZrRwVG9+6rtQk2Cdx69F6qbb70TzRj34sbxfjXQQX+uJHmUJUF1eRSDV1L3aL9XcvGaDVjOEPk60nkWs2rF1ePw9I6IKd7wjOAZvpa+DKjSdoxBg6YhIIFiYInQ+O/rWbmEtfPpUzKXikuj8E5iJhc3VZoz3k5AGKhaNNXxlaew3Xlr7rhFlcF7Q85hEuhknmAWrPj4TdxY7svJ7rLexESHmDfAc3GZ+Ye4VhzPe/yctF6wwi1ptxWF3YZhqFh1OGZfHDfS27r2fUnr28vjX261Jk7oPdn6zTLgVbKKuB8cpNM4NqBtlHnYoaTzuymNpA+4/nXISRv2mhyZDfWa97zxUt4ZMZVJoYPe9TYBHtEpupvAZ6nn2L2sLJkOzXvA4EWVn1YbUnrmjhv3ocP8kjqHDNJ4jpA5S0YzfhDRl+lLVQBNrgzxpR6E4WnDAxtqrRyksrYblw3wP9vqUqnaPPbpviP6Fw9dJXHn5bh4p6L5hMCwHXr3OWNf4CGMx9n6aeA6lkF85qjqskeEZ697DYNHPU12EUzh5oXJUuFdh3wPWH3vigC63T1sXhIRxQkwWlx2PGgx37grytRQNpD5Q4Q3fMF8+J9C0y2ycA4cpB+N+eU3yzLEVUEHrAoFeKkOQzx7vxt/djB5I4bIfhq+IWs5UR2D6b2+wqQBkEpMDkYv5uxeTn9cAE/zdPPBp2mF14iRg=</script>
+</main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-12 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <a href="../../" class="flex items-center gap-3 font-bold text-xl group transition-transform hover:scale-105" aria-label="Sandy Brook Projects Lab Home">
+                    <img src="../../blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="h-8 w-8 rounded-full dark:hidden">
+                    <img src="../../dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="hidden h-8 w-8 rounded-full dark:block">
+                    <div><span class="text-brand">Sandy Brook</span> Projects Lab</div>
+                </a>
+                <div class="flex gap-8 text-sm text-slate-500">
+                    <a href="https://sandybrookdevworks.com#services" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Services</a>
+                    <a href="https://sandybrookdevworks.com#about" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">About</a>
+                    <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Contact</a>
+                </div>
+                <div class="text-sm text-slate-500">&copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('menuToggle').addEventListener('click', toggleMenu);
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#menuToggle') && !e.target.closest('#mobileMenu')) {
+                closeMenu();
+            }
+        });
+    </script>
+    <script src="crypto.js"></script>
+</body>
+</html>
