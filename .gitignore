@@ -13,3 +13,6 @@ Thumbs.db
 .claude/
 .vs/
 guides/asp-net-core-principles/*.pdf
+
+# Local backup of original high-res images (pre-WebP)
+_source-images/
