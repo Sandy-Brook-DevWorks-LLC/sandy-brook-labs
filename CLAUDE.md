@@ -12,16 +12,16 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 
 | File / Directory | Purpose |
 |------------------|---------|
-| `index.html` | Main Projects Lab page (Relay, KnowItOwl) |
+| `index.html` | Main Projects Lab page (Relay, KnowItOwl, Aquorbis) |
 | `styles/brand.css` | **Shared** — CSS custom properties, brand colors, grid bg, dark mode overrides |
 | `styles/theme.js` | **Shared** — `toggleTheme()`, `toggleMenu()`, `closeMenu()` functions |
+| `images/` | Root-level brand assets: `blue_logo.jpg`, `dark_logo.jpg`, `relay_logo.png`, `cogniwatch_logo.png` |
 | `guides/index.html` | Guides hub page |
 | `guides/content.css` | **Shared** — Content styling for all guide pages (typography, callouts, code blocks, tables, etc.) |
 | `guides/linq/` | C# Data Structures & LINQ course (index + 5 lessons) |
-| `blue_logo.jpg` | Light mode Sandy Brook logo |
-| `dark_logo.jpg` | Dark mode Sandy Brook logo |
-| `relay_logo.png` | Relay app icon |
-| `cogniwatch_logo.png` | KnowItOwl app icon |
+| `guides/ximena/` | Standalone research guide page; styles in `guides/ximena/styles/` |
+| `apps/aquorbis/` | Aquorbis landing site — see "Aquorbis Structure" below |
+| `apps/knowitowl/` | KnowItOwl! landing site — see "KnowItOwl Structure" below |
 | `STYLE_GUIDE.md` | **Human-readable design system reference** with templates and how-to guides |
 | `.claude/launch.json` | Preview server config (python3 http.server on port 8080) |
 
@@ -35,7 +35,46 @@ Three files eliminate duplication across all pages:
 
 3. **`guides/content.css`** — Content styling for guide pages. Targets elements inside `<main>` via descendant selectors (`main h1`, `main p`, etc.). Includes callout system (`.callout.tip/warn/danger`), code block styling, table styling, challenge boxes, page nav, syntax highlighting spans, Big-O badges.
 
-Each HTML page also has a minimal inline `<style type="text/tailwindcss">` block (7 lines) for the Tailwind `@theme` and `@custom-variant` directives that the CDN requires inline.
+Each HTML page also has a minimal inline `<style type="text/tailwindcss">` block (7 lines) for the Tailwind `@theme` and `@custom-variant` directives that the CDN requires inline, plus a 1-line inline `<script>` that applies the `dark` class before paint to prevent FOUC. These two snippets must stay inline; everything else should live in external files under `styles/` or `scripts/`.
+
+## Per-App Asset Layout
+
+Each app under `apps/` keeps its own `styles/` and `scripts/` folders so the apps stay isolated from the brand-wide design system.
+
+### Aquorbis Structure
+
+```
+apps/aquorbis/
+  index.html
+  privacy.html
+  support.html
+  styles/
+    shared.css   # nav, footer, bubbles, body/font setup, app-store button — used by all 3 pages
+    index.css    # landing-only: hero, features, zones, fish gallery, growth, aquarium, CTA
+    legal.css    # privacy/support shared: page-header, content cards, FAQ, contact-btn
+  scripts/
+    bubbles.js   # background bubble generator. Reads `data-count` from `.bubbles` (defaults to 20).
+  images/        # in-game art, app icon, App Store badge, etc.
+```
+
+### KnowItOwl Structure
+
+```
+apps/knowitowl/
+  index.html
+  privacy.html
+  support.html
+  styles/
+    main.css                   # .glass, fade/float animations, FAQ details, print rules
+  scripts/
+    tailwind-config.js         # Tailwind CDN sage/cream palette + system-font stack. Loaded right after the CDN script.
+    theme-toggle.js            # wires up #theme-toggle button + persists to localStorage
+    scroll-fade-in.js          # IntersectionObserver fade-up for index.html sections
+    contact-form.js            # Formspree POST handler for the support form
+  favicon/                     # favicons + web app manifest
+```
+
+The dark-mode init script (`if (localStorage.getItem('theme') === 'dark' …)`) **must stay inline in the `<head>`** of every KnowItOwl page so the `dark` class is applied before paint. The toggle interaction logic lives in `theme-toggle.js`.
 
 ## Design System
 

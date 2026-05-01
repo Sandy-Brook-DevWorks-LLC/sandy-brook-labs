@@ -40,8 +40,8 @@ Every page needs these in `<head>`. Adjust paths based on file depth.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Title</title>
     <meta name="description" content="Page description.">
-    <link rel="icon" type="image/jpeg" href="[depth]blue_logo.jpg">
-    <link rel="apple-touch-icon" href="[depth]blue_logo.jpg">
+    <link rel="icon" type="image/jpeg" href="[depth]images/blue_logo.jpg">
+    <link rel="apple-touch-icon" href="[depth]images/blue_logo.jpg">
 
     <!-- Tailwind CSS v4 CDN -->
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
@@ -108,8 +108,8 @@ The nav adapts per page. Key parameters: logo path, subtitle text, nav links.
         <div class="flex items-center gap-4 font-bold text-xl tracking-tight">
             <a href="[home-path]" class="relative group" aria-label="Sandy Brook Projects Lab Home">
                 <div class="absolute -inset-1 rounded-full bg-brand/20 blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                <img src="[depth]blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative h-12 w-12 rounded-full border border-slate-200 dark:hidden shadow-sm">
-                <img src="[depth]dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative hidden h-12 w-12 rounded-full border border-slate-800 dark:block shadow-sm">
+                <img src="[depth]images/blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative h-12 w-12 rounded-full border border-slate-200 dark:hidden shadow-sm">
+                <img src="[depth]images/dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative hidden h-12 w-12 rounded-full border border-slate-800 dark:block shadow-sm">
             </a>
             <div class="flex flex-col leading-tight">
                 <span class="text-brand">[Title Line 1]</span>
@@ -161,8 +161,8 @@ Styles are defined in `styles/brand.css`. JS functions (`toggleMenu`, `closeMenu
     <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row justify-between items-center gap-8">
             <a href="[home-path]" class="flex items-center gap-3 font-bold text-xl group transition-transform hover:scale-105" aria-label="Sandy Brook Projects Lab Home">
-                <img src="[depth]blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="h-8 w-8 rounded-full dark:hidden">
-                <img src="[depth]dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="hidden h-8 w-8 rounded-full dark:block">
+                <img src="[depth]images/blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="h-8 w-8 rounded-full dark:hidden">
+                <img src="[depth]images/dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="hidden h-8 w-8 rounded-full dark:block">
                 <div>
                     <span class="text-brand">Sandy Brook</span> Projects Lab
                 </div>

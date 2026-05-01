@@ -1,0 +1,155 @@
+/* ===== Aquorbis — Shared Styles =====
+   Used by index.html, support.html, privacy.html.
+   Page-specific rules live in index.css / legal.css. */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --ocean-deep: #0a1628;
+    --ocean-mid: #0d2847;
+    --ocean-light: #1a4a7a;
+    --ocean-surface: #2d7bb5;
+    --sand: #f5d99a;
+    --coral: #ff6b6b;
+    --coral-light: #ff9a9a;
+    --teal: #2dd4bf;
+    --teal-dark: #14b8a6;
+    --gold: #fbbf24;
+    --purple: #a78bfa;
+    --green: #34d399;
+    --white: #ffffff;
+    --text-light: #e2e8f0;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--ocean-deep);
+    color: var(--white);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; }
+
+/* ---- Bubbles background ---- */
+.bubbles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.bubble {
+    position: absolute;
+    bottom: -40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    animation: rise linear infinite;
+}
+@keyframes rise {
+    0%   { transform: translateY(0) scale(1); opacity: 0.6; }
+    100% { transform: translateY(-110vh) scale(0.4); opacity: 0; }
+}
+
+/* ---- Nav ---- */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 22, 40, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+    padding: 0 1.5rem;
+}
+.nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--white);
+}
+.nav-brand img { width: 40px; height: 40px; border-radius: 10px; }
+.nav-brand span {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.nav-links { display: flex; gap: 1.5rem; list-style: none; }
+.nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--teal); }
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 8px;
+}
+@media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 22, 40, 0.95);
+        padding: 1rem 1.5rem;
+        gap: 1rem;
+        border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+    }
+    .menu-toggle { display: block; }
+}
+
+/* ---- Footer ---- */
+footer {
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 2rem 1.5rem;
+}
+.footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.footer-links { display: flex; gap: 1.5rem; list-style: none; }
+.footer-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--teal); }
+.footer-copy { color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; }
+
+/* ---- App-store button (used on index + cta) ---- */
+.app-store-btn {
+    display: inline-block;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.app-store-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+}
+.app-store-btn img { height: 54px; }

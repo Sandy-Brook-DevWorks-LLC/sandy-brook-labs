@@ -1,0 +1,113 @@
+/* ===== Aquorbis — Legal/Support Page Styles =====
+   Used by privacy.html and support.html. */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.page-header {
+    text-align: center;
+    padding: 3rem 0 2rem;
+}
+.page-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.5rem;
+}
+.page-header h1 span { color: var(--teal); }
+.page-header p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+.page-header .effective {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.content { padding: 2rem 0 4rem; }
+
+.card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+.card h2 {
+    font-size: 1.3rem;
+    color: var(--teal);
+    margin-bottom: 1rem;
+}
+.card p, .card li {
+    color: var(--text-light);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+.card p { margin-bottom: 0.75rem; }
+.card p:last-child { margin-bottom: 0; }
+.card ul {
+    color: var(--text-light);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+.card a {
+    color: var(--teal);
+    text-decoration: none;
+    font-weight: 600;
+}
+.card a:hover { text-decoration: underline; }
+
+.highlight {
+    background: rgba(45, 212, 191, 0.08);
+    border: 1px solid rgba(45, 212, 191, 0.2);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+}
+.highlight p { margin-bottom: 0; }
+
+footer { margin-top: auto; }
+
+/* ---- Support page extras ---- */
+.faq-item { margin-bottom: 1.25rem; }
+.faq-item:last-child { margin-bottom: 0; }
+.faq-q {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+}
+.faq-a {
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.contact-btn {
+    display: inline-block;
+    background: var(--teal-dark);
+    color: var(--white);
+    padding: 12px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: transform 0.2s, background 0.2s;
+}
+.contact-btn:hover {
+    transform: scale(1.05);
+    background: var(--teal);
+}

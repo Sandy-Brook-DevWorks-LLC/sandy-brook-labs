@@ -27,37 +27,7 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        sage: {
-                            DEFAULT: '#6B8E7E',
-                            50: '#F4F7F6',
-                            100: '#E9EFED',
-                            200: '#D3E0DB',
-                            300: '#BDD1C8',
-                            400: '#A7C1B6',
-                            500: '#91B2A4',
-                            600: '#7B9D8E',
-                            700: '#6B8E7E', // Primary Sage
-                            800: '#567265',
-                            900: '#41564C',
-                        },
-                        cream: {
-                            DEFAULT: '#FDFCF8',
-                            dark: '#F5F2E8',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="scripts/tailwind-config.js"></script>
     
     <script>
         // Check for saved theme preference, otherwise use system preference
@@ -68,35 +38,7 @@
         }
     </script>
     
-    <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .dark .glass {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .prose h2 {
-            scroll-margin-top: 100px;
-        }
-        @media print {
-            .glass, #theme-toggle, nav, footer {
-                display: none !important;
-            }
-            body {
-                background: white !important;
-                color: black !important;
-            }
-            .max-w-4xl {
-                max-width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body class="bg-cream dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased">
 
@@ -474,47 +416,6 @@
         </div>
     </footer>
 
-    <!-- Theme Toggle Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Theme Toggle Logic
-            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-            const themeToggleBtn = document.getElementById('theme-toggle');
-
-            // Change the icons inside the button based on previous settings
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                themeToggleLightIcon.classList.remove('hidden');
-            } else {
-                themeToggleDarkIcon.classList.remove('hidden');
-            }
-
-            themeToggleBtn.addEventListener('click', function() {
-                // toggle icons inside button
-                themeToggleDarkIcon.classList.toggle('hidden');
-                themeToggleLightIcon.classList.toggle('hidden');
-
-                // if set via local storage previously
-                if (localStorage.getItem('theme')) {
-                    if (localStorage.getItem('theme') === 'light') {
-                        document.documentElement.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
-                    }
-                // if NOT set via local storage previously
-                } else {
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
-                    }
-                }
-            });
-        });
-    </script>
+    <script src="scripts/theme-toggle.js"></script>
 </body>
 </html>
