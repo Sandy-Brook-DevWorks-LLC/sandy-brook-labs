@@ -143,28 +143,41 @@
                         <div class="space-y-6">
                             <div class="flex flex-wrap items-center gap-3">
                                 <h3 class="text-2xl md:text-3xl font-bold">Relay</h3>
-                                <span class="inline-flex items-center rounded-full bg-brand/10 border border-brand/30 px-3 py-1 text-xs font-semibold text-brand">
+                                <span class="inline-flex items-center rounded-full bg-green-500/10 border border-green-500/30 px-3 py-1 text-xs font-semibold text-green-400">
                                     <span class="relative flex h-1.5 w-1.5 mr-1.5">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand"></span>
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                                     </span>
-                                    In Development
+                                    Released · Early Access
                                 </span>
                             </div>
-                            <p class="text-lg font-medium text-slate-300">AI Phone Assistant</p>
+                            <p class="text-lg font-medium text-slate-300">AI Phone Receptionist for Small Business</p>
                             <div class="w-24 md:w-48">
                                 <div class="flex items-center justify-center aspect-square rounded-2xl overflow-hidden bg-slate-700 border border-slate-600">
                                     <img src="images/relay_logo.webp" alt="Relay App Icon" class="w-full h-full object-cover">
                                 </div>
                             </div>
                             <p class="text-slate-400 leading-relaxed">
-                                An intelligent AI assistant that handles phone interactions — answering calls, understanding context, and managing conversations so you don't have to. Built for seamless, natural communication powered by advanced language models.
+                                A production AI phone receptionist that answers business calls 24/7, takes messages,
+                                books appointments live on the call, and emails clean summaries. End-to-end build:
+                                real-time Twilio ↔ Gemini Live voice bridge, Semantic Kernel tool calling, multi-tenant
+                                .NET 10 SaaS on GCP Cloud Run, all infra as Pulumi C#.
                             </p>
                             <div class="flex flex-wrap gap-3 pt-2">
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">AI</span>
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Voice</span>
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Telephony</span>
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">NLP</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">.NET 10</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Gemini Live</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Twilio</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">GCP Cloud Run</span>
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Pulumi IaC</span>
+                            </div>
+                            <div class="flex flex-wrap gap-3 pt-2">
+                                <a href="apps/relay/" class="inline-flex items-center gap-2 font-bold text-brand hover:text-white transition-colors">
+                                    Read the Case Study <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                                </a>
+                                <span class="text-slate-600">·</span>
+                                <a href="https://relay.sandybrook.io" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-medium text-slate-400 hover:text-brand transition-colors">
+                                    Visit relay.sandybrook.io <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                                </a>
                             </div>
                         </div>
                     </div>
