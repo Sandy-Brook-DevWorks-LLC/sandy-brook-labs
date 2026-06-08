@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Driven Development Workflow Guide | Sandy Brook Projects Lab</title>
+    <meta name="description" content="A practical AI driven development workflow: align with docs, write PRDs, slice work vertically, implement with TDD, review fresh, and improve the system.">
+    <link rel="canonical" href="https://sandybrook.io/guides/ai-driven-development/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://sandybrook.io/guides/ai-driven-development/">
+    <meta property="og:title" content="AI Driven Development Workflow Guide">
+    <meta property="og:description" content="Use AI inside an engineering feedback system, not instead of one.">
+    <meta property="og:image" content="https://sandybrook.io/guides/ai-driven-development/ai-driven-development-workflow-infographic.png">
+    <meta property="og:site_name" content="Sandy Brook Projects Lab">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AI Driven Development Workflow Guide">
+    <meta name="twitter:description" content="A practical workflow for aligning, slicing, testing, reviewing, and improving AI-assisted software work.">
+    <meta name="twitter:image" content="https://sandybrook.io/guides/ai-driven-development/ai-driven-development-workflow-infographic.png">
+
+    <meta name="author" content="Sandy Brook DevWorks LLC">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#1a5f6b">
+
+    <link rel="icon" type="image/jpeg" href="../../images/blue_logo.jpg">
+    <link rel="apple-touch-icon" href="../../images/blue_logo.jpg">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "AI Driven Development Workflow Guide",
+        "description": "A practical AI driven development workflow: align with docs, write PRDs, slice work vertically, implement with TDD, review fresh, and improve the system.",
+        "url": "https://sandybrook.io/guides/ai-driven-development/",
+        "image": "https://sandybrook.io/guides/ai-driven-development/ai-driven-development-workflow-infographic.png",
+        "author": {
+            "@type": "Organization",
+            "name": "Sandy Brook DevWorks LLC",
+            "url": "https://sandybrookdevworks.com/"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Sandy Brook DevWorks LLC",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://sandybrook.io/images/blue_logo.jpg"
+            }
+        }
+    }
+    </script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/brand.css">
+    <link rel="stylesheet" href="../content.css">
+    <style type="text/tailwindcss">
+        @theme {
+            --color-brand: var(--brand-teal);
+            --color-brand-light: var(--brand-teal-light);
+            --color-brand-dark: var(--brand-teal-dark);
+            --color-brand-shadow: rgba(26, 95, 107, 0.25);
+        }
+        @custom-variant dark (&:where(.dark, .dark *));
+    </style>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+    </script>
+    <script src="../../styles/theme.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300 min-h-screen flex flex-col">
+    <div class="fixed inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10 pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 w-full border-b border-slate-200/40 bg-white/80 backdrop-blur-md dark:border-slate-800/40 dark:bg-slate-950/80">
+        <div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+            <div class="flex items-center gap-4 font-bold text-xl tracking-tight">
+                <a href="../../" class="relative group" aria-label="Sandy Brook Projects Lab Home">
+                    <div class="absolute -inset-1 rounded-full bg-brand/20 blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    <img src="../../images/blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative h-12 w-12 rounded-full border border-slate-200 dark:hidden shadow-sm">
+                    <img src="../../images/dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="relative hidden h-12 w-12 rounded-full border border-slate-800 dark:block shadow-sm">
+                </a>
+                <div class="flex flex-col leading-tight">
+                    <a href="../" class="text-brand hover:opacity-80 transition-opacity">Sandy Brook</a>
+                    <span class="text-xs font-medium tracking-widest uppercase text-slate-500 dark:text-slate-400">AI Driven Dev</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 md:gap-6">
+                <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+                    <a href="#principles" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Principles</a>
+                    <a href="#align" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Align</a>
+                    <a href="#prd" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">PRD</a>
+                    <a href="#issues" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Issues</a>
+                    <a href="#done" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Done</a>
+                </div>
+                <a href="../" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Guides</a>
+                <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Open Menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                </button>
+                <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu">
+        <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
+        <div class="mobile-menu-panel">
+            <a href="#principles" onclick="closeMenu()">Principles</a>
+            <a href="#align" onclick="closeMenu()">Align With Docs</a>
+            <a href="#prd" onclick="closeMenu()">Write the PRD</a>
+            <a href="#issues" onclick="closeMenu()">Vertical Issues</a>
+            <a href="#implementation" onclick="closeMenu()">TDD</a>
+            <a href="#review" onclick="closeMenu()">Review</a>
+            <a href="#done" onclick="closeMenu()">Ready &amp; Done</a>
+            <a href="../">All Guides</a>
+        </div>
+    </div>
+
+<main>
+
+  <h1>AI Driven Development Workflow Guide</h1>
+  <p class="subtitle">A practical workflow for using AI inside an engineering feedback system, not instead of one.</p>
+
+  <figure class="mb-10 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <img src="ai-driven-development-workflow-infographic.png" alt="AI driven development workflow infographic showing align, PRD, vertical slicing, TDD, fresh review, and system improvement." class="w-full h-auto">
+  </figure>
+
+  <p>Based on Matt Pocock's "Full Walkthrough: Workflow for AI Coding," his follow-up on <code>/grill-with-docs</code>, and related public materials.</p>
+
+  <h2 id="core-idea">Core Idea</h2>
+  <p>AI driven development works best when you stop treating the model as an infinite-context programmer and start treating it as a fast junior engineer inside a tight engineering system.</p>
+
+  <div class="callout tip">
+    <strong>The workflow</strong>
+    <ol>
+      <li>Keep the model in a small, high-quality context.</li>
+      <li>Align on the design before implementation.</li>
+      <li>Maintain shared project language while aligning.</li>
+      <li>Externalize memory into docs, issues, tests, and code.</li>
+      <li>Slice work vertically so every task produces feedback.</li>
+      <li>Let agents implement only after the work is clear.</li>
+      <li>Review in a fresh context.</li>
+      <li>Improve the codebase so the next agent has an easier job.</li>
+    </ol>
+  </div>
+
+  <h2 id="principles">The Operating Principles</h2>
+
+  <h3>1. Stay in the Smart Zone</h3>
+  <p>Large context windows do not mean unlimited coding quality. As the context fills, models tend to lose precision, miss constraints, and make worse decisions.</p>
+
+  <p>Working pattern:</p>
+  <ul>
+    <li>Keep each task small enough to fit in a fresh session.</li>
+    <li>Prefer short, complete issue files over sprawling chat history.</li>
+    <li>Clear context between major phases when possible.</li>
+    <li>Move important state into external artifacts: PRDs, issues, tests, ADRs, and code comments.</li>
+    <li>Use subagents or separate sessions for research so their raw exploration does not pollute the main context.</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>Rule of thumb</strong>
+    If the agent is rereading too much, arguing with old assumptions, or fixing bugs it just created, the task is probably too large or the context is too stale.
+  </div>
+
+  <h3>2. Treat the Model as Forgetful</h3>
+  <p>Assume the agent will forget anything not written down. This is not a defect to fight with more chat history; it is a design constraint.</p>
+
+  <p>Working pattern:</p>
+  <ul>
+    <li>Keep durable decisions in files.</li>
+    <li>Give every new agent a compact, current entry point.</li>
+    <li>Avoid relying on "we discussed this earlier."</li>
+    <li>Prefer a clean restart plus good artifacts over a long compacted conversation.</li>
+  </ul>
+
+  <p>Good project memory includes:</p>
+  <ul>
+    <li><code>CONTEXT.md</code> for domain language, bounded contexts, and non-obvious project concepts.</li>
+    <li>ADRs for hard-to-reverse or surprising architecture choices.</li>
+    <li>PRDs for destination-level product intent.</li>
+    <li>Issue files for implementation-ready slices.</li>
+    <li>Tests for executable expectations.</li>
+  </ul>
+
+  <h3>3. Alignment Beats Specs-to-Code</h3>
+  <p>The talk argues against handing a large spec to an agent and treating the generated code as an implementation detail. The code still matters. You need to understand it, shape it, and review it.</p>
+
+  <p>Working pattern:</p>
+  <ul>
+    <li>Do not start with "build this."</li>
+    <li>Start with "interview me until the design is clear."</li>
+    <li>In an existing codebase, make the interview update shared language and ADRs as decisions emerge.</li>
+    <li>Let the agent uncover missing decisions, edge cases, dependency choices, and product boundaries.</li>
+    <li>Only move to implementation after the design has been pressure-tested.</li>
+  </ul>
+
+  <h2 id="align">Phase 1: Align With Docs</h2>
+  <p>Use an alignment session before writing code. The agent's job is to ask one focused question at a time until both of you share the same design concept.</p>
+
+  <p>The update from Matt's newer <code>/grill-with-docs</code> workflow is this: for coding work in an existing project, alignment should not live only in chat. It should also refine the project's shared language and capture non-obvious decisions while the conversation is still fresh.</p>
+
+  <h3>Choose the Right Alignment Mode</h3>
+  <p>Use <code>/grill-me</code> when:</p>
+  <ul>
+    <li>The task is greenfield or mostly product exploration.</li>
+    <li>There is no meaningful project glossary yet.</li>
+    <li>You need zero setup.</li>
+    <li>You are using the pattern outside coding.</li>
+  </ul>
+
+  <p>Use <code>/grill-with-docs</code> when:</p>
+  <ul>
+    <li>The work touches an existing codebase.</li>
+    <li>The project has domain terms, established concepts, or team language.</li>
+    <li>The agent keeps being verbose because it does not know the right nouns.</li>
+    <li>You want the session to update <code>CONTEXT.md</code> and create ADRs for durable decisions.</li>
+  </ul>
+
+  <p>In short: <code>/grill-me</code> extracts clarity from your head. <code>/grill-with-docs</code> extracts clarity and makes it stick in the project.</p>
+
+  <h3>Prompt Template</h3>
+  <p>For a new or lightweight task:</p>
+
+<pre><code>Interview me relentlessly about this feature until we reach a shared understanding.
+Walk down each branch of the design tree and resolve dependencies between decisions one by one.
+Ask one question at a time.
+For each question, provide your recommended answer and why.
+If the answer can be discovered from the codebase, inspect the code instead of asking me.
+
+Feature:
+[describe the feature or problem]</code></pre>
+
+  <p>For an existing codebase:</p>
+
+<pre><code>Interview me relentlessly about this feature until we reach a shared understanding.
+Use the existing codebase, CONTEXT.md, and docs/adr as grounding.
+Challenge fuzzy or inconsistent terminology against the project language.
+Ask one question at a time.
+For each question, provide your recommended answer and why.
+If the answer can be discovered from the codebase or docs, inspect them instead of asking me.
+
+While we align:
+- Update CONTEXT.md when we define or refine project language.
+- Propose an ADR only for decisions that are hard to reverse, surprising, or involve a real tradeoff.
+- Keep implementation out of scope until alignment is complete.
+
+Feature:
+[describe the feature or problem]</code></pre>
+
+  <h3>What the Agent Should Clarify</h3>
+  <ul>
+    <li>User goal and success criteria.</li>
+    <li>In-scope and out-of-scope behavior.</li>
+    <li>Existing vocabulary and whether the feature needs new terms.</li>
+    <li>Data model and lifecycle.</li>
+    <li>Edge cases and failure modes.</li>
+    <li>Security, privacy, and permissions.</li>
+    <li>Backwards compatibility and migration needs.</li>
+    <li>UI states and empty/error/loading states.</li>
+    <li>Test strategy and verification commands.</li>
+    <li>Existing modules that should own the behavior.</li>
+    <li>Whether a durable architecture decision should be captured as an ADR.</li>
+  </ul>
+
+  <h3>Human Role</h3>
+  <p>Your job is not to answer everything perfectly. Your job is to make product and architecture decisions the agent cannot safely infer.</p>
+
+  <p>End this phase when:</p>
+  <ul>
+    <li>The agent stops surfacing surprising unresolved questions.</li>
+    <li>You can describe the feature in one or two crisp sentences.</li>
+    <li>The risky decisions are explicit.</li>
+    <li>You know what is out of scope.</li>
+    <li>Any new shared language or ADR-worthy decisions have been captured.</li>
+  </ul>
+
+  <h3>Lightweight CONTEXT.md Template</h3>
+<pre><code># Context
+
+## Bounded Context
+[What part of the system this language applies to.]
+
+## Shared Terms
+- Term: Meaning. Where it appears in code.
+
+## Important Workflows
+- [Workflow name]: [short explanation]
+
+## Naming Conventions
+- [How concepts should be named in files, variables, UI, and docs.]
+
+## Common Misunderstandings
+- [Term or behavior agents often get wrong.]</code></pre>
+
+  <h3>ADR Trigger</h3>
+  <p>Create an ADR only when a decision:</p>
+  <ul>
+    <li>Is hard to reverse.</li>
+    <li>Would surprise a future maintainer.</li>
+    <li>Has real tradeoffs or long-term consequences.</li>
+    <li>Explains why the obvious alternative was rejected.</li>
+  </ul>
+
+  <h2 id="prd">Phase 2: Write the PRD as a Destination Document</h2>
+  <p>After the alignment session, turn the conversation into a PRD. The PRD is not a magic input that generates correct code. It is a durable destination document so future fresh sessions know what "done" means.</p>
+
+  <p>If you used <code>/grill-with-docs</code>, the PRD should reference the updated project language instead of redefining everything. <code>CONTEXT.md</code> explains the nouns; the PRD explains the destination for this feature.</p>
+
+  <h3>PRD Template</h3>
+<pre><code># PRD: [Feature Name]
+
+## Problem
+[What user or business problem are we solving?]
+
+## Goals
+- [Goal 1]
+- [Goal 2]
+
+## Non-Goals
+- [Explicitly excluded behavior]
+
+## User Stories
+- As a [user], I want [capability], so that [outcome].
+
+## Product Decisions
+- [Decision and rationale]
+
+## Technical Decisions
+- [Module ownership]
+- [Data model changes]
+- [API or interface changes]
+- [Migration strategy]
+
+## UX States
+- Empty:
+- Loading:
+- Success:
+- Error:
+- Permission denied:
+
+## Test Strategy
+- Unit:
+- Integration:
+- E2E/manual:
+
+## Open Questions
+- [Only unresolved items that should block or constrain implementation]</code></pre>
+
+  <p>Review the PRD for risk, not prose. The valuable review already happened during grilling. Now check that the artifact captured the important decisions.</p>
+
+  <h2 id="issues">Phase 3: Break the PRD Into Vertical Slice Issues</h2>
+  <p>Agents often default to horizontal work: database first, API second, UI third. That delays feedback. Prefer vertical slices: each issue cuts through the necessary layers and leaves a visible, testable result.</p>
+
+  <h3>Bad Horizontal Issues</h3>
+  <ul>
+    <li>Add all database tables.</li>
+    <li>Add all API endpoints.</li>
+    <li>Build all UI screens.</li>
+    <li>Wire everything together.</li>
+  </ul>
+
+  <h3>Better Vertical Issues</h3>
+  <ul>
+    <li>Award points when a lesson is completed and show the new total on the dashboard.</li>
+    <li>Display an empty leaderboard state for users with no points.</li>
+    <li>Backfill points for historical completions and expose the migration result in admin logs.</li>
+  </ul>
+
+  <h3>Issue Template</h3>
+<pre><code># Issue: [Vertical Slice Name]
+
+## Outcome
+[One visible or verifiable behavior this issue must deliver.]
+
+## User Value
+[Why this slice matters.]
+
+## Scope
+- [Specific changes included]
+
+## Out of Scope
+- [What the agent must not do]
+
+## Expected Files or Modules
+- [Likely files/modules, if known]
+
+## Dependencies
+- Blocks: [issues this enables]
+- Blocked by: [issues required first]
+
+## Test Requirements
+- Write or update failing tests first.
+- Run: [test command]
+- Run: [typecheck/lint/build command]
+
+## Acceptance Criteria
+- [ ] [Observable behavior]
+- [ ] [Tests pass]
+- [ ] [No unrelated refactors]
+- [ ] [Docs updated if needed]</code></pre>
+
+  <p>Good issues are independently grabbable. If two issues do not share a dependency, separate agents should be able to work on them in parallel.</p>
+
+  <h2 id="implementation">Phase 4: Implement With TDD</h2>
+  <p>Once issues are clear, implementation can become more autonomous. Keep the agent inside a red-green-refactor loop.</p>
+
+  <h3>Implementation Prompt Template</h3>
+<pre><code>Implement this issue using red-green-refactor.
+
+Rules:
+- First inspect the relevant code and tests.
+- Write a failing test for the desired behavior.
+- Run the test and confirm it fails for the expected reason.
+- Implement the smallest change that makes the test pass.
+- Refactor only after the test passes.
+- Run the full required verification commands.
+- Do not make unrelated changes.
+- Summarize the files changed, tests run, and remaining risks.
+
+Issue:
+[paste issue]</code></pre>
+
+  <h3>Why TDD Matters More With Agents</h3>
+  <p>Tests are not ceremony here. They are the agent's steering system. Without executable feedback, the agent is guessing.</p>
+
+  <p>Minimum feedback loop:</p>
+  <ul>
+    <li>A focused failing test.</li>
+    <li>Typecheck.</li>
+    <li>Lint or formatting if the repo uses it.</li>
+    <li>Existing regression tests for nearby behavior.</li>
+    <li>Manual QA or screenshots for frontend-heavy work.</li>
+  </ul>
+
+  <h2 id="review">Phase 5: Review in a Fresh Context</h2>
+  <p>Do not let the same long-running implementation context be the only reviewer. The implementer is already carrying its own assumptions.</p>
+
+  <p>Working pattern:</p>
+  <ul>
+    <li>Start a fresh session for review.</li>
+    <li>Give it the issue, PRD excerpt, diff, and verification output.</li>
+    <li>Ask it to find bugs, missing tests, architectural drift, and unrelated changes.</li>
+    <li>Use a stronger model for review if available.</li>
+    <li>Treat AI-generated code as untrusted until reviewed.</li>
+  </ul>
+
+  <h3>Review Prompt Template</h3>
+<pre><code>Review this change as a senior engineer.
+
+Prioritize:
+- Behavioral bugs.
+- Missed acceptance criteria.
+- Missing or weak tests.
+- Security or data integrity risks.
+- Unrelated changes.
+- Architecture drift.
+
+Inputs:
+- Issue: [paste]
+- Relevant PRD section: [paste]
+- Diff: [paste or point to branch]
+- Test output: [paste]
+
+Return findings first, ordered by severity, with file and line references where possible.</code></pre>
+
+  <h2 id="kanban">Phase 6: Use a Kanban/DAG for Agent Work</h2>
+  <p>The useful planning artifact is not just a list. It is a dependency graph.</p>
+
+  <h3>Suggested Columns</h3>
+  <ul>
+    <li><code>Backlog</code>: captured but not ready.</li>
+    <li><code>Ready</code>: clear, vertical, unblocked, testable.</li>
+    <li><code>In Progress</code>: one agent per issue.</li>
+    <li><code>Review</code>: implementation complete, fresh review pending.</li>
+    <li><code>Needs Human</code>: blocked by product or architecture judgment.</li>
+    <li><code>Done</code>: merged and verified.</li>
+  </ul>
+
+  <h3>Rules</h3>
+  <ul>
+    <li>Only <code>Ready</code> issues may be picked up by agents.</li>
+    <li>Every <code>Ready</code> issue has acceptance criteria and verification commands.</li>
+    <li>Blocked issues name their dependency.</li>
+    <li>Parallel agents work only on independent slices.</li>
+    <li>Human reviews merges, architecture, and product tradeoffs.</li>
+  </ul>
+
+  <h2 id="architecture">Phase 7: Architecture Is the Quality Ceiling</h2>
+  <p>Agents perform better in codebases with deep modules: small interfaces hiding meaningful internal complexity. They perform worse in shallow, tangled systems where every change crosses many tiny files and ambiguous dependencies.</p>
+
+  <p>Working pattern:</p>
+  <ul>
+    <li>Prefer cohesive modules with clear ownership.</li>
+    <li>Keep public interfaces small.</li>
+    <li>Put complexity behind testable boundaries.</li>
+    <li>Consolidate scattered logic when repeated agent mistakes reveal a weak module boundary.</li>
+    <li>Add project language docs so agents use the same nouns as the team and codebase.</li>
+  </ul>
+
+  <h3>Architecture Review Questions</h3>
+  <ul>
+    <li>Where did the agent have to touch too many files?</li>
+    <li>Which concepts were named inconsistently?</li>
+    <li>Which tests were hard to write?</li>
+    <li>Which behavior had no obvious owning module?</li>
+    <li>Which instructions had to be repeated because the codebase did not make them obvious?</li>
+  </ul>
+
+  <h2 id="daily-workflow">A Practical Daily Workflow</h2>
+
+  <h3>For a New Feature</h3>
+  <ol>
+    <li>Start a fresh context.</li>
+    <li>Choose <code>/grill-me</code> for greenfield work or <code>/grill-with-docs</code> for existing code.</li>
+    <li>Align one question at a time.</li>
+    <li>Update <code>CONTEXT.md</code> and ADRs during alignment when needed.</li>
+    <li>Write/update PRD.</li>
+    <li>Convert PRD into vertical issues.</li>
+    <li>Mark dependencies.</li>
+    <li>Let agents implement ready issues with TDD.</li>
+    <li>Review each change in a fresh context.</li>
+    <li>Merge small slices.</li>
+    <li>Capture architecture improvement opportunities.</li>
+  </ol>
+
+  <h3>For a Bug</h3>
+  <ol>
+    <li>Ask the agent to reproduce and explain the bug.</li>
+    <li>Write a failing regression test.</li>
+    <li>Fix the smallest owning module.</li>
+    <li>Run focused and broad verification.</li>
+    <li>Fresh-context review.</li>
+    <li>Add an ADR or docs update only if the root cause was conceptual.</li>
+  </ol>
+
+  <h3>For a Refactor</h3>
+  <ol>
+    <li>Ask the agent to map current behavior and module boundaries.</li>
+    <li>Identify the smallest deepening opportunity.</li>
+    <li>Lock behavior with tests.</li>
+    <li>Refactor behind the same interface.</li>
+    <li>Run broad verification.</li>
+    <li>Review for behavior changes and unnecessary churn.</li>
+  </ol>
+
+  <h2 id="done">Definition of Ready</h2>
+  <p>An issue is ready for an agent when:</p>
+  <ul>
+    <li>The outcome is concrete.</li>
+    <li>Scope and non-scope are explicit.</li>
+    <li>The likely owning module is identified.</li>
+    <li>Dependencies are known.</li>
+    <li>There is a test strategy.</li>
+    <li>Verification commands are listed.</li>
+    <li>The issue can be completed without another product decision.</li>
+  </ul>
+
+  <h2>Definition of Done</h2>
+  <p>A slice is done when:</p>
+  <ul>
+    <li>Acceptance criteria are met.</li>
+    <li>Tests were added or updated where appropriate.</li>
+    <li>Required checks pass.</li>
+    <li>The diff is small enough to review.</li>
+    <li>The implementation was reviewed from fresh context.</li>
+    <li>Any new durable decisions are documented.</li>
+    <li>The issue is merged or ready for human merge.</li>
+  </ul>
+
+  <h2 id="anti-patterns">Anti-Patterns to Avoid</h2>
+  <ul>
+    <li>Asking the agent to "build the whole feature" from a vague brief.</li>
+    <li>Letting one chat run forever through planning, implementation, debugging, and review.</li>
+    <li>Treating PRDs as code generators instead of alignment artifacts.</li>
+    <li>Creating horizontal issues that delay feedback.</li>
+    <li>Running agents without tests, typechecks, or manual QA.</li>
+    <li>Reviewing agent output in the same context that produced it.</li>
+    <li>Using frameworks or orchestration tools you do not understand well enough to debug.</li>
+    <li>Allowing generated code volume to exceed review capacity.</li>
+  </ul>
+
+  <h2 id="minimal">Minimal Version You Can Use Today</h2>
+  <p>You do not need a full agent orchestration stack to adopt the pattern.</p>
+
+  <p>Start with this:</p>
+  <ol>
+    <li>Before coding, ask the agent to align with you one question at a time.</li>
+    <li>For existing codebases, keep a short <code>CONTEXT.md</code> and update it when new project language appears.</li>
+    <li>Save feature-specific decisions in a short PRD.</li>
+    <li>Split the PRD into vertical issues.</li>
+    <li>For each issue, require a failing test before implementation.</li>
+    <li>Clear context before review.</li>
+    <li>Keep only small, reviewed changes.</li>
+  </ol>
+
+  <div class="callout tip">
+    <strong>Core shift</strong>
+    AI writes code inside an engineering feedback system, not instead of one.
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=-QFHIoCo-Ko" target="_blank" rel="noopener noreferrer">YouTube: Full Walkthrough: Workflow for AI Coding - Matt Pocock</a></li>
+    <li><a href="https://www.youtube.com/watch?v=6BB6exR8Zd8" target="_blank" rel="noopener noreferrer">YouTube: I stopped using /grill-me for coding. Here's what I use instead - Matt Pocock</a></li>
+    <li><a href="https://talksintel.ai/ai-ml/conferences/aie-eu-2026/full-walkthrough-workflow-for-ai-coding-matt-pocock/" target="_blank" rel="noopener noreferrer">TalksIntel timestamped summary</a></li>
+    <li><a href="https://podwise.ai/episodes/7947446" target="_blank" rel="noopener noreferrer">Podwise episode summary</a></li>
+    <li><a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener noreferrer">Matt Pocock skills repository</a></li>
+    <li><a href="https://www.aihero.dev/grill-with-docs" target="_blank" rel="noopener noreferrer">Matt Pocock on grill-with-docs/shared language</a></li>
+    <li><a href="https://github.com/mattpocock/sandcastle" target="_blank" rel="noopener noreferrer">Sandcastle repository</a></li>
+  </ul>
+
+  <div class="page-nav">
+    <a href="../">
+      <span class="label">Back</span>
+      <span class="title">All Guides</span>
+    </a>
+    <a href="../linq/" class="next">
+      <span class="label">Next Guide</span>
+      <span class="title">C# Data Structures &amp; LINQ</span>
+    </a>
+  </div>
+
+</main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-12 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <a href="../../" class="flex items-center gap-3 font-bold text-xl group transition-transform hover:scale-105" aria-label="Sandy Brook Projects Lab Home">
+                    <img src="../../images/blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="h-8 w-8 rounded-full dark:hidden">
+                    <img src="../../images/dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="hidden h-8 w-8 rounded-full dark:block">
+                    <div>
+                        <span class="text-brand">Sandy Brook</span> Projects Lab
+                    </div>
+                </a>
+                <div class="flex gap-8 text-sm text-slate-500">
+                    <a href="https://sandybrookdevworks.com#services" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Services</a>
+                    <a href="https://sandybrookdevworks.com#about" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">About</a>
+                    <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Contact</a>
+                </div>
+                <div class="text-sm text-slate-500">
+                    &copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

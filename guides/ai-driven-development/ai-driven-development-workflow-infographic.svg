@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920" role="img" aria-labelledby="title desc">
+  <title id="title">AI Driven Development Workflow Infographic</title>
+  <desc id="desc">A vertical infographic showing the steps: stay in smart zone, grill the requirement, write PRD, slice vertically, implement with TDD, review fresh, improve architecture.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f7f3ea; }
+      .ink { fill: #17202a; }
+      .muted { fill: #5b6270; }
+      .line { stroke: #17202a; stroke-width: 3; stroke-linecap: round; }
+      .spine { stroke: #303846; stroke-width: 5; stroke-linecap: round; }
+      .card { fill: #fffdf7; stroke: #d9d0bd; stroke-width: 2; }
+      .small { font: 500 22px Arial, Helvetica, sans-serif; }
+      .body { font: 500 25px Arial, Helvetica, sans-serif; }
+      .label { font: 700 26px Arial, Helvetica, sans-serif; }
+      .title { font: 800 72px Arial, Helvetica, sans-serif; letter-spacing: 0; }
+      .subtitle { font: 500 30px Arial, Helvetica, sans-serif; }
+      .stepnum { font: 800 40px Arial, Helvetica, sans-serif; fill: #fffdf7; }
+      .steptitle { font: 800 32px Arial, Helvetica, sans-serif; }
+      .footer { font: 500 20px Arial, Helvetica, sans-serif; }
+    </style>
+    <filter id="shadow" x="-12%" y="-12%" width="124%" height="124%">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#17202a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect class="bg" width="1080" height="1920"/>
+  <path d="M0 0H1080V1920H0Z" fill="#f7f3ea"/>
+  <circle cx="955" cy="120" r="98" fill="#2b8c7f" opacity="0.14"/>
+  <circle cx="102" cy="1804" r="130" fill="#d85f3f" opacity="0.12"/>
+  <rect x="70" y="82" width="940" height="220" rx="8" fill="#17202a"/>
+  <text x="112" y="165" class="title" fill="#fffdf7">AI Driven</text>
+  <text x="112" y="240" class="title" fill="#fffdf7">Development</text>
+  <text x="600" y="152" class="subtitle" fill="#f2c14e">Align -> Slice -> Test -> Review</text>
+  <text x="600" y="205" class="small" fill="#fffdf7">Use AI inside an engineering</text>
+  <text x="600" y="238" class="small" fill="#fffdf7">feedback system, not instead of one.</text>
+
+  <line x1="540" y1="390" x2="540" y2="1602" class="spine"/>
+
+  <!-- Step 0 -->
+  <g filter="url(#shadow)">
+    <rect x="70" y="348" width="430" height="178" rx="8" class="card"/>
+  </g>
+  <circle cx="540" cy="437" r="42" fill="#2b8c7f"/>
+  <text x="528" y="452" class="stepnum">0</text>
+  <line x1="500" y1="437" x2="498" y2="437" class="line"/>
+  <text x="102" y="405" class="steptitle ink">Stay in the Smart Zone</text>
+  <text x="102" y="452" class="body muted">Small task. Fresh context.</text>
+  <text x="102" y="490" class="body muted">External memory in files.</text>
+
+  <!-- Step 1 -->
+  <g filter="url(#shadow)">
+    <rect x="580" y="532" width="430" height="190" rx="8" class="card"/>
+  </g>
+  <circle cx="540" cy="627" r="42" fill="#d85f3f"/>
+  <text x="528" y="642" class="stepnum">1</text>
+  <line x1="582" y1="627" x2="580" y2="627" class="line"/>
+  <text x="612" y="588" class="steptitle ink">Align With Docs</text>
+  <text x="612" y="635" class="body muted">One question at a time.</text>
+  <text x="612" y="673" class="body muted">Update CONTEXT.md and ADRs.</text>
+
+  <!-- Step 2 -->
+  <g filter="url(#shadow)">
+    <rect x="70" y="716" width="430" height="190" rx="8" class="card"/>
+  </g>
+  <circle cx="540" cy="811" r="42" fill="#3969b1"/>
+  <text x="528" y="826" class="stepnum">2</text>
+  <line x1="500" y1="811" x2="498" y2="811" class="line"/>
+  <text x="102" y="772" class="steptitle ink">Write the PRD</text>
+  <text x="102" y="819" class="body muted">A destination document.</text>
+  <text x="102" y="857" class="body muted">Goals, non-goals, decisions.</text>
+
+  <!-- Step 3 -->
+  <g filter="url(#shadow)">
+    <rect x="580" y="900" width="430" height="218" rx="8" class="card"/>
+  </g>
+  <circle cx="540" cy="1009" r="42" fill="#f2c14e"/>
+  <text x="528" y="1024" class="stepnum" fill="#17202a">3</text>
+  <line x1="582" y1="1009" x2="580" y2="1009" class="line"/>
+  <text x="612" y="958" class="steptitle ink">Slice Vertically</text>
+  <text x="612" y="1005" class="body muted">Each issue crosses layers.</text>
+  <text x="612" y="1043" class="body muted">Visible result. Clear checks.</text>
+  <text x="612" y="1081" class="body muted">Dependencies form a DAG.</text>
+
+  <!-- Step 4 -->
+  <g filter="url(#shadow)">
+    <rect x="70" y="1098" width="430" height="218" rx="8" class="card"/>
+  </g>
+  <circle cx="540" cy="1207" r="42" fill="#6f4e7c"/>
+  <text x="528" y="1222" class="stepnum">4</text>
+  <line x1="500" y1="1207" x2="498" y2="1207" class="line"/>
+  <text x="102" y="1156" class="steptitle ink">Implement With TDD</text>
+  <text x="102" y="1203" class="body muted">Red: failing test.</text>
+  <text x="102" y="1241" class="body muted">Green: smallest fix.</text>
+  <text x="102" y="1279" class="body muted">Refactor after feedback.</text>
+
+  <!-- Step 5 -->
+  <g filter="url(#shadow)">
+    <rect x="580" y="1296" width="430" height="190" rx="8" class="card"/>
+  </g>
+  <circle cx="540" cy="1391" r="42" fill="#2d5f73"/>
+  <text x="528" y="1406" class="stepnum">5</text>
+  <line x1="582" y1="1391" x2="580" y2="1391" class="line"/>
+  <text x="612" y="1352" class="steptitle ink">Review Fresh</text>
+  <text x="612" y="1399" class="body muted">New context. Diff plus issue.</text>
+  <text x="612" y="1437" class="body muted">Find bugs before merging.</text>
+
+  <!-- Step 6 -->
+  <g filter="url(#shadow)">
+    <rect x="70" y="1478" width="430" height="190" rx="8" class="card"/>
+  </g>
+  <circle cx="540" cy="1573" r="42" fill="#9a5b2f"/>
+  <text x="528" y="1588" class="stepnum">6</text>
+  <line x1="500" y1="1573" x2="498" y2="1573" class="line"/>
+  <text x="102" y="1534" class="steptitle ink">Improve the System</text>
+  <text x="102" y="1581" class="body muted">Deep modules. Shared language.</text>
+  <text x="102" y="1619" class="body muted">Better feedback for next time.</text>
+
+  <rect x="70" y="1708" width="940" height="150" rx="8" fill="#fffdf7" stroke="#d9d0bd" stroke-width="2"/>
+  <text x="108" y="1752" class="label ink">Definition of Ready:</text>
+  <text x="394" y="1752" class="small muted">concrete outcome, scoped slice, owner, tests,</text>
+  <text x="394" y="1782" class="small muted">checks, no open product decision.</text>
+  <text x="108" y="1818" class="label ink">Definition of Done:</text>
+  <text x="382" y="1818" class="small muted">criteria met, checks pass, fresh review complete,</text>
+  <text x="382" y="1848" class="small muted">durable decisions captured.</text>
+
+  <text x="70" y="1888" class="footer muted">Based on Matt Pocock's workflow for AI coding. Created as a shorthand guide for AI driven development.</text>
+</svg>
