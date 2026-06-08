@@ -32,6 +32,7 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 | `apps/knowitowl/` | KnowItOwl! landing site — see "KnowItOwl Structure" below |
 | `STYLE_GUIDE.md` | **Human-readable design system reference** with templates and how-to guides |
 | `AGENTS.md` | Codex project instructions and repo conventions |
+| `.claude/launch.json` | Legacy Claude preview server config (python3 http.server on port 8080) |
 
 ## Shared Assets
 
