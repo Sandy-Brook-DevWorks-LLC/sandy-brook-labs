@@ -114,10 +114,10 @@ Class-based using `@custom-variant dark (&:where(.dark, .dark *))`. Toggle persi
 
 ### Main Page (`index.html`)
 
-1. **Navigation** — Sticky nav, logo, "Sandy Brook Projects Lab", links to Building/Shipped/Developers sections, dark mode toggle, mobile hamburger menu (bottom sheet)
+1. **Navigation** — Sticky nav, logo, "Sandy Brook Projects Lab", links to Released/Shipped/Developers sections, dark mode toggle, mobile hamburger menu (bottom sheet)
 2. **Hero** — Logo, badge, headline, subtitle
-3. **Currently Building** — Dark section with Relay project card
-4. **Past Projects** — KnowItOwl project card with "Shipped" badge
+3. **Released Products** — Dark section with the fully released Relay product card
+4. **Other Shipped Projects** — KnowItOwl and Aquorbis cards with "Shipped" badges
 5. **Footer** — Logo, Services/About/Contact links, copyright
 
 ### Guides (`guides/`)

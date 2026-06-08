@@ -1,14 +1,14 @@
 # Sandy Brook Projects Lab
 
-A showcase of what [Sandy Brook DevWorks](https://sandybrookdevworks.com) is actively building and has shipped — from concept to production.
+A showcase of released products, experiments, and technical case studies from [Sandy Brook DevWorks](https://sandybrookdevworks.com) — from concept to production.
 
 ## Projects
 
-### Currently Building
+### Released Products
 
-- **Relay** — AI Phone Assistant that handles phone interactions, answering calls, understanding context, and managing conversations. Powered by advanced language models.
+- **Relay** — A fully released AI phone receptionist for small businesses. Answers calls 24/7, greets callers in 29 languages, books appointments live, transfers urgent callers, emails summaries, and connects into CRMs and 7,000+ tools through Zapier. [Product Site](https://relayconnect.net/) · [Case Study](https://sandybrook.io/apps/relay/)
 
-### Shipped
+### Other Shipped Projects
 
 - **KnowItOwl!** — An Apple Watch and iPhone app that brings conversational AI to your wrist. Voice-first, multilingual, with natural AI voices and privacy-first design. [Landing Page](https://sandybrook.io/apps/knowitowl/)
 - **Aquorbis — Splash Adventure** — A fun underwater adventure game for kids and families: explore 10 ocean zones, catch 60 unique sea creatures, and build your dream aquarium. [Landing Page](https://sandybrook.io/apps/aquorbis/)
