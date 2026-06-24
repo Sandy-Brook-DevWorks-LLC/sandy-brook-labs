@@ -22,12 +22,14 @@ A static site showcasing Sandy Brook's internal product experiments and study gu
 | `index.html` | Main Projects Lab page (Relay, KnowItOwl, Aquorbis) |
 | `styles/brand.css` | **Shared** — CSS custom properties, brand colors, grid bg, dark mode overrides |
 | `styles/theme.js` | **Shared** — `toggleTheme()`, `toggleMenu()`, `closeMenu()` functions |
-| `images/` | Root-level brand assets: `blue_logo.jpg`, `dark_logo.jpg`, `relay_logo.png`, `cogniwatch_logo.png` |
+| `images/` | Root-level brand assets: `blue_logo.jpg`, `dark_logo.jpg`, `relay_logo.png`, `relay_logo.webp`, `cogniwatch_logo.webp` |
 | `guides/index.html` | Guides hub page |
 | `guides/content.css` | **Shared** — Content styling for all guide pages (typography, callouts, code blocks, tables, etc.) |
 | `guides/ai-driven-development/` | AI driven development workflow guide (Markdown source, HTML page, infographic assets) |
+| `guides/rag/` | Introduction to RAG guide based on the RAGPipeline sample repo |
 | `guides/linq/` | C# Data Structures & LINQ course (index + 5 lessons) |
 | `guides/ximena/` | Standalone research guide page; styles in `guides/ximena/styles/` |
+| `apps/relay/` | Relay engineering case study page using shared brand styles |
 | `apps/aquorbis/` | Aquorbis landing site — see "Aquorbis Structure" below |
 | `apps/knowitowl/` | KnowItOwl! landing site — see "KnowItOwl Structure" below |
 | `STYLE_GUIDE.md` | **Human-readable design system reference** with templates and how-to guides |
@@ -49,6 +51,15 @@ Each HTML page also has a minimal inline `<style type="text/tailwindcss">` block
 ## Per-App Asset Layout
 
 Each app under `apps/` keeps its own `styles/` and `scripts/` folders so the apps stay isolated from the brand-wide design system.
+
+### Relay Structure
+
+```
+apps/relay/
+  index.html      # Case study for the released Relay product; uses root shared brand.css/theme.js
+```
+
+Relay's live product site is `https://relayconnect.net/`. The lab page is the Sandy Brook engineering/case-study companion and links to the live signup/demo flow.
 
 ### Aquorbis Structure
 
@@ -125,54 +136,31 @@ Class-based using `@custom-variant dark (&:where(.dark, .dark *))`. Toggle persi
 
 - `guides/index.html` — Hub page listing all available guides
 - `guides/ai-driven-development/` — AI driven development workflow guide with source Markdown and infographic assets
+- `guides/rag/` — Introduction to RAG guide with 15 chapter pages, decorative chapter images, source links, and code samples
 - `guides/linq/` — C# Data Structures & LINQ (5 lessons with Big-O cheat sheet)
+- `guides/ximena/` — Standalone ocean life research page with its own stylesheet
 
 Guide pages use `guides/content.css` for content styling. Content is wrapped in `<main>` so descendant selectors apply.
 
-### ASP.NET Core Study Guide (`guides/asp-net-core-principles/`)
+### Guide Image Generation
 
-A 36-chapter study guide based on "ASP.NET Core in Action, 3rd Edition" plus a RecipeVault capstone project. Designed for interview preparation.
-
-| File | Purpose |
-|------|---------|
-| `index.html` | Landing page with all 5 parts and chapter cards |
-| `chapter01.html` – `chapter36.html` | One page per book chapter with summary, code examples, and 10-question quiz |
-| `capstone.html` | RecipeVault guided project tying all concepts together |
-| `crypto.js` | Client-side AES-256-GCM decryption + password prompt UI |
-| `encrypt_guide.py` | Python script to encrypt all page content for publishing |
-| `decrypt_guide.py` | Python script to decrypt all page content for editing |
-
-#### Content Protection
-
-The `<main>` content of every guide page is encrypted with AES-256-GCM. The page source contains only the nav shell, footer, and an encrypted blob. Visitors must enter the password to view content. The password is cached in `sessionStorage` so it only needs to be entered once per browser session.
-
-**Encryption uses:** PBKDF2 (100,000 iterations, SHA-256) for key derivation, AES-256-GCM for encryption. Implemented with the Web Crypto API on the browser side and Python `cryptography` library for the build scripts.
-
-#### Editing Workflow
-
-The guide pages toggle between two states: **encrypted** (for publishing) and **decrypted** (for editing). You must decrypt before making content changes, then re-encrypt before publishing.
+`tools/generate_guide_images.py` generates bitmap guide images with the Gemini API. It currently supports the RAG guide and writes outputs under `guides/rag/images/`. The guide ships with SVG placeholders so pages render without API access.
 
 ```bash
-# Step 1: Decrypt all pages so you can edit them
-cd guides/asp-net-core-principles
-python decrypt_guide.py <password>
-
-# Step 2: Make your edits to any HTML file(s)...
-#   - Content lives inside <main> tags
-#   - Use the same HTML patterns as existing chapters
-#   - See STYLE_GUIDE.md for callout, code block, and quiz templates
-
-# Step 3: Re-encrypt all pages for publishing
-python encrypt_guide.py <password>
+GEMINI_API_KEY=... python3 tools/generate_guide_images.py --guide rag
+GEMINI_API_KEY=... python3 tools/generate_guide_images.py --guide rag --only chapter01
 ```
 
-Both scripts require the `cryptography` Python package (auto-installs if missing). They process all `chapter*.html`, `index.html`, and `capstone.html` in the guide folder. Files that are already in the target state are skipped automatically.
+### Removed Guides
 
-**Important:** The password is not stored anywhere in the repository. You must know it to decrypt or re-encrypt. If you encrypt with a different password, the old `crypto.js` session cache won't work — visitors will simply be re-prompted.
+Older notes may reference ASP.NET Core and Python guides. Those guides were intentionally removed from this repo. Do not recreate references to them in the guides hub, sitemap, or support docs unless the content is deliberately reintroduced.
 
-#### Chapter Structure
+## Maintenance Notes
 
-Every chapter page follows a consistent template: `<head>` with Tailwind CDN + Google Fonts + brand.css + content.css, sticky nav with chapter links for the current part, mobile menu, `<main>` with content sections using `h2`/`h3` headings, syntax-highlighted code blocks (`.kw`, `.tp`, `.str`, `.fn`, `.cm`, `.num` spans), callout boxes (`.callout.tip`, `.callout.warn`, `.callout.danger`), a 10-question quiz using `<details>/<summary>` for expandable answers, and a `.page-nav` div with Previous/Next links. The nav bar shows abbreviated chapter links for the current book part (e.g., C1–C7 for Part 1 chapters).
+- When adding or removing public pages, update `sitemap.xml` and check `robots.txt`.
+- Prefer root shared `styles/brand.css` and `styles/theme.js` for lab and guide pages; app-specific sites under `apps/` may keep isolated styles/scripts.
+- For visual changes, preview with `python3 -m http.server 8080` and inspect at the relevant path.
+- Use root-relative published URLs under `https://sandybrook.io/` in canonical, Open Graph, Twitter, and sitemap entries.
 
 ## Constraints
 

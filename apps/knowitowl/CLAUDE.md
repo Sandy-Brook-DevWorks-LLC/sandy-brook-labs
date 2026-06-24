@@ -44,14 +44,17 @@ apps/knowitowl/
   favicon/
     apple-touch-icon.png   # 180x180
     favicon-96x96.png      # 96x96
-    favicon-32x32.png      # 32x32
-    favicon-16x16.png      # 16x16
     favicon.ico            # Multi-size ICO (16, 32, 48)
     favicon.svg            # SVG favicon
     site.webmanifest        # PWA manifest (name, icons, theme)
-    safari-pinned-tab.svg  # Safari pinned tab icon
     web-app-manifest-*.png # PWA manifest icons (192, 512)
-    android-chrome-*.png   # Android home screen icons
+  styles/
+    main.css                # Shared page styling, glass nav, animations, FAQ details, print rules
+  scripts/
+    tailwind-config.js      # Tailwind CDN sage/cream palette and font stack
+    theme-toggle.js         # Dark mode toggle wiring and localStorage persistence
+    scroll-fade-in.js       # Landing page section animation observer
+    contact-form.js         # Support page Formspree submit handler
 ```
 
 ## Key Content Details
@@ -88,13 +91,16 @@ apps/knowitowl/
 
 ## Conventions
 
-- All pages are self-contained HTML files using Tailwind CSS CDN with minimal inline CSS (no external stylesheets or scripts beyond Tailwind and Google Fonts)
+- All pages use Tailwind CSS CDN plus shared app-local files under `styles/` and `scripts/`.
+- Keep the dark-mode init snippet inline in each page's `<head>` so the `dark` class is applied before paint.
+- Tailwind palette/config lives in `scripts/tailwind-config.js`; page styling belongs in `styles/main.css`.
 - Responsive design with mobile-first approach
 - Dark/light mode support via Tailwind `dark:` classes (toggled by class, persisted in localStorage)
 - Sage green accent color matching the app (`#6B8E7E` primary)
 - Scroll-triggered fade-in animations via IntersectionObserver
 - Contact form uses Formspree (`https://formspree.io/f/...`)
 - FAQ uses native `<details>/<summary>` elements (no JS needed)
+- App Store links currently point to `https://apps.apple.com/us/app/knowitowl-q-a-on-your-wrist/id6759131642`.
 
 ## Deployment
 
@@ -108,9 +114,8 @@ Changes appear at `https://sandybrook.io/apps/knowitowl/` within minutes.
 
 ## Known Issues
 
-- **No build step** — All pages use Tailwind CSS CDN with shared config inline in each file. Changes to shared styles (nav, footer, colors, Tailwind config) must be manually replicated across all three files.
+- **No build step** — Tailwind is loaded from the CDN. Shared app behavior lives in `styles/main.css` and `scripts/*.js`.
 - **Formspree contact form** — Requires a Formspree account. The form action URL is hardcoded in `support.html`.
-- **App Store link** — Currently uses a placeholder `#` href on the App Store badge. Must be updated with the real App Store URL after approval.
 - **Sitemap entries** — Lives in the parent site root at `sandybrook.io/sitemap.xml`. Any new pages added here must also be listed there.
 
 ## Changelog
