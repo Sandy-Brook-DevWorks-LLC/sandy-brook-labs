@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es-419">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 2: Aspire como plano de control local | Introducción a RAG</title>
+<meta name="description" content="RAG.AppHost/AppHost.cs define el entorno local.">
+<link rel="canonical" href="https://sandybrook.io/guides/rag/es/chapter02.html">
+<link rel="alternate" hreflang="en" href="https://sandybrook.io/guides/rag/chapter02.html">
+<link rel="alternate" hreflang="es-419" href="https://sandybrook.io/guides/rag/es/chapter02.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sandybrook.io/guides/rag/es/chapter02.html">
+<meta property="og:title" content="Capítulo 2: Aspire como plano de control local | Introducción a RAG">
+<meta property="og:description" content="RAG.AppHost/AppHost.cs define el entorno local.">
+<meta property="og:image" content="https://sandybrook.io/guides/rag/images/chapter02.svg">
+<meta property="og:site_name" content="Sandy Brook Projects Lab">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Capítulo 2: Aspire como plano de control local | Introducción a RAG">
+<meta name="twitter:description" content="RAG.AppHost/AppHost.cs define el entorno local.">
+<meta name="twitter:image" content="https://sandybrook.io/guides/rag/images/chapter02.svg">
+<meta name="author" content="Sandy Brook DevWorks LLC">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1a5f6b">
+<link rel="icon" type="image/jpeg" href="../../../images/blue_logo.jpg">
+<link rel="apple-touch-icon" href="../../../images/blue_logo.jpg">
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../styles/brand.css">
+<link rel="stylesheet" href="../../content.css">
+<link rel="stylesheet" href="../styles.css">
+<style type="text/tailwindcss">@theme { --color-brand: var(--brand-teal); --color-brand-light: var(--brand-teal-light); --color-brand-dark: var(--brand-teal-dark); --color-brand-shadow: rgba(26, 95, 107, 0.25); } @custom-variant dark (&:where(.dark, .dark *));</style>
+<script>if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')</script>
+<script src="../../../styles/theme.js"></script>
+</head><body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300 min-h-screen flex flex-col"><div class="fixed inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10 pointer-events-none"></div><nav class="sticky top-0 z-50 w-full border-b border-slate-200/40 bg-white/80 backdrop-blur-md dark:border-slate-800/40 dark:bg-slate-950/80"><div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6"><div class="flex items-center gap-4 font-bold text-xl tracking-tight"><a href="../../../" class="relative group" aria-label="Inicio de Sandy Brook Projects Lab"><div class="absolute -inset-1 rounded-full bg-brand/20 blur opacity-0 group-hover:opacity-100 transition duration-500"></div><img src="../../../images/blue_logo.jpg" alt="Logo de Sandy Brook DevWorks" class="relative h-12 w-12 rounded-full border border-slate-200 dark:hidden shadow-sm"><img src="../../../images/dark_logo.jpg" alt="Logo de Sandy Brook DevWorks" class="relative hidden h-12 w-12 rounded-full border border-slate-800 dark:block shadow-sm"></a><div class="flex flex-col leading-tight"><a href="../../" class="text-brand hover:opacity-80 transition-opacity">Sandy Brook</a><span class="text-xs font-medium tracking-widest uppercase text-slate-500 dark:text-slate-400">Introducción a RAG</span></div></div><div class="flex items-center gap-2 md:gap-6"><div class="hidden xl:flex items-center gap-1 text-sm font-medium"><a href="index.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Inicio</a><a href="chapter01.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">1</a><a href="chapter02.html" class="px-2 py-1 rounded-md text-brand font-semibold">2</a><a href="chapter03.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">3</a><a href="chapter04.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">4</a><a href="chapter05.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">5</a><a href="chapter06.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">6</a><a href="chapter07.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">7</a><a href="chapter08.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">8</a><a href="chapter09.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">9</a><a href="chapter10.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">10</a><a href="chapter11.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">11</a><a href="chapter12.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">12</a><a href="chapter13.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">13</a><a href="chapter14.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">14</a><a href="chapter15.html" class="px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">15</a></div><a href="../../" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Guías</a><div class="language-switch" aria-label="Selector de idioma"><a href="../chapter02.html" hreflang="en" lang="en">EN</a><span class="is-active" aria-current="page">ES</span></div><button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Abrir menú"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button><button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Cambiar tema"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button></div></div></nav><div id="mobile-menu"><div class="mobile-menu-backdrop" onclick="closeMenu()"></div><div class="mobile-menu-panel"><a href="index.html">Inicio de la guía</a>
+<a href="chapter01.html">1. Topología de la solución</a>
+<a href="chapter02.html">2. Aspire como plano de control local</a>
+<a href="chapter03.html">3. Configuración y contratos compartidos</a>
+<a href="chapter04.html">4. Metadatos con SQLite y EF Core</a>
+<a href="chapter05.html">5. API e interfaz de carga</a>
+<a href="chapter06.html">6. Almacenamiento de objetos con MinIO</a>
+<a href="chapter07.html">7. Pipeline de ingesta del worker</a>
+<a href="chapter08.html">8. Extracción y división de texto</a>
+<a href="chapter09.html">9. Artefactos literarios</a>
+<a href="chapter10.html">10. Abstracciones de proveedores de IA</a>
+<a href="chapter11.html">11. Almacenamiento vectorial con Qdrant</a>
+<a href="chapter12.html">12. Flujo de preguntas y recuperación</a>
+<a href="chapter13.html">13. Prompts y citas</a>
+<a href="chapter14.html">14. Pruebas del pipeline</a>
+<a href="chapter15.html">15. Notas de desarrollo local</a>
+<a href="../../">Todas las guías</a></div></div><main class="rag-main rag-chapter"><details class="chapter-menu"><summary><span>Navegación de la guía</span><strong>Índice y capítulos</strong></summary><nav aria-label="Capítulos de Introducción a RAG"><a href="index.html">Índice de la guía</a><a href="chapter01.html"><span>1</span>Topología de la solución</a><a href="chapter02.html" aria-current="page" class="is-current"><span>2</span>Aspire como plano de control local</a><a href="chapter03.html"><span>3</span>Configuración y contratos compartidos</a><a href="chapter04.html"><span>4</span>Metadatos con SQLite y EF Core</a><a href="chapter05.html"><span>5</span>API e interfaz de carga</a><a href="chapter06.html"><span>6</span>Almacenamiento de objetos con MinIO</a><a href="chapter07.html"><span>7</span>Pipeline de ingesta del worker</a><a href="chapter08.html"><span>8</span>Extracción y división de texto en chunks</a><a href="chapter09.html"><span>9</span>Artefactos literarios</a><a href="chapter10.html"><span>10</span>Abstracciones de proveedores de IA</a><a href="chapter11.html"><span>11</span>Almacenamiento vectorial con Qdrant</a><a href="chapter12.html"><span>12</span>Flujo de preguntas y estrategia de recuperación</a><a href="chapter13.html"><span>13</span>Prompts y citas</a><a href="chapter14.html"><span>14</span>Pruebas del pipeline</a><a href="chapter15.html"><span>15</span>Notas de desarrollo local</a></nav></details><header class="chapter-head"><span class="rag-kicker">Capítulo 2</span><h1>Aspire como plano de control local</h1><p class="subtitle">RAG.AppHost/AppHost.cs define el entorno local.</p></header><section class="translation-note"><strong>Nota de traducción:</strong> Esta versión en español fue traducida con ayuda de un LLM y revisada para conservar los términos técnicos, el código y los nombres de archivos en inglés cuando corresponde.</section><figure class="chapter-image"><img src="../images/chapter02.svg" alt="Imagen decorativa del capítulo sobre Aspire como plano de control local" loading="eager"></figure><aside class="source-rack" aria-label="Archivos fuente de este capítulo"><div><span class="source-rack__eyebrow">Archivos fuente</span><p>Abre el código completo en el repositorio del tutorial de RAG.</p></div><div class="source-rack__links"><a href="https://github.com/jaime-reyes-rrtx/rag-intro-tutorial/blob/main/RAG.AppHost/AppHost.cs" target="_blank" rel="noopener noreferrer">RAG.AppHost/AppHost.cs</a><a href="https://github.com/jaime-reyes-rrtx/rag-intro-tutorial/blob/main/RAG.AppHost/appsettings.json" target="_blank" rel="noopener noreferrer">RAG.AppHost/appsettings.json</a></div></aside><details class="source-panel"><summary>AppHost conecta dependencias locales con API y worker</summary><pre><code>var qdrant = builder.AddContainer("qdrant", "qdrant/qdrant")
+    .WithHttpEndpoint(port: 6333, targetPort: 6333, name: "http")
+    .WithVolume("rag-qdrant-data", "/qdrant/storage");
+
+var minio = builder.AddContainer("minio", "minio/minio")
+    .WithArgs("server", "/data", "--console-address", ":9001")
+    .WithHttpEndpoint(port: 9000, targetPort: 9000, name: "api");</code></pre><div class="source-panel__actions"><a href="https://github.com/jaime-reyes-rrtx/rag-intro-tutorial/blob/main/RAG.AppHost/AppHost.cs" target="_blank" rel="noopener noreferrer">Código fuente completo: RAG.AppHost/AppHost.cs</a><a href="https://github.com/jaime-reyes-rrtx/rag-intro-tutorial/blob/main/RAG.AppHost/appsettings.json" target="_blank" rel="noopener noreferrer">Código fuente completo: RAG.AppHost/appsettings.json</a></div></details><section class="chapter-body tutorial-content"><p><a href="https://github.com/jaime-reyes-rrtx/rag-intro-tutorial/blob/main/RAG.AppHost/AppHost.cs" target="_blank" rel="noopener noreferrer"><code>RAG.AppHost/AppHost.cs</code></a> define el entorno local.</p>
+<p>Inicia:</p>
+<ul>
+<li>Qdrant en los puertos <code>6333</code> y <code>6334</code>.</li>
+<li>MinIO en los puertos <code>9000</code> y <code>9001</code>.</li>
+<li>API en <code>http://127.0.0.1:5080/</code>.</li>
+<li>Worker como proceso en segundo plano.</li>
+<li>Ollama solo cuando Gemini no está seleccionado.</li>
+</ul>
+<p>El AppHost también crea volúmenes Docker persistentes:</p>
+<ul>
+<li><code>rag-qdrant-data</code></li>
+<li><code>rag-minio-data</code></li>
+<li><code>rag-ollama-data</code></li>
+</ul>
+<p>Esos volúmenes permiten que los vectores indexados, los archivos cargados y los modelos descargados de Ollama sobrevivan reinicios de contenedores.</p>
+<p>Nota de producción: estos servicios se exponen en puertos locales fijos y MinIO usa credenciales de ejemplo. Eso es aceptable para este proyecto de aprendizaje, que no está pensado para producción, pero un despliegue real debería usar redes privadas, secretos administrados y acceso restringido a servicios.</p>
+<p>Aspire inyecta configuración en la API y en el worker mediante variables de entorno:</p>
+<pre><code data-lang="csharp">.WithEnvironment("Rag__Qdrant__BaseUrl", qdrant.GetEndpoint("http"))
+.WithEnvironment("Rag__Storage__ServiceUrl", minio.GetEndpoint("api"))
+.WithEnvironment("Rag__DatabasePath", databasePath)</code></pre>
+<p>La sintaxis de doble guion bajo mapea variables de entorno a secciones de configuración de .NET. Por ejemplo, <code>Rag__Qdrant__BaseUrl</code> se convierte en <code>Rag:Qdrant:BaseUrl</code>.</p>
+<h3>Selección del proveedor de IA</h3>
+<p>El AppHost elige Gemini cuando <code>GEMINI_API_KEY</code> está presente:</p>
+<pre><code data-lang="text">GEMINI_API_KEY present -&gt; Gemini
+otherwise              -&gt; Ollama</code></pre>
+<p>Puedes sobrescribirlo con:</p>
+<pre><code data-lang="bash">export RAG_AI_PROVIDER="Gemini"</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th>Opción</th><th>Pros</th><th>Contras</th></tr></thead>
+<tbody>
+<tr><td>LLM local con Ollama</td><td>Mantiene prompts y contenido de documentos en tu máquina. Funciona bien para experimentar offline después de descargar los modelos. Evita costos por solicitud de API.</td><td>Requiere recursos locales de CPU/GPU, memoria y disco. Las descargas de modelos pueden ser grandes. En hardware modesto, las respuestas suelen ser más lentas que en APIs alojadas.</td></tr>
+<tr><td>LLM alojado por API con Gemini</td><td>No requiere alojar modelos localmente. Suele dar respuestas más rápidas y mejor calidad de modelo. Es más fácil de escalar más allá de una sola máquina de desarrollo.</td><td>Envía prompts y contexto recuperado del documento a un servicio externo. Requiere API key, acceso de red y facturación/cuotas del proveedor.</td></tr>
+</tbody>
+</table></div>
+<p>Los valores predeterminados actuales de Gemini son:</p>
+<ul>
+<li>Modelo de embeddings: <code>gemini-embedding-2</code></li>
+<li>Modelo de chat: <code>gemini-2.5-pro</code></li>
+</ul>
+<p>Los valores predeterminados locales de Ollama son:</p>
+<ul>
+<li>Modelo de embeddings: <code>nomic-embed-text</code></li>
+<li>Modelo de chat: <code>llama3.2</code></li>
+</ul>
+<p>Nota: RAG usa dos tipos de modelos porque la recuperación y la generación de respuestas son trabajos distintos. El modelo de embeddings convierte chunks de documentos y preguntas del usuario en vectores numéricos, llamados embeddings, que capturan significado semántico. El almacén vectorial usa esos embeddings para encontrar chunks relacionados con la pregunta. Luego el modelo de chat recibe la pregunta más los chunks recuperados y escribe la respuesta final.</p></section><div class="page-nav"><a href="chapter01.html"><span class="label">Anterior</span><span class="title">Topología de la solución</span></a><a href="chapter03.html" class="next"><span class="label">Siguiente</span><span class="title">Configuración y contratos compartidos</span></a></div></main><footer class="border-t border-slate-200 dark:border-slate-800 py-12 mt-auto"><div class="container mx-auto px-4"><div class="flex flex-col md:flex-row justify-between items-center gap-8"><a href="../../../" class="flex items-center gap-3 font-bold text-xl group transition-transform hover:scale-105" aria-label="Inicio de Sandy Brook Projects Lab"><img src="../../../images/blue_logo.jpg" alt="Logo de Sandy Brook DevWorks" class="h-8 w-8 rounded-full dark:hidden"><img src="../../../images/dark_logo.jpg" alt="Logo de Sandy Brook DevWorks" class="hidden h-8 w-8 rounded-full dark:block"><div><span class="text-brand">Sandy Brook</span> Projects Lab</div></a><div class="flex gap-8 text-sm text-slate-500"><a href="https://sandybrookdevworks.com#services" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Servicios</a><a href="https://sandybrookdevworks.com#about" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Acerca de</a><a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Contacto</a></div><div class="text-sm text-slate-500">&copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.</div></div></div></footer><script src="../scripts/syntax-highlight.js"></script></body></html>
