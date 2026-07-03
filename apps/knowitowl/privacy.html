@@ -115,7 +115,7 @@
                             KnowItOwl! ("we," "our," or "the App") is committed to protecting your privacy. This policy explains how we handle your information when you use our Apple Watch and iPhone application.
                         </p>
                         <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400 mt-4">
-                            <strong>Our core privacy principle:</strong> KnowItOwl! does not collect, store, or process any personally identifiable information (PII). We do not know your name, email address, phone number, or location. All conversation content and audio is encrypted on your device before it reaches our servers. We follow security best practices as recommended by Apple and Google.
+                            <strong>Our core privacy principle:</strong> KnowItOwl! does not collect, store, or process personally identifiable information (PII) such as your name, email address, phone number, or location. Your questions and audio are sent over HTTPS to the KnowItOwl! AI API so we can generate answers, transcripts, and spoken responses. Conversation history and audio saved to your account are encrypted on your device before being stored in Firebase. We follow security best practices as recommended by Apple and Google.
                         </p>
                     </section>
 
@@ -132,9 +132,10 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">Voice Input and Conversations</h3>
                                 <ul class="list-disc pl-5 space-y-2">
-                                    <li>When you speak to KnowItOwl!, your voice audio is sent directly to Google Gemini for transcription and response generation</li>
+                                    <li>When you speak to KnowItOwl!, your voice audio is sent to the KnowItOwl! AI API for transcription, answer generation, and text-to-speech audio generation</li>
+                                    <li>Your typed questions, spoken questions, transcripts, and AI responses are processed only to provide the app experience</li>
                                     <li>Your questions and the AI responses are stored in your personal account to maintain conversation history and enable cross-device sync</li>
-                                    <li>Audio recordings (your voice messages and AI-generated voice responses) are stored in your personal account for playback</li>
+                                    <li>Audio recordings (your voice messages and AI-generated voice responses) are encrypted on your device before being stored in your personal account for playback</li>
                                 </ul>
                             </div>
                             <div>
@@ -178,20 +179,20 @@
                         <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">4. THIRD-PARTY SERVICES</h2>
                         <div class="space-y-4 text-slate-600 dark:text-slate-400">
                             <div>
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-2">Google Gemini (AI Processing)</h3>
+                                <h3 class="font-bold text-slate-900 dark:text-white mb-2">KnowItOwl! AI API and Google AI Services</h3>
                                 <p>
-                                    KnowItOwl! uses Google Gemini (via Firebase AI Logic / Google Vertex AI) to process your requests and generate responses. The following data is sent to Google's servers each time you ask a question:
+                                    KnowItOwl! sends your requests to the KnowItOwl! AI API operated by Sandy Brook DevWorks LLC. The API verifies legitimate, authenticated requests and uses Google Vertex AI/Gemini and Google Cloud Text-to-Speech to transcribe audio, generate answers, and generate spoken responses. The following data may be processed each time you ask a question:
                                 </p>
                                 <ul class="list-disc pl-5 space-y-2 mt-2">
                                     <li><strong>Voice audio recordings</strong> — the AAC audio captured when you speak a question (voice input only)</li>
                                     <li><strong>Text messages</strong> — the text you type when using text input</li>
-                                    <li><strong>Conversation history</strong> — up to 10 recent messages (questions and answers) to maintain context across a conversation</li>
+                                    <li><strong>Conversation history</strong> — up to 3 recent messages (questions and answers) to maintain context across a conversation</li>
                                 </ul>
                                 <p class="mt-2">
-                                    This data is transmitted to Google's Gemini AI service solely to generate a response to your question and to synthesize text-to-speech audio output. <strong>Your data is not used to train AI models.</strong> Google's handling of this data is governed by the <a href="https://policies.google.com/privacy" class="text-sage hover:underline">Google Privacy Policy</a> and <a href="https://cloud.google.com/terms/data-processing-addendum" class="text-sage hover:underline">Google Cloud Data Processing Addendum</a>, which provide equivalent data protection to the terms under which Sandy Brook DevWorks LLC operates.
+                                    This data is transmitted over HTTPS and is used solely to generate a transcript, answer, and text-to-speech audio output for your request. <strong>Your data is not used to train AI models.</strong> Google's handling of this data is governed by the <a href="https://policies.google.com/privacy" class="text-sage hover:underline">Google Privacy Policy</a> and <a href="https://cloud.google.com/terms/data-processing-addendum" class="text-sage hover:underline">Google Cloud Data Processing Addendum</a>, which provide equivalent data protection to the terms under which Sandy Brook DevWorks LLC operates.
                                 </p>
                                 <p class="mt-2">
-                                    The app obtains your explicit consent before sending any data to Google Gemini, and you may withdraw consent at any time by signing out of the app.
+                                    The app obtains your explicit consent before sending AI requests for processing, and you may withdraw consent at any time by signing out of the app.
                                 </p>
                             </div>
                             <div>
@@ -226,7 +227,7 @@
                                 <li>Apple Privacy Policy: <a href="https://www.apple.com/legal/privacy/" class="text-sage hover:underline">https://www.apple.com/legal/privacy/</a></li>
                             </ul>
                             <p class="font-medium text-slate-900 dark:text-white mt-4">
-                                Important: Your conversations are sent to Google Gemini in real-time to generate responses. This data transmission is necessary for the app to function. No data from any of these services is used by Sandy Brook DevWorks for AI training, marketing, or any purpose beyond operating KnowItOwl!.
+                                Important: Your questions, audio, and recent conversation context are processed in real time by the KnowItOwl! AI API and Google AI services to generate responses. This data transmission is necessary for the app to function. No data from any of these services is used by Sandy Brook DevWorks for AI training, marketing, or any purpose beyond operating KnowItOwl!.
                             </p>
                         </div>
                     </section>
@@ -308,7 +309,7 @@
                             <p>We follow security best practices as recommended by Apple and Google, implementing defense in depth across every layer of the app:</p>
                             <ul class="list-disc pl-5 space-y-2">
                                 <li>All data is transmitted over HTTPS/TLS encrypted connections</li>
-                                <li><strong>Client-side end-to-end encryption</strong> — all conversation text and audio files are encrypted on your device using AES-256-GCM (via Apple CryptoKit) before leaving the device. Firestore and Firebase Storage only ever store ciphertext. Your encryption key is stored in iCloud Keychain and never leaves your devices</li>
+                                <li><strong>Client-side encryption for saved history</strong> — conversation text and audio files saved to your account are encrypted on your device using AES-256-GCM (via Apple CryptoKit) before being stored in Firebase. Firestore and Firebase Storage only ever store ciphertext. Your encryption key is stored in iCloud Keychain and never leaves your devices</li>
                                 <li><strong>No PII stored server-side</strong> — we do not collect, store, or process personally identifiable information. Your account is identified only by an opaque Apple-generated token</li>
                                 <li><strong>Sign in with Apple with cryptographic nonce</strong> — prevents token replay attacks, following Apple's recommended authentication practices</li>
                                 <li><strong>Apple ID credential revocation</strong> — the app automatically detects and responds if you revoke KnowItOwl! access in your Apple ID settings, immediately signing you out</li>
@@ -321,9 +322,9 @@
                                 <li>No API keys are stored on or distributed to client devices — Firebase manages all service authentication server-side</li>
                             </ul>
                             <div class="p-6 rounded-2xl bg-sage-50 dark:bg-sage-900/10 border border-sage-100 dark:border-sage-800">
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-2">End-to-End Encryption</h3>
+                                <h3 class="font-bold text-slate-900 dark:text-white mb-2">Encrypted Storage</h3>
                                 <p>
-                                    All conversation messages and audio files are encrypted on your device using <strong>AES-256-GCM</strong> (via Apple CryptoKit) before being stored in Firebase. This means that even if Firebase data were accessed, it would be unreadable without your personal encryption key, which is stored exclusively in your iCloud Keychain and syncs only to your own Apple devices. Sandy Brook DevWorks cannot read your conversations or listen to your audio recordings.
+                                    Conversation messages and audio files saved to your account are encrypted on your device using <strong>AES-256-GCM</strong> (via Apple CryptoKit) before being stored in Firebase. This means that even if Firebase data were accessed, it would be unreadable without your personal encryption key, which is stored exclusively in your iCloud Keychain and syncs only to your own Apple devices. AI requests must be processed in readable form by the KnowItOwl! AI API and Google AI services to generate responses, transcripts, and audio.
                                 </p>
                             </div>
                         </div>

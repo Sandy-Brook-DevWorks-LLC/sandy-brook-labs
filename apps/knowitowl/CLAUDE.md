@@ -73,7 +73,7 @@ apps/knowitowl/
 - **No PII collected** — only Apple's opaque user identifier; no name, email, phone, or location
 - User data is **never** sold, rented, or shared with data brokers or aggregators
 - User data is **never** used for AI model training
-- **Client-side end-to-end encryption** — AES-256-GCM via Apple CryptoKit; Firestore/Storage only store ciphertext
+- **Client-side encrypted storage** — saved conversation history and audio use AES-256-GCM via Apple CryptoKit; Firestore/Storage only store ciphertext
 - **User-scoped encryption keys** — stored in iCloud Keychain, never leave user's devices
 - Data stored in Firebase (Firestore + Storage) in `nam5` (multi-region US, 99.999% SLA)
 - Authentication via Sign in with Apple with cryptographic nonce (Firebase Auth)
@@ -85,7 +85,8 @@ apps/knowitowl/
 
 ### Third-Party Services (disclosed in privacy policy)
 
-- **Google Gemini** (via Firebase AI Logic) — processes voice/text queries
+- **KnowItOwl! AI API** — authenticated bridge operated by Sandy Brook DevWorks for transcription, answer generation, and text-to-speech
+- **Google Vertex AI/Gemini and Google Cloud Text-to-Speech** — process voice/text queries and generate spoken responses through the KnowItOwl! AI API
 - **Firebase** — Auth, Firestore, Storage, App Check, Cloud Functions (credit management), Crashlytics (crash/error reporting)
 - **Apple** — Sign in with Apple, In-App Purchases, iCloud KV (settings only)
 
@@ -120,4 +121,5 @@ Changes appear at `https://sandybrook.io/apps/knowitowl/` within minutes.
 
 ## Changelog
 
+- **2026-07-03:** Updated `privacy.html` and `support.html` to reflect the current AI API architecture: device requests go through the authenticated KnowItOwl! AI API before Google Vertex AI/Gemini and Google Cloud Text-to-Speech, saved Firebase history/audio remains client-side encrypted, and context is limited to up to 3 recent messages.
 - **2026-03-18:** Updated `privacy.html` section 4 (Google Gemini / AI Processing) to explicitly enumerate data types sent to Google's servers (voice audio recordings, text messages, conversation history up to 10 messages), reference Google Cloud Data Processing Addendum for equivalent protection, and note that the app obtains explicit in-app consent before sending data — addressing App Store rejection Guidelines 5.1.1(i) & 5.1.2(i).
