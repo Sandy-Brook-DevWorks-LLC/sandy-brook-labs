@@ -82,7 +82,7 @@
             </div>
             <div class="flex items-center gap-4 md:gap-8">
                 <a href="https://sandybrookdevworks.com" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Sandy Brook DevWorks</a>
-                <a href="#released-products" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Released</a>
+                <a href="#working-on" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Working on</a>
                 <a href="#past-projects" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Shipped</a>
                 <a href="guides/" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Developers</a>
                 <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Open Menu">
@@ -100,7 +100,7 @@
     <div id="mobile-menu">
         <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
         <div class="mobile-menu-panel">
-            <a href="#released-products" onclick="closeMenu()">Released</a>
+            <a href="#working-on" onclick="closeMenu()">Working on</a>
             <a href="#past-projects" onclick="closeMenu()">Shipped</a>
             <a href="guides/">Developers</a>
             <a href="https://sandybrookdevworks.com" target="_blank" rel="noopener noreferrer">Sandy Brook DevWorks</a>
@@ -130,72 +130,97 @@
             </p>
         </section>
 
-        <!-- Released Products -->
-        <section id="released-products" class="bg-slate-900 text-white py-24">
+        <!-- What We Are Working On -->
+        <section id="working-on" class="bg-slate-900 text-white py-24">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Released Products</h2>
-                    <p class="mt-4 text-slate-400">Live products Sandy Brook has shipped and operates.</p>
+                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">What we are working on.</h2>
+                    <p class="mt-4 text-slate-400">A look at what is taking shape in the lab.</p>
                 </div>
 
                 <div class="max-w-4xl mx-auto">
                     <div class="group relative overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 p-8 md:p-12 transition-all hover:border-brand/50 hover:shadow-2xl hover:shadow-brand-shadow/20">
-                        <div class="space-y-6">
+                        <div class="absolute inset-y-0 right-0 hidden w-2/5 opacity-25 md:block" aria-hidden="true">
+                            <svg class="h-full w-full text-brand-light" viewBox="0 0 360 420" fill="none">
+                                <path d="M58 70H190C230 70 230 126 270 126H344" stroke="currentColor" stroke-width="2"/>
+                                <path d="M18 210H118C158 210 158 154 198 154H344" stroke="currentColor" stroke-width="2"/>
+                                <path d="M58 350H190C230 350 230 294 270 294H344" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="58" cy="70" r="8" fill="currentColor"/>
+                                <circle cx="18" cy="210" r="8" fill="currentColor"/>
+                                <circle cx="58" cy="350" r="8" fill="currentColor"/>
+                                <circle cx="198" cy="154" r="8" fill="currentColor"/>
+                                <circle cx="270" cy="294" r="8" fill="currentColor"/>
+                                <rect x="292" y="99" width="52" height="54" rx="12" stroke="currentColor" stroke-width="2"/>
+                                <rect x="292" y="267" width="52" height="54" rx="12" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="relative space-y-6 md:max-w-xl">
                             <div class="flex flex-wrap items-center gap-3">
-                                <h3 class="text-2xl md:text-3xl font-bold">Relay</h3>
-                                <span class="inline-flex items-center rounded-full bg-green-500/10 border border-green-500/30 px-3 py-1 text-xs font-semibold text-green-400">
+                                <h3 class="text-2xl md:text-3xl font-bold">DataOps</h3>
+                                <span class="inline-flex items-center rounded-full bg-brand/10 border border-brand-light/40 px-3 py-1 text-xs font-semibold text-brand-light">
                                     <span class="relative flex h-1.5 w-1.5 mr-1.5">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-light opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-light"></span>
                                     </span>
-                                    Now Available
+                                    In Development
                                 </span>
                             </div>
-                            <p class="text-lg font-medium text-slate-300">AI Phone Receptionist for Small Business</p>
-                            <div class="w-24 md:w-48">
-                                <div class="flex items-center justify-center aspect-square rounded-2xl overflow-hidden bg-slate-700 border border-slate-600">
-                                    <img src="images/relay_logo.webp" alt="Relay App Icon" class="w-full h-full object-cover">
-                                </div>
-                            </div>
+                            <p class="text-lg font-medium text-slate-300">A new product is taking shape.</p>
                             <p class="text-slate-400 leading-relaxed">
-                                A fully released AI phone receptionist that answers business calls 24/7, greets callers
-                                in 29 languages, takes messages, books appointments live on the call, transfers urgent
-                                callers, emails clean summaries, and connects into CRMs and 7,000+ tools through Zapier.
-                                End-to-end build: real-time Twilio ↔ Gemini Live voice bridge, Semantic Kernel tool
-                                calling, multi-tenant .NET 10 SaaS on GCP Cloud Run, all infra as Pulumi C#.
+                                We are still exploring the shape of DataOps. More details will be shared as the product develops.
                             </p>
-                            <div class="flex flex-wrap gap-3 pt-2">
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">.NET 10</span>
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Gemini Live</span>
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Twilio</span>
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">GCP Cloud Run</span>
-                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Pulumi IaC</span>
-                            </div>
-                            <div class="flex flex-wrap gap-3 pt-2">
-                                <a href="apps/relay/" class="inline-flex items-center gap-2 font-bold text-brand hover:text-white transition-colors">
-                                    Read the Case Study <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                                </a>
-                                <span class="text-slate-600">·</span>
-                                <a href="https://relayconnect.net/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-medium text-slate-400 hover:text-brand transition-colors">
-                                    Visit relayconnect.net <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Past Projects -->
+        <!-- Shipped Products -->
         <section id="past-projects" class="py-24">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Other Shipped Projects</h2>
-                    <p class="mt-4 text-slate-600 dark:text-slate-400">More finished work from the lab. Scroll to explore.</p>
+                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Other Shipped Products</h2>
+                    <p class="mt-4 text-slate-600 dark:text-slate-400">Finished products from the lab. Scroll to explore.</p>
                 </div>
             </div>
 
             <div class="past-projects-scroller flex gap-6 overflow-x-auto snap-x snap-mandatory px-4 md:px-8 pb-6 scroll-smooth">
+                <!-- Relay -->
+                <article class="snap-start shrink-0 w-[85vw] sm:w-[28rem] md:w-[32rem] rounded-2xl border border-slate-200 bg-white p-8 md:p-10 shadow-sm transition-all hover:border-brand/50 hover:shadow-xl hover:shadow-brand-shadow/10 dark:border-slate-800 dark:bg-slate-900">
+                    <div class="space-y-6">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <h3 class="text-2xl md:text-3xl font-bold">Relay</h3>
+                            <span class="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-3 py-1 text-xs font-semibold text-green-700 dark:bg-green-900/20 dark:border-green-800 dark:text-green-400">
+                                Shipped
+                            </span>
+                        </div>
+                        <p class="text-lg font-medium text-slate-700 dark:text-slate-300">AI Phone Receptionist for Small Business</p>
+                        <div class="w-24 md:w-40">
+                            <div class="flex items-center justify-center aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
+                                <img src="images/relay_logo.webp" alt="Relay App Icon" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            An AI phone receptionist that answers business calls 24/7, takes messages, books appointments, transfers urgent callers, and connects with the tools small businesses already use.
+                        </p>
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">.NET 10</span>
+                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">Gemini Live</span>
+                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">Twilio</span>
+                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">GCP</span>
+                        </div>
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <a href="apps/relay/" class="inline-flex items-center gap-2 font-bold text-brand hover:text-brand-dark dark:hover:text-white transition-colors">
+                                Read the Case Study <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            </a>
+                            <span class="text-slate-300 dark:text-slate-700">·</span>
+                            <a href="https://relayconnect.net/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 font-medium text-slate-500 hover:text-brand transition-colors">
+                                Visit site <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
                 <!-- KnowItOwl! -->
                 <article class="snap-start shrink-0 w-[85vw] sm:w-[28rem] md:w-[32rem] rounded-2xl border border-slate-200 bg-white p-8 md:p-10 shadow-sm transition-all hover:border-brand/50 hover:shadow-xl hover:shadow-brand-shadow/10 dark:border-slate-800 dark:bg-slate-900">
                     <div class="space-y-6">

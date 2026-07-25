@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relay — AI Phone Receptionist | Sandy Brook Projects Lab</title>
-    <meta name="description" content="Relay — a fully released AI phone receptionist for small businesses. Real-time voice ↔ Gemini Live bridge, multi-tenant SaaS, .NET 10 on GCP Cloud Run. A case study from Sandy Brook DevWorks.">
+    <title>Relay Engineering Case Study | Sandy Brook Projects Lab</title>
+    <meta name="description" content="How Sandy Brook DevWorks engineered Relay: a production AI voice system spanning real-time audio, tool calling, durable RAG, multi-tenant SaaS, security, observability, and GCP infrastructure.">
     <link rel="canonical" href="https://sandybrook.io/apps/relay/">
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     <meta property="og:url" content="https://sandybrook.io/apps/relay/">
-    <meta property="og:title" content="Relay — AI Phone Receptionist">
-    <meta property="og:description" content="A fully released AI phone receptionist for small businesses. Real-time voice ↔ Gemini Live, .NET 10 on GCP Cloud Run.">
+    <meta property="og:title" content="Relay Engineering Case Study">
+    <meta property="og:description" content="Inside the architecture of a production AI voice system: real-time audio, tool-using AI, durable RAG, multi-tenant SaaS, and cloud operations.">
     <meta property="og:image" content="https://sandybrook.io/images/relay_logo.png">
     <meta property="og:site_name" content="Sandy Brook Projects Lab">
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Relay — AI Phone Receptionist">
-    <meta name="twitter:description" content="A fully released AI phone receptionist for small businesses. Real-time voice ↔ Gemini Live, .NET 10 on GCP Cloud Run.">
+    <meta name="twitter:title" content="Relay Engineering Case Study">
+    <meta name="twitter:description" content="Inside the architecture of a production AI voice system built end to end by Sandy Brook DevWorks.">
     <meta name="twitter:image" content="https://sandybrook.io/images/relay_logo.png">
 
     <meta name="author" content="Sandy Brook DevWorks LLC">
@@ -32,12 +32,18 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Relay",
-        "applicationCategory": "BusinessApplication",
-        "description": "AI phone receptionist that answers business calls 24/7, greets callers in 29 languages, takes detailed messages, books appointments live, transfers urgent callers, emails summaries, and connects into CRMs and thousands of tools through Zapier.",
-        "url": "https://relayconnect.net/",
-        "operatingSystem": "Web",
+        "@type": "TechArticle",
+        "headline": "Relay Engineering Case Study",
+        "description": "An engineering case study of Relay, a production AI voice system built by Sandy Brook DevWorks.",
+        "url": "https://sandybrook.io/apps/relay/",
+        "image": "https://sandybrook.io/images/relay_logo.png",
+        "about": {
+            "@type": "SoftwareApplication",
+            "name": "Relay",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "url": "https://relayconnect.net/"
+        },
         "author": {
             "@type": "Organization",
             "name": "Sandy Brook DevWorks LLC",
@@ -66,33 +72,34 @@
     </script>
     <script src="../../styles/theme.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300 min-h-screen flex flex-col">
-    <div class="fixed inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10 pointer-events-none"></div>
+<body class="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-50">
+    <div class="fixed inset-0 -z-10 pointer-events-none bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]"></div>
 
     <!-- Navigation -->
     <nav class="sticky top-0 z-50 w-full border-b border-slate-200/40 bg-white/80 backdrop-blur-md dark:border-slate-800/40 dark:bg-slate-950/80">
         <div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-            <div class="flex items-center gap-4 font-bold text-xl tracking-tight">
+            <div class="flex items-center gap-4 text-xl font-bold tracking-tight">
                 <a href="../../" class="relative group" aria-label="Sandy Brook Projects Lab Home">
-                    <div class="absolute -inset-1 rounded-full bg-brand/20 blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    <div class="absolute -inset-1 rounded-full bg-brand/20 opacity-0 blur transition duration-500 group-hover:opacity-100"></div>
                     <img src="../../images/relay_logo.png" alt="Relay logo" class="relative h-12 w-12 rounded-full shadow-sm">
                 </a>
                 <div class="flex flex-col leading-tight">
                     <span class="text-brand">Relay</span>
-                    <span class="text-xs font-medium tracking-widest uppercase text-slate-500 dark:text-slate-400">A Sandy Brook Project</span>
+                    <span class="text-xs font-medium uppercase tracking-widest text-slate-500 dark:text-slate-400">Engineering case study</span>
                 </div>
             </div>
             <div class="flex items-center gap-4 md:gap-8">
-                <a href="#what-it-does" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">What it does</a>
-                <a href="#engineering" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Engineering</a>
-                <a href="#architecture" class="hidden md:inline-flex text-sm font-medium hover:text-brand transition-colors">Architecture</a>
-                <a href="https://relayconnect.net/signup.html" target="_blank" rel="noopener" class="hidden md:inline-flex items-center rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-dark transition-colors">
-                    Try Relay
+                <a href="#architecture" class="hidden text-sm font-medium transition-colors hover:text-brand md:inline-flex">Architecture</a>
+                <a href="#engineering" class="hidden text-sm font-medium transition-colors hover:text-brand md:inline-flex">Engineering</a>
+                <a href="#reliability" class="hidden text-sm font-medium transition-colors hover:text-brand md:inline-flex">Reliability</a>
+                <a href="#stack" class="hidden text-sm font-medium transition-colors hover:text-brand md:inline-flex">Stack</a>
+                <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="hidden items-center rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark md:inline-flex">
+                    Work with us
                 </a>
-                <button onclick="toggleMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Open Menu">
+                <button onclick="toggleMenu()" class="rounded-lg p-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden" aria-label="Open Menu">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                 </button>
-                <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                <button onclick="toggleTheme()" class="rounded-lg p-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Toggle Theme">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
                 </button>
@@ -100,394 +107,597 @@
         </div>
     </nav>
 
-    <!-- Mobile Dropdown Menu -->
+    <!-- Mobile Menu -->
     <div id="mobile-menu">
         <div class="mobile-menu-backdrop" onclick="closeMenu()"></div>
         <div class="mobile-menu-panel">
-            <a href="#what-it-does" onclick="closeMenu()">What it does</a>
-            <a href="#engineering" onclick="closeMenu()">Engineering</a>
             <a href="#architecture" onclick="closeMenu()">Architecture</a>
+            <a href="#engineering" onclick="closeMenu()">Engineering</a>
+            <a href="#reliability" onclick="closeMenu()">Reliability</a>
             <a href="#stack" onclick="closeMenu()">Tech stack</a>
-            <a href="https://relayconnect.net/signup.html" target="_blank" rel="noopener">Try Relay →</a>
+            <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer">Work with us →</a>
             <a href="../../">← Back to Lab</a>
         </div>
     </div>
 
     <main>
         <!-- Hero -->
-        <section class="container mx-auto px-4 py-20 md:py-28 flex flex-col items-center text-center">
-            <div class="mb-8 relative">
-                <div class="absolute -inset-4 rounded-full bg-brand/10 blur-xl dark:bg-brand/20"></div>
-                <img src="../../images/relay_logo.png" alt="Relay" class="relative h-24 w-24 md:h-32 md:w-32 rounded-full border-4 border-white shadow-2xl dark:border-slate-900">
+        <section class="container mx-auto px-4 py-16 md:px-6 md:py-24">
+            <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+                <div>
+                    <div class="mb-7 flex items-center gap-3">
+                        <img src="../../images/relay_logo.png" alt="" class="h-12 w-12 rounded-xl shadow-md">
+                        <div>
+                            <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand">Production system · case study</p>
+                            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Designed, built, deployed, and operated end to end</p>
+                        </div>
+                    </div>
+                    <h1 class="max-w-4xl text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
+                        Relay is not a prompt wrapped in a phone number.
+                    </h1>
+                    <p class="mt-7 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400 md:text-xl">
+                        It is a production AI system spanning real-time audio, model orchestration, durable knowledge
+                        retrieval, multi-tenant SaaS, billing, identity, observability, and cloud infrastructure.
+                        Sandy Brook DevWorks engineered the whole path.
+                    </p>
+                    <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+                        <a href="#architecture" class="inline-flex items-center justify-center rounded-full bg-brand px-7 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-brand-dark hover:shadow-xl hover:shadow-brand-shadow/30">
+                            Trace the architecture
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </a>
+                        <a href="https://relayconnect.net/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-7 py-3 text-sm font-semibold shadow-sm transition-colors hover:border-brand hover:text-brand dark:border-slate-700 dark:bg-slate-900">
+                            View the live product
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Signal path -->
+                <div class="overflow-hidden rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl shadow-brand-shadow/20">
+                    <div class="flex items-center justify-between border-b border-slate-700 px-5 py-4">
+                        <span class="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Live signal path</span>
+                        <span class="flex items-center gap-2 text-xs font-medium text-emerald-400">
+                            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                            Production
+                        </span>
+                    </div>
+                    <div class="space-y-1 p-5 font-mono text-xs sm:p-7 sm:text-sm">
+                        <div class="grid grid-cols-[2rem_1fr] gap-3 border-b border-slate-800 py-4">
+                            <span class="text-slate-600">01</span>
+                            <div>
+                                <p class="font-semibold text-white">Caller → Twilio</p>
+                                <p class="mt-1 text-slate-500">PSTN · signed webhook · SHAKEN/STIR</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-[2rem_1fr] gap-3 border-b border-slate-800 py-4">
+                            <span class="text-slate-600">02</span>
+                            <div>
+                                <p class="font-semibold text-brand-light">Twilio.API voice bridge</p>
+                                <p class="mt-1 text-slate-500">G.711 μ-law 8 kHz ⇄ PCM16 16 kHz</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-[2rem_1fr] gap-3 border-b border-slate-800 py-4">
+                            <span class="text-slate-600">03</span>
+                            <div>
+                                <p class="font-semibold text-white">Gemini Live session</p>
+                                <p class="mt-1 text-slate-500">Bidirectional audio · VAD · session recovery</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-[2rem_1fr] gap-3 border-b border-slate-800 py-4">
+                            <span class="text-slate-600">04</span>
+                            <div>
+                                <p class="font-semibold text-white">Mode-gated tools</p>
+                                <p class="mt-1 text-slate-500">Calendar · knowledge · search · redirect</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-[2rem_1fr] gap-3 py-4">
+                            <span class="text-slate-600">05</span>
+                            <div>
+                                <p class="font-semibold text-white">Durable completion</p>
+                                <p class="mt-1 text-slate-500">Cloud Tasks · Firestore · email · telemetry</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="inline-flex items-center rounded-full border border-green-200 bg-green-50 px-4 py-1.5 text-sm font-semibold text-green-700 shadow-sm dark:border-green-800 dark:bg-green-900/20 dark:text-green-400 mb-6">
-                <span class="relative flex h-2 w-2 mr-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                </span>
-                Now Available
-            </div>
-            <h1 class="max-w-4xl text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl">
-                An AI phone receptionist,<br><span class="text-brand">built end-to-end.</span>
-            </h1>
-            <p class="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400 md:text-xl">
-                Relay answers business phones in real time — bridging callers to a Gemini-powered voice assistant
-                that takes messages, books appointments, transfers urgent callers, and silently switches languages on
-                the fly. Relay is fully released at <span class="font-semibold text-brand">relayconnect.net</span>.
-            </p>
-            <div class="mt-10 flex flex-col sm:flex-row gap-4">
-                <a href="https://relayconnect.net/signup.html" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-brand px-8 py-3 text-base font-semibold text-white shadow-lg hover:bg-brand-dark transition-all hover:shadow-xl hover:shadow-brand-shadow/30">
-                    Try a Free Demo Call
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
-                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                    </svg>
-                </a>
-                <a href="#engineering" class="inline-flex items-center justify-center rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-8 py-3 text-base font-semibold shadow-sm hover:border-brand/50 transition-all">
-                    See How It's Built
-                </a>
-            </div>
-            <p class="mt-6 text-sm text-slate-500 dark:text-slate-500">Sign up free — Relay phones you within seconds for a ten-minute live demo. No credit card.</p>
         </section>
 
-        <!-- What it does -->
-        <section id="what-it-does" class="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
-            <div class="container mx-auto px-4">
-                <div class="max-w-3xl mx-auto text-center mb-14">
-                    <span class="inline-block px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-bold uppercase tracking-wider mb-4">For the user</span>
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl mb-4">What Relay does for a small business.</h2>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                        A solo dentist, a contractor, a pet groomer — they miss calls. Relay picks up instead, holds a
-                        natural conversation with the caller, captures what they need, and emails a clean summary.
-                        Two modes share one number: external callers get a polite receptionist; the owner gets an
-                        open-ended assistant that can search the web and recall their own message history by voice.
-                    </p>
+        <!-- Repository evidence -->
+        <section class="border-y border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div class="container mx-auto px-4 py-10 md:px-6">
+                <div class="mb-7 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+                    <div>
+                        <p class="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-brand">Current repository snapshot</p>
+                        <h2 class="mt-2 text-xl font-bold">The evidence is in the system.</h2>
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Counts verified against the production codebase.</p>
                 </div>
-
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
-                    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-6">
-                        <div class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        </div>
-                        <h3 class="font-bold mb-1">Picks up 24/7</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-400">Greets callers, takes messages, classifies urgency. No voicemail, no hold music.</p>
+                <div class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 dark:border-slate-700 dark:bg-slate-700 lg:grid-cols-4">
+                    <div class="bg-slate-50 p-5 dark:bg-slate-950">
+                        <div class="font-mono text-3xl font-semibold text-brand">4</div>
+                        <p class="mt-2 text-sm font-semibold">deployed services</p>
+                        <p class="mt-1 text-xs leading-relaxed text-slate-500">Voice, API, dashboard, public site</p>
                     </div>
-                    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-6">
-                        <div class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                        </div>
-                        <h3 class="font-bold mb-1">Speaks 29 languages</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-400">Greets in your chosen language and silently mirrors the caller mid-call.</p>
+                    <div class="bg-slate-50 p-5 dark:bg-slate-950">
+                        <div class="font-mono text-3xl font-semibold text-brand">126</div>
+                        <p class="mt-2 text-sm font-semibold">REST endpoints</p>
+                        <p class="mt-1 text-xs leading-relaxed text-slate-500">Across 26 Relay.API controllers</p>
                     </div>
-                    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-6">
-                        <div class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                        </div>
-                        <h3 class="font-bold mb-1">Books appointments live</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-400">Connects to Google Calendar — checks availability and books on the call.</p>
+                    <div class="bg-slate-50 p-5 dark:bg-slate-950">
+                        <div class="font-mono text-3xl font-semibold text-brand">326</div>
+                        <p class="mt-2 text-sm font-semibold">automated test definitions</p>
+                        <p class="mt-1 text-xs leading-relaxed text-slate-500">Voice, API, and dashboard suites</p>
                     </div>
-                    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-6">
-                        <div class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                        </div>
-                        <h3 class="font-bold mb-1">Hands off urgent calls</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-400">Live transfer to a real phone, with a private whisper announcing the caller.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Engineering brief -->
-        <section id="engineering" class="py-24 bg-slate-900 text-white">
-            <div class="container mx-auto px-4">
-                <div class="max-w-3xl mx-auto text-center mb-14">
-                    <span class="inline-block px-3 py-1 rounded-full bg-brand/20 text-brand text-xs font-bold uppercase tracking-wider mb-4">Why this matters</span>
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl mb-4">A consulting case study, deployed.</h2>
-                    <p class="text-slate-400 leading-relaxed">
-                        Relay is what Sandy Brook DevWorks looks like when given a real product with real constraints —
-                        regulated telephony, real-time audio, multi-tenant billing, and zero-downtime infrastructure-as-code.
-                        Four deployed surfaces stacked together to ship an AI product that actually picks up the phone.
-                    </p>
-                </div>
-
-                <div class="grid gap-6 lg:grid-cols-2 max-w-6xl mx-auto">
-                    <!-- Real-time voice bridge -->
-                    <div class="rounded-2xl border border-slate-700 bg-slate-800 p-8 transition-all hover:border-brand/50 hover:shadow-2xl">
-                        <div class="flex items-start gap-4 mb-4">
-                            <div class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">Real-time voice bridge</h3>
-                                <p class="text-sm text-slate-500">Twilio Media Streams ↔ Gemini Live</p>
-                            </div>
-                        </div>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            A long-lived WebSocket per call shuttles raw audio in both directions: G.711 μ-law 8 kHz from
-                            Twilio, PCM16 16 kHz to Gemini Live's bidirectional speech endpoint, and back again. Two
-                            concurrent <span class="font-mono text-xs text-brand">System.Threading.Channels</span> loops
-                            keep the pipeline lossless under load. Built-in VAD with tuned start/end-of-speech
-                            sensitivity, μ-law ↔ PCM16 + 8 kHz ↔ 16 kHz transcoding from scratch (no external codec),
-                            and a SHAKEN/STIR carrier-attestation filter that rejects spoofed calls before billable
-                            audio ever flows.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mt-4">
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">WebSockets</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Twilio Voice</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Gemini Live</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">VAD</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">SHAKEN/STIR</span>
-                        </div>
-                    </div>
-
-                    <!-- AI orchestration -->
-                    <div class="rounded-2xl border border-slate-700 bg-slate-800 p-8 transition-all hover:border-brand/50 hover:shadow-2xl">
-                        <div class="flex items-start gap-4 mb-4">
-                            <div class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">AI orchestration</h3>
-                                <p class="text-sm text-slate-500">Semantic Kernel + tool calling</p>
-                            </div>
-                        </div>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Mode-gated plugins are registered with the live model at call start: Receptionist gets the
-                            <em>Calendar</em> plugin (check availability, book, cancel — with timezone-aware slot
-                            sampling); Assistant Mode gets <em>Messages</em> ("what did Sarah call about?") and
-                            <em>WebSearch</em> (Gemini text-API with native <span class="font-mono text-xs text-brand">google_search</span>
-                            grounding for live weather, traffic, hours). Receptionist can also conditionally register a
-                            <em>RedirectCall</em> tool that emits live TwiML to bridge the caller to a real phone — with
-                            a one-line whisper to the dialed party only.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mt-4">
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Semantic Kernel</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Vertex AI</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Tool Calling</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Search Grounding</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Google Calendar</span>
-                        </div>
-                    </div>
-
-                    <!-- Multi-tenant SaaS -->
-                    <div class="rounded-2xl border border-slate-700 bg-slate-800 p-8 transition-all hover:border-brand/50 hover:shadow-2xl">
-                        <div class="flex items-start gap-4 mb-4">
-                            <div class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">Multi-tenant SaaS</h3>
-                                <p class="text-sm text-slate-500">4 Cloud Run services · 26 controllers · ~120 endpoints</p>
-                            </div>
-                        </div>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Three .NET services with strict boundaries plus a static RelayConnect marketing service:
-                            a Blazor Server BFF for the dashboard, a JWT-auth REST API for tenant operations, and an
-                            internal voice service that owns the Twilio and Brevo integrations. Tenants authenticate
-                            via Google OAuth, Firebase email/password, or WebAuthn passkeys; cross-service calls use
-                            Google-signed OIDC instead of shared secrets. Stripe subscriptions are managed by Pulumi
-                            (catalog) plus webhook-driven self-heal; per-line config overrides cascade from global
-                            tenant settings; phone-number lifecycle (provision, hold, resume, release) is fully
-                            reversible from the dashboard.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mt-4">
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Blazor Server</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">ASP.NET Core</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">JWT + OIDC</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">WebAuthn</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Stripe</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Firestore</span>
-                        </div>
-                    </div>
-
-                    <!-- Production-grade infra -->
-                    <div class="rounded-2xl border border-slate-700 bg-slate-800 p-8 transition-all hover:border-brand/50 hover:shadow-2xl">
-                        <div class="flex items-start gap-4 mb-4">
-                            <div class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">Production-grade infrastructure</h3>
-                                <p class="text-sm text-slate-500">Pulumi · GCP · OpenTelemetry</p>
-                            </div>
-                        </div>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Everything is code. Pulumi (C#) provisions Cloud Run services, Firestore composite indexes,
-                            Cloud Tasks queues, Cloud Scheduler jobs, KMS keyrings, Stripe products, Secret Manager
-                            secrets, and the IAM triangles required for OIDC service-to-service auth. Post-call
-                            enrichment runs on Cloud Tasks; daily-summary fan-out runs on Cloud Scheduler. Calendar
-                            OAuth refresh tokens are envelope-encrypted via Cloud KMS before persistence.
-                            Custom OpenTelemetry instrumentation around the Gemini Live session exports
-                            <span class="font-mono text-xs text-brand">gemini.session.duration</span>,
-                            <span class="font-mono text-xs text-brand">gemini.turn.latency</span>, and
-                            <span class="font-mono text-xs text-brand">gemini.interruptions</span> via an
-                            otelcol-google sidecar to Cloud Trace + Cloud Monitoring.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mt-4">
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Pulumi IaC</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Cloud Run</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Cloud Tasks</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Cloud KMS</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">OpenTelemetry</span>
-                            <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-medium text-slate-300">Secret Manager</span>
-                        </div>
+                    <div class="bg-slate-50 p-5 dark:bg-slate-950">
+                        <div class="font-mono text-3xl font-semibold text-brand">115</div>
+                        <p class="mt-2 text-sm font-semibold">composite indexes</p>
+                        <p class="mt-1 text-xs leading-relaxed text-slate-500">Including vector search infrastructure</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Architecture -->
-        <section id="architecture" class="py-24">
-            <div class="container mx-auto px-4">
-                <div class="max-w-3xl mx-auto text-center mb-14">
-                    <span class="inline-block px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-bold uppercase tracking-wider mb-4">Architecture</span>
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Four services, two product planes.</h2>
-                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                        RelayConnect is the static front door. Behind it, the voice plane is hot — sub-second audio
-                        streaming end-to-end. The dashboard plane is transactional — JWT, REST, and reads off the same
-                        Firestore that the voice plane writes. Service-to-service hops are OIDC-signed, never shared
-                        secrets.
+        <section id="architecture" class="scroll-mt-20 bg-slate-900 py-24 text-white">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="mx-auto mb-14 max-w-3xl">
+                    <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand-light">System architecture</p>
+                    <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Three planes. One product.</h2>
+                    <p class="mt-5 text-lg leading-relaxed text-slate-400">
+                        The architecture separates latency-sensitive conversation from transactional product work and
+                        retryable background processing. Each plane gets the failure semantics and security boundary it needs.
                     </p>
                 </div>
 
-                <div class="max-w-5xl mx-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 md:p-10 overflow-x-auto">
-                    <pre class="text-xs md:text-sm leading-relaxed font-mono text-slate-700 dark:text-slate-300"><span class="text-slate-400 dark:text-slate-500">┌──────────┐                    ┌─────────────┐</span>
-<span class="text-slate-400 dark:text-slate-500">│  Caller  │</span>  PSTN call      <span class="text-slate-400 dark:text-slate-500">│   Twilio    │</span>
-<span class="text-slate-400 dark:text-slate-500">└──────────┘ ─────────────────▶ └─────────────┘</span>
-                                       <span class="text-slate-400 dark:text-slate-500">│</span>  HTTP webhook
-                                       <span class="text-slate-400 dark:text-slate-500">│</span>  + WSS audio
-                                       ▼
-              <span class="text-brand font-semibold">┌────────────────────────────┐</span>
-              <span class="text-brand font-semibold">│  Twilio.API (Cloud Run)    │</span>   ◀───── Gemini Live (Vertex AI)
-              <span class="text-brand font-semibold">│  ─ voice bridge            │</span>          bidirectional WSS
-              <span class="text-brand font-semibold">│  ─ SK plugins (tools)      │</span>
-              <span class="text-brand font-semibold">│  ─ post-call enrichment    │</span>   ─────▶ Cloud Tasks ─▶ self
-              <span class="text-brand font-semibold">└────────────────────────────┘</span>           (transcribe, summarize,
-                       <span class="text-slate-400 dark:text-slate-500">│</span>                          email)
-                       <span class="text-slate-400 dark:text-slate-500">│</span>  writes
-                       ▼
-              <span class="text-slate-400 dark:text-slate-500">┌────────────────────────────┐</span>
-              <span class="text-slate-400 dark:text-slate-500">│         Firestore          │</span>   ◀──── Relay.API (Cloud Run)
-              <span class="text-slate-400 dark:text-slate-500">└────────────────────────────┘</span>          ─ JWT REST API
-                                                  ▲
-                                                  <span class="text-slate-400 dark:text-slate-500">│</span>  OIDC
-                                                  <span class="text-slate-400 dark:text-slate-500">│</span>  bearer
-                                                  ▼
-                                          <span class="text-brand font-semibold">┌────────────────┐</span>
-                                          <span class="text-brand font-semibold">│   Relay.Web    │</span>
-                                          <span class="text-brand font-semibold">│   Blazor BFF   │</span>
-                                          <span class="text-brand font-semibold">│  Tenant signs  │</span>
-                                          <span class="text-brand font-semibold">│  in here ──┐   │</span>
-                                          <span class="text-brand font-semibold">└────────────│───┘</span>
-                                                       <span class="text-slate-400 dark:text-slate-500">▼</span>
-                                                <span class="text-slate-400 dark:text-slate-500">Google OAuth</span>
-                                                <span class="text-slate-400 dark:text-slate-500">Firebase Auth</span>
-                                                <span class="text-slate-400 dark:text-slate-500">WebAuthn</span></pre>
-                </div>
+                <div class="mx-auto max-w-6xl space-y-6">
+                    <!-- Real-time plane -->
+                    <div class="rounded-3xl border border-brand/40 bg-brand/10 p-6 md:p-8">
+                        <div class="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                            <div>
+                                <div class="font-mono text-xs font-semibold uppercase tracking-wider text-brand-light">01 · Real-time voice plane</div>
+                                <h3 class="mt-2 text-2xl font-bold">Keep the conversation moving.</h3>
+                            </div>
+                            <span class="w-fit rounded-full border border-brand/40 px-3 py-1 font-mono text-xs text-brand-light">latency-sensitive</span>
+                        </div>
+                        <div class="grid gap-3 md:grid-cols-5">
+                            <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
+                                <div class="font-mono text-xs text-slate-500">INPUT</div>
+                                <div class="mt-2 font-semibold">Caller / PSTN</div>
+                                <p class="mt-1 text-xs text-slate-400">A real phone call</p>
+                            </div>
+                            <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
+                                <div class="font-mono text-xs text-slate-500">EDGE</div>
+                                <div class="mt-2 font-semibold">Twilio Voice</div>
+                                <p class="mt-1 text-xs text-slate-400">Webhook + media stream</p>
+                            </div>
+                            <div class="rounded-xl border border-brand/50 bg-slate-950 p-4 shadow-lg shadow-brand-shadow/20">
+                                <div class="font-mono text-xs text-brand-light">BRIDGE</div>
+                                <div class="mt-2 font-semibold">Twilio.API</div>
+                                <p class="mt-1 text-xs text-slate-400">Transcode + session state</p>
+                            </div>
+                            <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
+                                <div class="font-mono text-xs text-slate-500">MODEL</div>
+                                <div class="mt-2 font-semibold">Gemini Live</div>
+                                <p class="mt-1 text-xs text-slate-400">Native audio + tools</p>
+                            </div>
+                            <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
+                                <div class="font-mono text-xs text-slate-500">ACTION</div>
+                                <div class="mt-2 font-semibold">SK plugins</div>
+                                <p class="mt-1 text-xs text-slate-400">Calendar, RAG, transfer</p>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="max-w-3xl mx-auto mt-8 grid gap-4 sm:grid-cols-3 text-sm">
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
-                        <div class="font-bold text-brand mb-1">Voice plane</div>
-                        <p class="text-slate-600 dark:text-slate-400">Sub-second audio. WebSockets. Tuned VAD. Built-in spam filter.</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
-                        <div class="font-bold text-brand mb-1">Dashboard plane</div>
-                        <p class="text-slate-600 dark:text-slate-400">JWT REST. Tenant-scoped queries. Stripe-driven plan limits.</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 p-4">
-                        <div class="font-bold text-brand mb-1">Async plane</div>
-                        <p class="text-slate-600 dark:text-slate-400">Cloud Tasks for enrichment. Scheduler for digests. Idempotent.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+                    <div class="grid gap-6 lg:grid-cols-2">
+                        <!-- Control plane -->
+                        <div class="rounded-3xl border border-slate-700 bg-slate-800 p-6 md:p-8">
+                            <div class="font-mono text-xs font-semibold uppercase tracking-wider text-brand-light">02 · Control plane</div>
+                            <h3 class="mt-2 text-2xl font-bold">Operate a multi-tenant product.</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-slate-400">
+                                A Blazor Server BFF keeps browser credentials and backend access separated. Relay.Web
+                                talks to Relay.API; Relay.API owns tenant-scoped data, billing, configuration, teams,
+                                phone lifecycle, integrations, and signed recording access.
+                            </p>
+                            <div class="mt-6 grid grid-cols-3 gap-2 font-mono text-xs text-slate-300">
+                                <div class="rounded-lg bg-slate-900 p-3">Browser</div>
+                                <div class="rounded-lg border border-brand/30 bg-brand/10 p-3 text-brand-light">Relay.Web</div>
+                                <div class="rounded-lg bg-slate-900 p-3">Relay.API</div>
+                            </div>
+                            <p class="mt-3 font-mono text-xs text-slate-500">cookie auth → BFF → JWT REST → Firestore / Stripe</p>
+                        </div>
 
-        <!-- Tech stack -->
-        <section id="stack" class="py-24 bg-slate-50 dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-14">
-                    <span class="inline-block px-3 py-1 rounded-full bg-brand/10 text-brand text-xs font-bold uppercase tracking-wider mb-4">Tech stack</span>
-                    <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">What it's built with.</h2>
-                </div>
+                        <!-- Async plane -->
+                        <div class="rounded-3xl border border-slate-700 bg-slate-800 p-6 md:p-8">
+                            <div class="font-mono text-xs font-semibold uppercase tracking-wider text-brand-light">03 · Async and data plane</div>
+                            <h3 class="mt-2 text-2xl font-bold">Move expensive work off the hot path.</h3>
+                            <p class="mt-4 text-sm leading-relaxed text-slate-400">
+                                Cloud Tasks runs post-call enrichment, webhook delivery, and knowledge indexing with
+                                OIDC-authenticated targets. Cloud Scheduler drives cleanup, reconciliation, retries,
+                                retention, and refresh. Firestore, Cloud Storage, and BigQuery hold operational and analytical state.
+                            </p>
+                            <div class="mt-6 grid grid-cols-3 gap-2 font-mono text-xs text-slate-300">
+                                <div class="rounded-lg bg-slate-900 p-3">Cloud Tasks</div>
+                                <div class="rounded-lg border border-brand/30 bg-brand/10 p-3 text-brand-light">Workers</div>
+                                <div class="rounded-lg bg-slate-900 p-3">Durable state</div>
+                            </div>
+                            <p class="mt-3 font-mono text-xs text-slate-500">deterministic jobs → idempotent work → observable completion</p>
+                        </div>
+                    </div>
 
-                <div class="max-w-5xl mx-auto grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 text-sm">
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">.NET 10</div>
-                        <p class="text-xs text-slate-500">ASP.NET Core, Blazor Server</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Vertex AI Gemini</div>
-                        <p class="text-xs text-slate-500">Live Audio + Text + Search grounding</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Semantic Kernel</div>
-                        <p class="text-xs text-slate-500">Plugins, tool calling</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Twilio</div>
-                        <p class="text-xs text-slate-500">Media Streams, TwiML, Voice</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">GCP Cloud Run</div>
-                        <p class="text-xs text-slate-500">4 services, autoscaling</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Firestore</div>
-                        <p class="text-xs text-slate-500">Multi-tenant document store</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Cloud Tasks + Scheduler</div>
-                        <p class="text-xs text-slate-500">Async + cron, OIDC-gated</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Cloud KMS</div>
-                        <p class="text-xs text-slate-500">OAuth token envelope encryption</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Pulumi (C#)</div>
-                        <p class="text-xs text-slate-500">All infra as code</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">OpenTelemetry</div>
-                        <p class="text-xs text-slate-500">Custom Gemini metrics + traces</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Stripe</div>
-                        <p class="text-xs text-slate-500">Subscriptions + metered billing</p>
-                    </div>
-                    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                        <div class="font-bold mb-0.5">Identity Platform</div>
-                        <p class="text-xs text-slate-500">Firebase Auth + WebAuthn</p>
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-5">
+                            <div class="font-semibold text-brand-light">Identity</div>
+                            <p class="mt-2 text-sm text-slate-400">Google-signed OIDC between services. No shared internal API key.</p>
+                        </div>
+                        <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-5">
+                            <div class="font-semibold text-brand-light">Persistence</div>
+                            <p class="mt-2 text-sm text-slate-400">Tenant-scoped Firestore, protected object storage, atomic markers.</p>
+                        </div>
+                        <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-5">
+                            <div class="font-semibold text-brand-light">Infrastructure</div>
+                            <p class="mt-2 text-sm text-slate-400">Cloud Run, IAM, queues, schedulers, indexes, KMS, and Stripe catalog in Pulumi C#.</p>
+                        </div>
+                        <div class="rounded-xl border border-slate-700 bg-slate-950/60 p-5">
+                            <div class="font-semibold text-brand-light">Operations</div>
+                            <p class="mt-2 text-sm text-slate-400">Structured logs, distributed traces, custom metrics, cost analytics.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Dual CTA -->
-        <section class="py-24 bg-slate-900 text-white">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto grid gap-6 md:grid-cols-2">
-                    <div class="rounded-2xl border border-brand/40 bg-gradient-to-br from-brand/20 to-brand/5 p-8">
-                        <div class="text-xs font-bold uppercase tracking-wider text-brand mb-3">For potential customers</div>
-                        <h3 class="text-2xl font-bold mb-3">Try Relay live.</h3>
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            Sign up free, pick a language, and Relay will phone you within seconds for a ten-minute
-                            live demo of the receptionist on your line.
+        <!-- Engineering -->
+        <section id="engineering" class="scroll-mt-20 py-24">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="mx-auto mb-14 max-w-3xl">
+                    <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand">Engineering depth</p>
+                    <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">The hard parts are the product.</h2>
+                    <p class="mt-5 text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                        A convincing demo can ignore failure, tenancy, security, and operations. Relay cannot. These
+                        are the systems that turn a model capability into dependable software.
+                    </p>
+                </div>
+
+                <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
+                    <article class="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+                        <div class="font-mono text-xs font-semibold text-brand">REAL-TIME AUDIO</div>
+                        <h3 class="mt-3 text-2xl font-bold">A purpose-built bidirectional media bridge.</h3>
+                        <p class="mt-4 leading-relaxed text-slate-600 dark:text-slate-400">
+                            Twilio streams G.711 μ-law at 8 kHz; Gemini expects PCM16 at 16 kHz. Relay converts both
+                            directions in-process, moves frames through bounded <span class="font-mono text-sm text-brand">System.Threading.Channels</span>,
+                            tunes server-side voice activity detection, and measures latency from caller turn-end to first model audio.
                         </p>
-                        <a href="https://relayconnect.net/signup.html" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-brand-dark transition-all">
-                            Try the demo
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                        </a>
+                        <ul class="mt-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Separate send and receive loops prevent one direction from starving the other.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Abnormal provider closes use bounded reconnects and Gemini session resumption.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Terminal failures become persisted state and a localized caller response—not dead air.</span></li>
+                        </ul>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+                        <div class="font-mono text-xs font-semibold text-brand">AI ORCHESTRATION</div>
+                        <h3 class="mt-3 text-2xl font-bold">Tools are granted by context, not exposed wholesale.</h3>
+                        <p class="mt-4 leading-relaxed text-slate-600 dark:text-slate-400">
+                            Semantic Kernel plugins are registered at call start according to mode, entitlement,
+                            configuration, and available data. Receptionist calls can book or cancel appointments,
+                            search approved tenant knowledge, and redirect callers. Trusted-owner calls can query message history
+                            or use Google Search grounding.
+                        </p>
+                        <ul class="mt-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Tool boundaries prevent capabilities from leaking between receptionist and assistant modes.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Calendar operations re-check availability server-side and interpret time in the tenant’s timezone.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Per-line overrides resolve against tenant defaults before the call snapshot is committed.</span></li>
+                        </ul>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+                        <div class="font-mono text-xs font-semibold text-brand">MULTI-TENANT SAAS</div>
+                        <h3 class="mt-3 text-2xl font-bold">Product boundaries stay explicit.</h3>
+                        <p class="mt-4 leading-relaxed text-slate-600 dark:text-slate-400">
+                            The browser-facing dashboard is a BFF, the REST API owns product state, and the voice service
+                            alone owns telephony and email provider SDKs. Tenant identity comes from signed claims and scopes every data access.
+                            Stripe plan entitlements are centralized and repaired by an idempotent daily reconciler.
+                        </p>
+                        <ul class="mt-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Google OAuth, Firebase email/password, and WebAuthn passkeys converge on one JWT model.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Phone numbers can be provisioned, held, resumed, or released through a reversible lifecycle.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Team roles, API keys, webhooks, Zapier, billing, and retention are first-class product surfaces.</span></li>
+                        </ul>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+                        <div class="font-mono text-xs font-semibold text-brand">PLATFORM ENGINEERING</div>
+                        <h3 class="mt-3 text-2xl font-bold">The deployment is part of the codebase.</h3>
+                        <p class="mt-4 leading-relaxed text-slate-600 dark:text-slate-400">
+                            Pulumi C# provisions the Cloud Run services and sidecars, IAM relationships, queues,
+                            schedulers, storage, KMS keys, secrets, databases, indexes, alerts, domains, and Stripe
+                            product catalog. Environments are repeatable because infrastructure decisions are reviewed like application code.
+                        </p>
+                        <ul class="mt-5 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Workload-specific service accounts use narrow, resource-scoped permissions.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>OIDC tokens are minted at dispatch time for task and scheduler targets.</span></li>
+                            <li class="flex gap-3"><span class="text-brand">→</span><span>Cloud KMS envelope-encrypts Google Calendar refresh tokens before persistence.</span></li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Knowledge Assistant -->
+        <section class="border-y border-slate-200 bg-white py-24 dark:border-slate-800 dark:bg-slate-900">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+                    <div>
+                        <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand">Production RAG</p>
+                        <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Knowledge that can change without breaking the call.</h2>
+                        <p class="mt-5 text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                            Relay’s Knowledge Assistant ingests approved PDFs, DOCX files, and public websites, then
+                            lets the receptionist retrieve grounded answers during a live call. The interesting work is not embedding text.
+                            It is preserving a trustworthy active corpus while ingestion, refresh, deletion, downgrade, and failure happen around it.
+                        </p>
+                        <div class="mt-7 rounded-2xl border border-brand/30 bg-brand/5 p-5">
+                            <p class="font-mono text-xs font-semibold text-brand">DESIGN INVARIANT</p>
+                            <p class="mt-2 font-semibold leading-relaxed">
+                                A failed refresh never replaces the last known-good generation.
+                            </p>
+                        </div>
                     </div>
-                    <div class="rounded-2xl border border-slate-700 bg-slate-800 p-8">
-                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">For potential clients</div>
-                        <h3 class="text-2xl font-bold mb-3">Need something like this?</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            Sandy Brook DevWorks builds AI-integrated systems end-to-end — from real-time audio
-                            pipelines to multi-tenant SaaS to cloud infrastructure. Relay is one of them.
+
+                    <ol class="space-y-4">
+                        <li class="grid grid-cols-[3rem_1fr] gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-950">
+                            <div class="font-mono text-xl font-semibold text-brand">01</div>
+                            <div>
+                                <h3 class="font-bold">Acquire and constrain</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                                    Native-text PDF and DOCX extraction, plus an SSRF-safe website crawler with DNS/IP validation and a 50-page ceiling.
+                                    Originals and normalized artifacts are retained in protected Cloud Storage.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="grid grid-cols-[3rem_1fr] gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-950">
+                            <div class="font-mono text-xl font-semibold text-brand">02</div>
+                            <div>
+                                <h3 class="font-bold">Prepare before publishing</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                                    Deterministic Cloud Tasks split normalization and embedding into durable phases. Pending artifacts, hashes,
+                                    vectors, and sensitive-data acknowledgement remain separate from the active generation.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="grid grid-cols-[3rem_1fr] gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-950">
+                            <div class="font-mono text-xl font-semibold text-brand">03</div>
+                            <div>
+                                <h3 class="font-bold">Commit one authoritative generation</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                                    Chunks use 768-dimension Vertex embeddings. Only after every dependent record is durable do
+                                    <span class="font-mono text-xs text-brand">activeGeneration</span>, content hash, and chunk count move together.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="grid grid-cols-[3rem_1fr] gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-950">
+                            <div class="font-mono text-xl font-semibold text-brand">04</div>
+                            <div>
+                                <h3 class="font-bold">Retrieve within hard boundaries</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                                    Vector search is isolated by tenant, selected knowledge set, entitlement, and active source generation.
+                                    It returns at most five passages, enforces a similarity threshold, and fails open after two seconds so the conversation continues.
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reliability -->
+        <section id="reliability" class="scroll-mt-20 py-24">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="mx-auto mb-14 max-w-3xl">
+                    <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand">Reliability engineering</p>
+                    <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Failure is part of the architecture.</h2>
+                    <p class="mt-5 text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                        The system assumes webhooks repeat, providers fail, workers stop halfway through, configuration
+                        drifts, and external calls time out. Recovery behavior is designed before the happy path is considered complete.
+                    </p>
+                </div>
+
+                <div class="mx-auto max-w-6xl overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+                    <div class="hidden grid-cols-[0.85fr_1.35fr_0.8fr] gap-6 border-b border-slate-200 bg-slate-100 px-6 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-950 md:grid">
+                        <div>Failure mode</div>
+                        <div>Designed response</div>
+                        <div>Durable signal</div>
+                    </div>
+                    <div class="grid gap-3 border-b border-slate-200 p-6 dark:border-slate-800 md:grid-cols-[0.85fr_1.35fr_0.8fr] md:gap-6">
+                        <div class="font-semibold">Duplicate Twilio webhook</div>
+                        <div class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">Overwrite-safe message write and deterministic Cloud Task name keyed by call SID.</div>
+                        <div class="font-mono text-xs text-brand">ALREADY_EXISTS = success</div>
+                    </div>
+                    <div class="grid gap-3 border-b border-slate-200 p-6 dark:border-slate-800 md:grid-cols-[0.85fr_1.35fr_0.8fr] md:gap-6">
+                        <div class="font-semibold">Partial enrichment failure</div>
+                        <div class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">Retries resume from persisted completion and email markers instead of repeating costly model work.</div>
+                        <div class="font-mono text-xs text-brand">enrichmentStatus<br>emailSentAt</div>
+                    </div>
+                    <div class="grid gap-3 border-b border-slate-200 p-6 dark:border-slate-800 md:grid-cols-[0.85fr_1.35fr_0.8fr] md:gap-6">
+                        <div class="font-semibold">Retry budget exhausted</div>
+                        <div class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">The final worker attempt records a DLQ document; a scheduled sweep retries outside the original task lifecycle.</div>
+                        <div class="font-mono text-xs text-brand">dlqEnrichmentTasks</div>
+                    </div>
+                    <div class="grid gap-3 border-b border-slate-200 p-6 dark:border-slate-800 md:grid-cols-[0.85fr_1.35fr_0.8fr] md:gap-6">
+                        <div class="font-semibold">Gemini session interruption</div>
+                        <div class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">Bounded reconnect with the latest resumption handle; terminal failure ends the call cleanly with localized audio.</div>
+                        <div class="font-mono text-xs text-brand">reconnects<br>terminal_failures</div>
+                    </div>
+                    <div class="grid gap-3 border-b border-slate-200 p-6 dark:border-slate-800 md:grid-cols-[0.85fr_1.35fr_0.8fr] md:gap-6">
+                        <div class="font-semibold">Knowledge refresh fails</div>
+                        <div class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">Pending state remains pending; retrieval continues serving the previous active generation.</div>
+                        <div class="font-mono text-xs text-brand">active ≠ pending</div>
+                    </div>
+                    <div class="grid gap-3 p-6 md:grid-cols-[0.85fr_1.35fr_0.8fr] md:gap-6">
+                        <div class="font-semibold">Plan state drifts</div>
+                        <div class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">A daily idempotent reconciliation job repairs entitlement mirrors and reversibly suspends out-of-plan integrations.</div>
+                        <div class="font-mono text-xs text-brand">catalog → reconcile</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security and observability -->
+        <section class="border-y border-slate-200 bg-slate-900 py-24 text-white dark:border-slate-800">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="mx-auto grid max-w-6xl gap-14 lg:grid-cols-2">
+                    <div>
+                        <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand-light">Security architecture</p>
+                        <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Trust is narrow and explicit.</h2>
+                        <div class="mt-8 space-y-5">
+                            <div class="border-l-2 border-brand pl-5">
+                                <h3 class="font-bold">Browser boundary</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-400">Secure cookies terminate at the Blazor BFF. Firebase credentials never reach Relay servers; passkeys use short-lived WebAuthn challenges.</p>
+                            </div>
+                            <div class="border-l-2 border-brand pl-5">
+                                <h3 class="font-bold">Service boundary</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-400">Google-signed OIDC tokens are audience-pinned and service accounts are allow-listed. Shared internal API keys were removed.</p>
+                            </div>
+                            <div class="border-l-2 border-brand pl-5">
+                                <h3 class="font-bold">Telephony boundary</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-400">Twilio HTTP signatures are validated; WebSockets require a five-minute pending-call record; demo URLs carry signed expiring tokens.</p>
+                            </div>
+                            <div class="border-l-2 border-brand pl-5">
+                                <h3 class="font-bold">Data boundary</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-400">Every API request resolves tenant identity from signed claims. OAuth refresh tokens are KMS-encrypted and retrieval never crosses tenant or generation boundaries.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand-light">Observability</p>
+                        <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">The AI session is not a black box.</h2>
+                        <p class="mt-5 leading-relaxed text-slate-400">
+                            Each deployed .NET service emits structured JSON logs, distributed traces, and metrics through an
+                            OpenTelemetry Collector sidecar to Cloud Trace and Cloud Monitoring. The voice bridge adds
+                            domain telemetry at the exact points generic HTTP instrumentation cannot see.
                         </p>
-                        <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full border border-slate-600 px-6 py-3 text-sm font-semibold text-slate-200 hover:border-brand hover:text-brand transition-colors">
+                        <div class="mt-8 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950">
+                            <div class="border-b border-slate-800 px-5 py-3 font-mono text-xs text-slate-500">twilio-api.gemini</div>
+                            <div class="grid gap-px bg-slate-800 sm:grid-cols-2">
+                                <div class="bg-slate-950 p-5">
+                                    <code class="font-mono text-sm text-brand-light">gemini.turn.latency</code>
+                                    <p class="mt-2 text-xs text-slate-500">VAD end → first model audio</p>
+                                </div>
+                                <div class="bg-slate-950 p-5">
+                                    <code class="font-mono text-sm text-brand-light">gemini.session.duration</code>
+                                    <p class="mt-2 text-xs text-slate-500">Full session wall time</p>
+                                </div>
+                                <div class="bg-slate-950 p-5">
+                                    <code class="font-mono text-sm text-brand-light">gemini.interruptions</code>
+                                    <p class="mt-2 text-xs text-slate-500">Caller interruption behavior</p>
+                                </div>
+                                <div class="bg-slate-950 p-5">
+                                    <code class="font-mono text-sm text-brand-light">gemini.reconnects</code>
+                                    <p class="mt-2 text-xs text-slate-500">Recovered provider sessions</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-5 text-sm leading-relaxed text-slate-400">
+                            Versioned per-call cost breakdowns are written atomically with enrichment completion, then
+                            streamed to BigQuery for COGS analysis. A local-only founder operations dashboard reads
+                            Logging, Monitoring, Firestore, BigQuery, and Stripe without introducing another public service.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What the system enables -->
+        <section class="py-24">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="mx-auto max-w-6xl rounded-3xl border border-slate-200 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-10">
+                    <div class="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
+                        <div>
+                            <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand">What ships on top</p>
+                            <h2 class="mt-4 text-3xl font-bold tracking-tight">Engineering becomes product capability.</h2>
+                            <p class="mt-4 leading-relaxed text-slate-600 dark:text-slate-400">
+                                The architecture is not ornamental. It supports the customer-facing behavior while keeping each capability
+                                isolated, configurable, billable, and observable.
+                            </p>
+                        </div>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <div class="rounded-xl bg-slate-50 p-4 dark:bg-slate-950"><span class="font-semibold">29-language voice behavior</span><p class="mt-1 text-sm text-slate-500">Silent in-call language mirroring</p></div>
+                            <div class="rounded-xl bg-slate-50 p-4 dark:bg-slate-950"><span class="font-semibold">Live appointment operations</span><p class="mt-1 text-sm text-slate-500">Availability, booking, lookup, cancellation</p></div>
+                            <div class="rounded-xl bg-slate-50 p-4 dark:bg-slate-950"><span class="font-semibold">Knowledge-grounded answers</span><p class="mt-1 text-sm text-slate-500">Approved documents and websites</p></div>
+                            <div class="rounded-xl bg-slate-50 p-4 dark:bg-slate-950"><span class="font-semibold">Live call transfer</span><p class="mt-1 text-sm text-slate-500">Private whisper and outcome tracking</p></div>
+                            <div class="rounded-xl bg-slate-50 p-4 dark:bg-slate-950"><span class="font-semibold">Per-line configuration</span><p class="mt-1 text-sm text-slate-500">Overrides with explicit inheritance</p></div>
+                            <div class="rounded-xl bg-slate-50 p-4 dark:bg-slate-950"><span class="font-semibold">Integration surfaces</span><p class="mt-1 text-sm text-slate-500">API keys, webhooks, and Zapier</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stack -->
+        <section id="stack" class="scroll-mt-20 border-y border-slate-200 bg-slate-50 py-24 dark:border-slate-800 dark:bg-slate-950">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="mx-auto mb-12 max-w-3xl">
+                    <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand">System inventory</p>
+                    <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">The stack, by responsibility.</h2>
+                </div>
+
+                <div class="mx-auto grid max-w-6xl gap-5 md:grid-cols-2 lg:grid-cols-4">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+                        <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-brand">Application</h3>
+                        <ul class="mt-5 space-y-3 text-sm">
+                            <li><strong>.NET 10</strong><span class="block text-slate-500">ASP.NET Core</span></li>
+                            <li><strong>Blazor Server</strong><span class="block text-slate-500">Dashboard BFF</span></li>
+                            <li><strong>Semantic Kernel</strong><span class="block text-slate-500">Tool orchestration</span></li>
+                        </ul>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+                        <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-brand">AI + voice</h3>
+                        <ul class="mt-5 space-y-3 text-sm">
+                            <li><strong>Vertex AI</strong><span class="block text-slate-500">Gemini Live, text, embeddings</span></li>
+                            <li><strong>Twilio Voice</strong><span class="block text-slate-500">Media Streams + TwiML</span></li>
+                            <li><strong>Firestore vectors</strong><span class="block text-slate-500">Tenant-scoped retrieval</span></li>
+                        </ul>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+                        <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-brand">Cloud platform</h3>
+                        <ul class="mt-5 space-y-3 text-sm">
+                            <li><strong>GCP Cloud Run</strong><span class="block text-slate-500">Containerized services</span></li>
+                            <li><strong>Tasks + Scheduler</strong><span class="block text-slate-500">Durable work and maintenance</span></li>
+                            <li><strong>Storage + KMS</strong><span class="block text-slate-500">Protected artifacts and tokens</span></li>
+                        </ul>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+                        <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-brand">Operations</h3>
+                        <ul class="mt-5 space-y-3 text-sm">
+                            <li><strong>Pulumi C#</strong><span class="block text-slate-500">Infrastructure as code</span></li>
+                            <li><strong>OpenTelemetry</strong><span class="block text-slate-500">Logs, traces, metrics</span></li>
+                            <li><strong>Stripe + BigQuery</strong><span class="block text-slate-500">Billing and unit economics</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="bg-slate-900 py-24 text-white">
+            <div class="container mx-auto px-4 text-center md:px-6">
+                <div class="mx-auto max-w-4xl">
+                    <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand-light">The point of the project</p>
+                    <h2 class="mt-5 text-3xl font-bold tracking-tight sm:text-5xl">
+                        The model is one component.<br>The system is the work.
+                    </h2>
+                    <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-400">
+                        Relay demonstrates how Sandy Brook DevWorks approaches ambitious software: understand the
+                        constraints, draw clear boundaries, design for failure, instrument the unknowns, and ship the whole thing.
+                    </p>
+                    <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+                        <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full bg-brand px-7 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-brand-dark">
                             Talk to Sandy Brook
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </a>
+                        <a href="https://relayconnect.net/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full border border-slate-600 px-7 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-brand hover:text-brand-light">
+                            Visit Relay
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                         </a>
                     </div>
                 </div>
@@ -496,28 +706,23 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-200 dark:border-slate-800 py-12 mt-auto">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                <a href="../../" class="flex items-center gap-3 font-bold text-xl group transition-transform hover:scale-105" aria-label="Sandy Brook Projects Lab Home">
+    <footer class="border-t border-slate-200 py-12 dark:border-slate-800">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col items-center justify-between gap-8 md:flex-row">
+                <a href="../../" class="flex items-center gap-3 text-xl font-bold transition-transform hover:scale-105" aria-label="Sandy Brook Projects Lab Home">
                     <img src="../../images/blue_logo.jpg" alt="Sandy Brook DevWorks Logo" class="h-8 w-8 rounded-full dark:hidden">
                     <img src="../../images/dark_logo.jpg" alt="Sandy Brook DevWorks Logo" class="hidden h-8 w-8 rounded-full dark:block">
-                    <div>
-                        <span class="text-brand">Sandy Brook</span> Projects Lab
-                    </div>
+                    <div><span class="text-brand">Sandy Brook</span> Projects Lab</div>
                 </a>
-                <div class="flex flex-wrap justify-center gap-6 md:gap-8 text-sm text-slate-500">
-                    <a href="../../" class="hover:text-brand transition-colors">All Projects</a>
-                    <a href="https://relayconnect.net/" target="_blank" rel="noopener" class="hover:text-brand transition-colors">Visit Relay</a>
-                    <a href="https://sandybrookdevworks.com#services" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Services</a>
-                    <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="hover:text-brand transition-colors">Contact</a>
+                <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-500 md:gap-8">
+                    <a href="../../" class="transition-colors hover:text-brand">All Projects</a>
+                    <a href="https://relayconnect.net/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-brand">Live Product</a>
+                    <a href="https://sandybrookdevworks.com#services" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-brand">Services</a>
+                    <a href="https://sandybrookdevworks.com/contact.html" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-brand">Contact</a>
                 </div>
-                <div class="text-sm text-slate-500">
-                    &copy; 2026 Sandy Brook DevWorks LLC. All rights reserved.
-                </div>
+                <div class="text-sm text-slate-500">&copy; 2026 Sandy Brook DevWorks LLC.</div>
             </div>
         </div>
     </footer>
-
 </body>
 </html>
