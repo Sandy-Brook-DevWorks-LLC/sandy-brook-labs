@@ -12,8 +12,7 @@ Static landing site for the KnowItOwl! iOS/watchOS voice Q&A app. Lives as a sub
 
 ## Related Repos
 
-- **iOS/watchOS app:** `cloudreyes/gnosisai-iosapp` — local path: `~/Repos/gnosisai-iosapp`
-- **Backend:** `cloudreyes/gnosisai-backend` — local path: `~/Repos/gnosisai-backend`
+- **Unified app and backend:** `Sandy-Brook-DevWorks-LLC/know-it-owl` — local path: `~/Repos/know-it-owl`
 
 ## Tech Stack
 
@@ -64,31 +63,33 @@ apps/knowitowl/
 - **Welcome credits:** 20 credits for new users (one-time)
 - **Monthly free credits:** 5 credits per month
 - **Credit packs (consumable, never expire):**
-  - Standard: 50 credits / $2.99
-  - Popular: 100 credits / $4.99
-  - Power: 200 credits / $7.99
+  - Standard: 30 credits
+  - Popular: 60 credits
+  - Power: 120 credits
+- Localized App Store prices shown in the app are authoritative.
 
 ### Privacy Commitments (reflected in privacy.html)
 
-- **No PII collected** — only Apple's opaque user identifier; no name, email, phone, or location
+- **No sign-in screen and no name/email account** — the backend derives an opaque identifier from Apple's signed, app-scoped App Transaction
 - User data is **never** sold, rented, or shared with data brokers or aggregators
 - User data is **never** used for AI model training
 - **Client-side encrypted storage** — saved conversation history and audio use AES-256-GCM via Apple CryptoKit; Firestore/Storage only store ciphertext
-- **User-scoped encryption keys** — stored in iCloud Keychain, never leave user's devices
+- **User-scoped encryption keys** — stored in synchronizable Keychain for cross-device history
 - Data stored in Firebase (Firestore + Storage) in `nam5` (multi-region US, 99.999% SLA)
-- Authentication via Sign in with Apple with cryptographic nonce (Firebase Auth)
-- Apple ID credential revocation detection (auto-sign out)
-- Credit operations via tamper-proof Cloud Functions (server-side validation)
-- Users can delete their conversation data (messages + audio) directly within the app
-- Firebase Crashlytics for crash/error reporting only (no PII, no conversation content)
+- The backend validates Apple's App Transaction and mints a Firebase custom-token session
+- Credit operations use the authenticated Cloud Run API and server-side validation
+- Users can withdraw AI-processing consent, which stops new iPhone and Watch questions until consent is restored
+- Delete Personal Data erases conversations, stored audio, profile data, encryption key, consent, and the active Firebase Auth user/session
+- Credit balance, credit ledger, and redeemed StoreKit transaction claims remain after deletion to preserve purchases and prevent duplicate grants
+- Native Apple crash reports plus privacy-filtered backend diagnostics replace third-party crash reporting
 - No behavioral analytics, no tracking, no ads
 
 ### Third-Party Services (disclosed in privacy policy)
 
 - **KnowItOwl! AI API** — authenticated bridge operated by Sandy Brook DevWorks for transcription, answer generation, and text-to-speech
-- **Google Vertex AI/Gemini and Google Cloud Text-to-Speech** — process voice/text queries and generate spoken responses through the KnowItOwl! AI API
-- **Firebase** — Auth, Firestore, Storage, App Check, Cloud Functions (credit management), Crashlytics (crash/error reporting)
-- **Apple** — Sign in with Apple, In-App Purchases, iCloud KV (settings only)
+- **Google Cloud Speech-to-Text, Vertex AI Gemini, Google Search grounding, and Cloud Text-to-Speech** — process voice/text questions and generate answers through the KnowItOwl! API
+- **Firebase** — Auth, Firestore, Storage, and App Check
+- **Apple** — app-scoped App Transaction identity, In-App Purchases, synchronizable Keychain, iCloud KV, and native crash reporting
 
 ## Conventions
 
@@ -121,5 +122,6 @@ Changes appear at `https://sandybrook.io/apps/knowitowl/` within minutes.
 
 ## Changelog
 
+- **2026-09-05:** Updated product, privacy, support, and repository documentation for KnowItOwl! 4.0: account-free App Transaction identity, consent withdrawal, personal-data deletion with commerce-record retention, current credit packs, Cloud Run processing, and native Apple crash reports.
 - **2026-07-03:** Updated `privacy.html` and `support.html` to reflect the current AI API architecture: device requests go through the authenticated KnowItOwl! AI API before Google Vertex AI/Gemini and Google Cloud Text-to-Speech, saved Firebase history/audio remains client-side encrypted, and context is limited to up to 3 recent messages.
 - **2026-03-18:** Updated `privacy.html` section 4 (Google Gemini / AI Processing) to explicitly enumerate data types sent to Google's servers (voice audio recordings, text messages, conversation history up to 10 messages), reference Google Cloud Data Processing Addendum for equivalent protection, and note that the app obtains explicit in-app consent before sending data — addressing App Store rejection Guidelines 5.1.1(i) & 5.1.2(i).

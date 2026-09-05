@@ -80,7 +80,7 @@
         <div class="max-w-4xl mx-auto px-6">
             <header class="mb-16">
                 <h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Privacy Policy</h1>
-                <p class="text-slate-600 dark:text-slate-400">Last Updated: March 13, 2026</p>
+                <p class="text-slate-600 dark:text-slate-400">Last Updated: September 5, 2026</p>
             </header>
 
             <div class="grid lg:grid-cols-4 gap-12">
@@ -115,7 +115,7 @@
                             KnowItOwl! ("we," "our," or "the App") is committed to protecting your privacy. This policy explains how we handle your information when you use our Apple Watch and iPhone application.
                         </p>
                         <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400 mt-4">
-                            <strong>Our core privacy principle:</strong> KnowItOwl! does not collect, store, or process personally identifiable information (PII) such as your name, email address, phone number, or location. Your questions and audio are sent over HTTPS to the KnowItOwl! AI API so we can generate answers, transcripts, and spoken responses. Conversation history and audio saved to your account are encrypted on your device before being stored in Firebase. We follow security best practices as recommended by Apple and Google.
+                            <strong>Our core privacy principle:</strong> KnowItOwl! does not ask you to create a profile and does not request your name, email address, phone number, or location. Your questions and audio are sent over HTTPS to the KnowItOwl! API so we can generate answers, transcripts, grounding, and spoken responses. Do not include information in a question that you do not want processed for that purpose. Conversation history and audio saved for cross-device sync are encrypted on your device before being stored in Firebase. We follow security best practices as recommended by Apple and Google.
                         </p>
                     </section>
 
@@ -125,8 +125,9 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">Account Information</h3>
                                 <ul class="list-disc pl-5 space-y-2">
-                                    <li>KnowItOwl! uses Sign in with Apple for authentication. We receive only your Apple-generated user identifier — <strong>we do not request or store your name, email address, or any other personally identifiable information (PII)</strong></li>
-                                    <li>Your Apple-generated user identifier is an opaque, anonymous token that cannot be used to identify you personally</li>
+                                    <li>KnowItOwl! does not have a sign-in screen and does not request or store your name, email address, phone number, or location</li>
+                                    <li>Apple provides a signed, app-scoped App Transaction. Our backend validates it and derives an opaque identifier used for authentication, cross-device sync, and credit accounting</li>
+                                    <li>The app-scoped identifier is not your Apple ID and cannot be used by us to identify you personally or track you across other apps</li>
                                 </ul>
                             </div>
                             <div>
@@ -134,8 +135,8 @@
                                 <ul class="list-disc pl-5 space-y-2">
                                     <li>When you speak to KnowItOwl!, your voice audio is sent to the KnowItOwl! AI API for transcription, answer generation, and text-to-speech audio generation</li>
                                     <li>Your typed questions, spoken questions, transcripts, and AI responses are processed only to provide the app experience</li>
-                                    <li>Your questions and the AI responses are stored in your personal account to maintain conversation history and enable cross-device sync</li>
-                                    <li>Audio recordings (your voice messages and AI-generated voice responses) are encrypted on your device before being stored in your personal account for playback</li>
+                                    <li>Your questions and the AI responses are stored under your app-scoped identifier to maintain conversation history and enable cross-device sync</li>
+                                    <li>Audio recordings (your voice messages and AI-generated voice responses) are encrypted on your device before being stored under that identifier for playback</li>
                                 </ul>
                             </div>
                             <div>
@@ -181,7 +182,7 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">KnowItOwl! AI API and Google AI Services</h3>
                                 <p>
-                                    KnowItOwl! sends your requests to the KnowItOwl! AI API operated by Sandy Brook DevWorks LLC. The API verifies legitimate, authenticated requests and uses Google Vertex AI/Gemini and Google Cloud Text-to-Speech to transcribe audio, generate answers, and generate spoken responses. The following data may be processed each time you ask a question:
+                                    KnowItOwl! sends your requests to an authenticated API operated by Sandy Brook DevWorks LLC. The API uses Google Cloud Speech-to-Text, Vertex AI Gemini, Google Search grounding when available, and Cloud Text-to-Speech to transcribe audio, generate concise answers, and generate spoken responses. The following data may be processed each time you ask a question:
                                 </p>
                                 <ul class="list-disc pl-5 space-y-2 mt-2">
                                     <li><strong>Voice audio recordings</strong> — the AAC audio captured when you speak a question (voice input only)</li>
@@ -192,7 +193,7 @@
                                     This data is transmitted over HTTPS and is used solely to generate a transcript, answer, and text-to-speech audio output for your request. <strong>Your data is not used to train AI models.</strong> Google's handling of this data is governed by the <a href="https://policies.google.com/privacy" class="text-sage hover:underline">Google Privacy Policy</a> and <a href="https://cloud.google.com/terms/data-processing-addendum" class="text-sage hover:underline">Google Cloud Data Processing Addendum</a>, which provide equivalent data protection to the terms under which Sandy Brook DevWorks LLC operates.
                                 </p>
                                 <p class="mt-2">
-                                    The app obtains your explicit consent before sending AI requests for processing, and you may withdraw consent at any time by signing out of the app.
+                                    The app obtains your explicit consent before sending AI requests. You may withdraw consent at any time from <strong>iPhone Settings &gt; Privacy &amp; Data</strong>. Withdrawing consent immediately stops new AI questions on both iPhone and the paired Apple Watch until you allow processing again; it does not delete existing history.
                                 </p>
                             </div>
                             <div>
@@ -201,12 +202,12 @@
                                     We use Google Firebase services to securely store and sync your data:
                                 </p>
                                 <ul class="list-disc pl-5 space-y-2 mt-2">
-                                    <li><strong>Firebase Auth</strong> — manages your Sign in with Apple identity (with cryptographic nonce for replay attack prevention)</li>
+                                    <li><strong>Firebase Auth</strong> — provides an authenticated session using a custom token minted after the backend validates Apple's signed App Transaction</li>
                                     <li><strong>Cloud Firestore</strong> — stores your encrypted conversation messages and credit balance</li>
                                     <li><strong>Firebase Storage</strong> — stores encrypted audio recordings for playback</li>
-                                    <li><strong>Cloud Functions</strong> — handles credit operations via tamper-proof server-side transactions</li>
+                                    <li><strong>Cloud Run API</strong> — handles AI interactions, identity validation, data deletion, and credit operations through server-side transactions</li>
                                     <li><strong>Firebase App Check</strong> — verifies that requests come from legitimate Apple devices (App Attest on iPhone, DeviceCheck on Apple Watch)</li>
-                                    <li><strong>Firebase Crashlytics</strong> — records non-fatal errors (app crashes, API failures) to help us fix bugs and improve reliability. Crash reports contain technical information only (error type, stack trace, device model, OS version) — no conversation content, audio, or personally identifiable information is included</li>
+                                    <li><strong>Privacy-filtered diagnostics</strong> — nonfatal operational events may be sent to our authenticated API without conversation text, audio, or personal identifiers; Apple may provide crash and diagnostic reports through TestFlight and App Store services according to your device settings</li>
                                 </ul>
                                 <p class="mt-2">
                                     All Firebase data is stored in Google Cloud infrastructure in a multi-region US deployment (nam5) for high availability (99.999% SLA). Your data is isolated under your authenticated user account and is not accessible to other users.
@@ -215,7 +216,7 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">Apple (Purchases and Settings)</h3>
                                 <p>
-                                    In-app purchases are processed entirely by Apple through the App Store. Voice preferences are synced between devices using Apple's iCloud Key-Value Store.
+                                    In-app purchases are processed entirely by Apple through the App Store. Apple also supplies the signed, app-scoped App Transaction used to create your session without a login screen. Voice preferences are synced between devices using Apple's iCloud Key-Value Store.
                                 </p>
                             </div>
                             <p class="mt-2">
@@ -238,7 +239,7 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">Where Your Data Lives</h3>
                                 <ul class="list-disc pl-5 space-y-2">
-                                    <li>Your conversation messages, credit balance, and audio recordings are stored in Google Firebase (Cloud Firestore and Firebase Storage) under your authenticated user account</li>
+                                    <li>Your conversation messages, credit balance, ledger records, and audio recordings are stored in Google Firebase (Cloud Firestore and Firebase Storage) under your app-scoped identifier</li>
                                     <li>Data is stored in Google Cloud infrastructure in a multi-region US deployment for high availability and durability</li>
                                     <li>Your data is isolated to your account and is not accessible to other users or to Sandy Brook DevWorks staff in the normal course of operations</li>
                                     <li>Voice preferences are synced via Apple's iCloud Key-Value Store</li>
@@ -247,7 +248,9 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">Data Control</h3>
                                 <ul class="list-disc pl-5 space-y-2">
-                                    <li>You can delete individual messages or all conversation history at any time within the app</li>
+                                    <li>You can delete individual messages or choose <strong>Delete Personal Data</strong> in iPhone Settings to erase conversations, stored audio, the profile record, the local encryption key, consent, and the current Firebase Auth user and session</li>
+                                    <li>Credit balances, credit-ledger records, and redeemed StoreKit transaction claims are retained after personal-data deletion. These non-personal commerce records preserve purchased credits and prevent welcome credits or consumable purchases from being granted more than once after deletion or reinstallation</li>
+                                    <li>Because Apple supplies the same app-scoped identity again, the app can automatically create a new session after deletion or reinstallation without asking you to sign in</li>
                                     <li>Uninstalling the app removes local data from your devices</li>
                                 </ul>
                             </div>
@@ -266,8 +269,8 @@
                             <li>We do NOT sell, rent, license, or share your personal information with third parties for marketing, advertising, profiling, or AI training purposes</li>
                             <li>We do NOT provide your data to data brokers or aggregators under any circumstances</li>
                             <li>We do NOT use advertising or tracking technologies</li>
-                            <li>Data is shared only with Google Firebase/Gemini as necessary to operate the app (data storage, AI response generation, crash reporting)</li>
-                            <li>Firebase Crashlytics receives technical error data only (no conversations, audio, or PII) to help us improve app reliability</li>
+                            <li>Data is processed by Google Cloud and Firebase only as necessary to operate the app, including storage, transcription, answer generation, search grounding, and speech synthesis</li>
+                            <li>Privacy-filtered nonfatal diagnostics may be sent to our authenticated API, and Apple may provide native crash reports through TestFlight and App Store services; conversation text and audio are excluded from our diagnostic events</li>
                             <li>We receive only aggregate, non-identifying statistics from Apple App Store Connect (download counts, basic usage metrics)</li>
                         </ul>
                     </section>
@@ -277,7 +280,8 @@
                         <ul class="list-disc pl-5 space-y-2 text-slate-600 dark:text-slate-400">
                             <li>We do NOT use third-party analytics or tracking tools for user behavior or usage patterns</li>
                             <li>We do NOT track your behavior or usage patterns</li>
-                            <li>We use <strong>Firebase Crashlytics</strong> solely for crash reporting and error tracking to improve app stability. Crash reports contain only technical diagnostic data (error type, stack trace, device model, OS version) and your anonymous Firebase user ID. No conversation content, audio recordings, or personally identifiable information is ever included in crash reports</li>
+                            <li>We use Apple's native crash-reporting pipeline through TestFlight, the App Store, and Xcode Organizer. Availability of those reports follows your Apple device analytics settings</li>
+                            <li>Nonfatal operational events may be sent to our authenticated API with privacy filtering. They do not include conversation content or audio</li>
                             <li>Basic app statistics (downloads, active devices) are provided by Apple and do not identify individual users</li>
                             <li>No cookies or tracking pixels are used</li>
                         </ul>
@@ -295,8 +299,9 @@
                         <div class="space-y-2 text-slate-600 dark:text-slate-400">
                             <p>You have the right to:</p>
                             <ul class="list-disc pl-5 space-y-2">
-                                <li>Delete individual messages or all conversation history within the app</li>
-                                <li>Sign out at any time from the iPhone app Settings</li>
+                                <li>Delete individual messages or use Delete Personal Data to erase conversations, stored audio, profile data, the local encryption key, consent, and your current authentication session</li>
+                                <li>Withdraw AI-processing consent at any time from iPhone Settings, stopping new AI requests on iPhone and Apple Watch until you consent again</li>
+                                <li>Retain purchased credits after personal-data deletion; limited commerce records remain to preserve the balance and prevent duplicate grants</li>
                                 <li>Stop using the app at any time</li>
                                 <li>Contact us with privacy questions or concerns</li>
                             </ul>
@@ -309,22 +314,21 @@
                             <p>We follow security best practices as recommended by Apple and Google, implementing defense in depth across every layer of the app:</p>
                             <ul class="list-disc pl-5 space-y-2">
                                 <li>All data is transmitted over HTTPS/TLS encrypted connections</li>
-                                <li><strong>Client-side encryption for saved history</strong> — conversation text and audio files saved to your account are encrypted on your device using AES-256-GCM (via Apple CryptoKit) before being stored in Firebase. Firestore and Firebase Storage only ever store ciphertext. Your encryption key is stored in iCloud Keychain and never leaves your devices</li>
-                                <li><strong>No PII stored server-side</strong> — we do not collect, store, or process personally identifiable information. Your account is identified only by an opaque Apple-generated token</li>
-                                <li><strong>Sign in with Apple with cryptographic nonce</strong> — prevents token replay attacks, following Apple's recommended authentication practices</li>
-                                <li><strong>Apple ID credential revocation</strong> — the app automatically detects and responds if you revoke KnowItOwl! access in your Apple ID settings, immediately signing you out</li>
+                                <li><strong>Client-side encryption for saved history</strong> — conversation text and audio files saved to your account are encrypted on your device using AES-256-GCM (via Apple CryptoKit) before being stored in Firebase. Firestore and Firebase Storage only store ciphertext. Your encryption key is stored in synchronizable Keychain for use by your Apple devices</li>
+                                <li><strong>No name or email account</strong> — we do not request or store your name, email, phone number, or location. The service uses an opaque identifier derived from Apple's signed, app-scoped App Transaction</li>
+                                <li><strong>Signed App Transaction validation</strong> — the backend validates Apple's signature, application identity, environment, and device binding before minting a Firebase session</li>
                                 <li><strong>Firebase App Check</strong> — verifies that every request originates from a legitimate Apple device using hardware attestation (App Attest on iPhone, DeviceCheck on Apple Watch), preventing unauthorized API access</li>
                                 <li><strong>Firebase Auth</strong> — ensures that only you can access your data through authenticated sessions</li>
-                                <li><strong>Firestore security rules</strong> — enforce that users can only read and write their own data. Credit operations are server-side only (read-only for clients) via Cloud Functions with tamper-proof validation</li>
+                                <li><strong>Firestore security rules</strong> — enforce that users can only read and write their own data. Credit operations are server-side only and use tamper-resistant validation</li>
                                 <li><strong>Firebase Storage security rules</strong> — restrict audio file access to the owning user, with a 5MB file size limit and content type validation</li>
                                 <li><strong>User-scoped encryption keys</strong> — encryption keys are scoped to your user account, preventing cross-user key sharing on shared devices</li>
                                 <li><strong>Structured logging with privacy annotations</strong> — all diagnostic logs use Apple's os.Logger framework with <code>privacy: .private</code> annotations, ensuring sensitive data (balances, transaction IDs) is redacted in release builds</li>
-                                <li>No API keys are stored on or distributed to client devices — Firebase manages all service authentication server-side</li>
+                                <li>No AI-provider API keys are stored on or distributed to client devices; AI requests pass through the authenticated Sandy Brook DevWorks API</li>
                             </ul>
                             <div class="p-6 rounded-2xl bg-sage-50 dark:bg-sage-900/10 border border-sage-100 dark:border-sage-800">
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-2">Encrypted Storage</h3>
                                 <p>
-                                    Conversation messages and audio files saved to your account are encrypted on your device using <strong>AES-256-GCM</strong> (via Apple CryptoKit) before being stored in Firebase. This means that even if Firebase data were accessed, it would be unreadable without your personal encryption key, which is stored exclusively in your iCloud Keychain and syncs only to your own Apple devices. AI requests must be processed in readable form by the KnowItOwl! AI API and Google AI services to generate responses, transcripts, and audio.
+                                    Conversation messages and audio files saved to your account are encrypted on your device using <strong>AES-256-GCM</strong> (via Apple CryptoKit) before being stored in Firebase. The user-scoped key is stored in synchronizable Keychain so your devices can decrypt shared history. AI requests must be processed in readable form by the KnowItOwl! API and Google Cloud services to generate responses, transcripts, grounding, and audio.
                                 </p>
                             </div>
                         </div>

@@ -35,8 +35,7 @@ Push to `main`. GitHub Pages deploys the parent `sandy-brook-labs` repo automati
 
 | Repo | Description |
 |------|-------------|
-| [gnosisai-iosapp](https://github.com/cloudreyes/gnosisai-iosapp) | iOS/watchOS app (Swift, SwiftUI, Firebase) |
-| [gnosisai-backend](https://github.com/cloudreyes/gnosisai-backend) | GCP + Firebase backend infrastructure (Terraform) |
+| [know-it-owl](https://github.com/Sandy-Brook-DevWorks-LLC/know-it-owl) | Unified iOS/watchOS app, .NET API, Firebase configuration, and Google Cloud infrastructure |
 
 ## License
 
